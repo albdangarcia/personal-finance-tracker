@@ -1,0 +1,139 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("POSTGRES_URL") // uses connection pooling
+}
+
+model Account {
+    userId            String
+    user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    type              String
+    provider          String
+    providerAccountId String
+    access_token      String?
+    token_type        String?
+    scope             String?
+    createdAt         DateTime @default(now())
+    updatedAt         DateTime @updatedAt
+
+    @@id([provider, providerAccountId])
+}
+
+model User {
+    id               String            @id @default(cuid())
+    name             String?
+    password         String?
+    email            String            @unique
+    emailVerified    DateTime?
+    image            String?
+    regularIncomes   RegularIncome[]
+    irregularIncomes IrregularIncome[]
+    fixedExpenses    FixedExpense[]
+    variableExpenses VariableExpense[]
+    savingsGoals     SavingsGoal[]
+    debts            Debt[]
+    budgets          Budget[]
+    accounts         Account[]
+    createdAt        DateTime          @default(now())
+    updatedAt        DateTime          @updatedAt
+}
+
+enum Frequency {
+    WEEKLY
+    BIWEEKLY
+    MONTHLY
+}
+
+model RegularIncome {
+    id        String    @id @default(cuid())
+    amount    Float
+    source    String
+    frequency Frequency // ["weekly", "biweekly", "monthly"]
+    startDate DateTime
+    endDate   DateTime?
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    userId    String?
+    User      User?     @relation(fields: [userId], references: [id])
+}
+
+model IrregularIncome {
+    id        String   @id @default(cuid())
+    amount    Float
+    source    String
+    date      DateTime
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    userId    String?
+    User      User?    @relation(fields: [userId], references: [id])
+}
+
+model FixedExpense {
+    id        String   @id @default(cuid())
+    amount    Float
+    category  String // ["rent", "utilities", "subscriptions", "other"]
+    frequency String // ["weekly", "biweekly", "monthly"]
+    date      DateTime
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    userId    String?
+    User      User?    @relation(fields: [userId], references: [id])
+}
+
+model VariableExpense {
+    id        String   @id @default(cuid())
+    amount    Float
+    category  String // ["groceries", "transportation", "entertainment", "other"]
+    date      DateTime
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    userId    String?
+    User      User?    @relation(fields: [userId], references: [id])
+}
+
+model SavingsGoal {
+    id        String   @id @default(cuid())
+    amount    Float
+    category  String // ["emergency fund", "vacation", "other"]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    userId    String?
+    User      User?    @relation(fields: [userId], references: [id])
+}
+
+model Debt {
+    id        String        @id @default(cuid())
+    amount    Float
+    category  String // ["credit card", "student loan", "mortgage", "other"]
+    interest  Float
+    createdAt DateTime      @default(now())
+    updatedAt DateTime      @updatedAt
+    payments  DebtPayment[] // One-to-many relationship with Payment
+    userId    String?
+    User      User?         @relation(fields: [userId], references: [id])
+}
+
+model DebtPayment {
+    id        String   @id @default(cuid())
+    amount    Float
+    dueDate   DateTime
+    paid      Boolean  @default(false)
+    debtId    String
+    debt      Debt     @relation(fields: [debtId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Budget {
+    id             String    @id @default(cuid())
+    frequency      Frequency
+    allocation     Float // The planned budget allocation
+    actualSpending Float     @default(0) // The actual spending, initialized to 0
+    createdAt      DateTime  @default(now())
+    updatedAt      DateTime  @updatedAt
+    userId         String?
+    User           User?     @relation(fields: [userId], references: [id])
+}
