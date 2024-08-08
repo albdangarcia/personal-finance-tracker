@@ -129,9 +129,8 @@ model DebtPayment {
 
 model Budget {
     id             String    @id @default(cuid())
-    frequency      Frequency
     allocation     Float // The planned budget allocation
-    actualSpending Float     @default(0) // The actual spending, initialized to 0
+    category       String   // ["groceries", "transportation", "entertainment", "other"]
     createdAt      DateTime  @default(now())
     updatedAt      DateTime  @updatedAt
     userId         String?
