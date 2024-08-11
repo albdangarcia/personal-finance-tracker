@@ -1,16 +1,17 @@
 import { z } from "zod";
-import { Frequency } from "@prisma/client";
 
+// error state for budget form
 export type BudgetFormErrorState = {
   errors?: {
-    frequency?: string[];
+    categoryId?: string[];
     allocation?: string[];
   };
   message?: string | null;
 };
 
+// schema for budget form
 export const BudgetSchema = z.object({
-  frequency: z.enum([Frequency.WEEKLY, Frequency.BIWEEKLY, Frequency.MONTHLY]),
+  categoryId: z.string().min(1),
   allocation: z.coerce
     .number()
     .gt(0, { message: "Please enter an amount greater than $0." }),

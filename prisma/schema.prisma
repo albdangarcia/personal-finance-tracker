@@ -31,8 +31,9 @@ model User {
     image            String?
     regularIncomes   RegularIncome[]
     irregularIncomes IrregularIncome[]
-    fixedExpenses    FixedExpense[]
-    variableExpenses VariableExpense[]
+    // fixedExpenses    FixedExpense[]
+    // variableExpenses VariableExpense[]
+    expenses         Expense[]
     savingsGoals     SavingsGoal[]
     debts            Debt[]
     budgets          Budget[]
@@ -56,8 +57,8 @@ model RegularIncome {
     endDate   DateTime?
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
-    userId    String?
-    User      User?     @relation(fields: [userId], references: [id])
+    userId    String
+    User      User      @relation(fields: [userId], references: [id])
 }
 
 model IrregularIncome {
@@ -67,31 +68,8 @@ model IrregularIncome {
     date      DateTime
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    userId    String?
-    User      User?    @relation(fields: [userId], references: [id])
-}
-
-model FixedExpense {
-    id        String   @id @default(cuid())
-    amount    Float
-    category  String // ["rent", "utilities", "subscriptions", "other"]
-    frequency String // ["weekly", "biweekly", "monthly"]
-    date      DateTime
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    userId    String?
-    User      User?    @relation(fields: [userId], references: [id])
-}
-
-model VariableExpense {
-    id        String   @id @default(cuid())
-    amount    Float
-    category  String // ["groceries", "transportation", "entertainment", "other"]
-    date      DateTime
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    userId    String?
-    User      User?    @relation(fields: [userId], references: [id])
+    userId    String
+    User      User     @relation(fields: [userId], references: [id])
 }
 
 model SavingsGoal {
@@ -100,8 +78,8 @@ model SavingsGoal {
     category  String // ["emergency fund", "vacation", "other"]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    userId    String?
-    User      User?    @relation(fields: [userId], references: [id])
+    userId    String
+    User      User     @relation(fields: [userId], references: [id])
 }
 
 model Debt {
@@ -112,8 +90,8 @@ model Debt {
     createdAt DateTime      @default(now())
     updatedAt DateTime      @updatedAt
     payments  DebtPayment[] // One-to-many relationship with Payment
-    userId    String?
-    User      User?         @relation(fields: [userId], references: [id])
+    userId    String
+    User      User          @relation(fields: [userId], references: [id])
 }
 
 model DebtPayment {
@@ -127,12 +105,34 @@ model DebtPayment {
     updatedAt DateTime @updatedAt
 }
 
+model Expense {
+    id         String   @id @default(cuid())
+    amount     Float
+    categoryId String   @unique
+    category   Category @relation(fields: [categoryId], references: [id])
+    date       DateTime
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    userId     String
+    User       User     @relation(fields: [userId], references: [id])
+}
+
 model Budget {
-    id             String    @id @default(cuid())
-    allocation     Float // The planned budget allocation
-    category       String   // ["groceries", "transportation", "entertainment", "other"]
-    createdAt      DateTime  @default(now())
-    updatedAt      DateTime  @updatedAt
-    userId         String?
-    User           User?     @relation(fields: [userId], references: [id])
+    id         String   @id @default(cuid())
+    allocation Float // The planned budget allocation
+    categoryId String   @unique
+    category   Category @relation(fields: [categoryId], references: [id])
+    userId     String
+    User       User     @relation(fields: [userId], references: [id])
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+}
+
+model Category {
+    id        String    @id @default(cuid())
+    name      String    @unique // ["groceries", "transportation", "entertainment", "other"]
+    budget    Budget?   // One-to-one relationship with Budget
+    expenses   Expense[] // One-to-many relationship with Expense
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
 }
