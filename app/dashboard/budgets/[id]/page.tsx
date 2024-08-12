@@ -1,6 +1,7 @@
 import { fetchAvailableCategories, fetchBudgetById } from "@/app/lib/data";
-import EditForm from "@/app/ui/budgets/edit-form";
+import EditBudgetForm from "@/app/ui/budgets/edit-form";
 import { notFound } from "next/navigation";
+import FormWrapper from "@/app/ui/budgets/form-wrapper";
 
 // Page for editing a budget
 export default async function Page({ params }: { params: { id: string } }) {
@@ -16,10 +17,8 @@ export default async function Page({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold mb-5">Edit Budget</h1>
-      {/* pass budget and categories to EditForm component */}
-      <EditForm budget={budget} categories={categories} />
-    </div>
+      <FormWrapper formTitle="Edit Budget">
+        <EditBudgetForm budget={budget} categories={categories} />
+      </FormWrapper>
   );
 }

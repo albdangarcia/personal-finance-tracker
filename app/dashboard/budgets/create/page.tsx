@@ -1,5 +1,6 @@
 import { fetchAvailableCategories } from "@/app/lib/data";
 import CreateBudgetForm from "@/app/ui/budgets/create-form";
+import FormWrapper from "@/app/ui/budgets/form-wrapper";
 
 // Page for creating a budget
 export default async function Page() {
@@ -7,10 +8,9 @@ export default async function Page() {
   const categories = await fetchAvailableCategories();
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold mb-5">Create Budget</h1>
+    <FormWrapper formTitle="Create Budget">
       {/* Pass categories to the Form component */}
       <CreateBudgetForm categories={categories} />
-    </div>
+    </FormWrapper>
   );
 }

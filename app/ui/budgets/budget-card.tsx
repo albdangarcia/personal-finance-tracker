@@ -9,12 +9,12 @@ import BudgetBar from "./budget-bar";
 export default function BudgetCard({
   category,
   budgetId,
-  allocation,
+  amount,
   totalExpenses,
 }: {
   category: string;
   budgetId: string;
-  allocation: number;
+  amount: number;
   totalExpenses: number;
 }) {
   // State to manage the dialog open/close
@@ -27,12 +27,12 @@ export default function BudgetCard({
   }
 
   // Calculate if there is budget left or over
-  const budgetLeft = allocation - totalExpenses;
+  const budgetLeft = amount - totalExpenses;
   const isThereBudgetLeft = budgetLeft >= 0;
   return (
-    <div className="bg-white shadow-sm rounded p-5">
+    <div className="bg-white shadow rounded p-5">
       <div className="flex justify-between">
-        <h1 className="font-semibold mb-1 text-gray-800">{category}</h1>
+        <h1 className="font-medium mb-3 text-gray-800">{category}</h1>
         {/* Link to the budget edit page */}
         <div className="flex gap-x-2">
           <Link
@@ -61,7 +61,7 @@ export default function BudgetCard({
       </h4>
       {/* Budget bar */}
       <BudgetBar
-        allocation={allocation}
+        amount={amount}
         totalExpenses={totalExpenses}
         isThereBudgetLeft={isThereBudgetLeft}
       />

@@ -11,8 +11,8 @@ export async function createBudget(
 ) {
   // Validate form fields using Zod
   const validatedFields = BudgetSchema.safeParse({
-    categoryId: formData.get("category"),
-    allocation: formData.get("allocation"),
+    categoryId: formData.get("categoryId"),
+    amount: formData.get("amount"),
   });
   
   // If form validation fails, return errors early. Otherwise, continue.
@@ -24,14 +24,14 @@ export async function createBudget(
   }
 
   // Extract validated fields
-  const { categoryId, allocation } = validatedFields.data;
+  const { categoryId, amount } = validatedFields.data;
 
   // Create the budget
   try {
     await prisma.budget.create({
       data: {
         categoryId: categoryId,
-        allocation: allocation,
+        amount: amount,
         userId: "clziqqbgy000108l7dmts0vng",
       },
     });
@@ -55,7 +55,7 @@ export async function updateBudget(
   // Validate form fields using Zod
   const validatedFields = BudgetSchema.safeParse({
     categoryId: formData.get("category"),
-    allocation: formData.get("allocation"),
+    amount: formData.get("amount"),
   });
 
   // If form validation fails, return errors early. Otherwise, continue.
@@ -67,7 +67,7 @@ export async function updateBudget(
   }
 
   // Extract validated fields
-  const { categoryId, allocation } = validatedFields.data;
+  const { categoryId, amount } = validatedFields.data;
 
   // Check if the category exists
   if (categoryId) {
@@ -89,7 +89,7 @@ export async function updateBudget(
       },
       data: {
         categoryId: categoryId,
-        allocation: allocation,
+        amount: amount,
       },
     });
   } catch (error) {

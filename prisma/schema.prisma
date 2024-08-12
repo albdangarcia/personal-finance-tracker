@@ -119,7 +119,7 @@ model Expense {
 
 model Budget {
     id         String   @id @default(cuid())
-    allocation Float // The planned budget allocation
+    amount Float // The planned budget amount
     categoryId String   @unique
     category   Category @relation(fields: [categoryId], references: [id])
     userId     String

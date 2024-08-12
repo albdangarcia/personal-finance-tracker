@@ -7,7 +7,7 @@ Chart.register(ArcElement, Tooltip);
 type BudgetDataType = {
   name: string;
   budget: {
-      allocation: number;
+      amount: number;
   } | null;
 }
 
@@ -24,7 +24,7 @@ export default function BudgetChart({
     datasets: [
       {
         label: "Budgets",
-        data: budgetData.map((data) => data.budget?.allocation ?? 0),
+        data: budgetData.map((data) => data.budget?.amount ?? 0),
         backgroundColor: backgroundColors,
         hoverOffset: 4,
       },

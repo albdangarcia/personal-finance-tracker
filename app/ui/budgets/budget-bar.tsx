@@ -2,16 +2,16 @@ import clsx from "clsx";
 
 // Budget bar component
 const BudgetBar = ({
-  allocation,
+  amount,
   totalExpenses,
   isThereBudgetLeft,
 }: {
-  allocation: number;
+  amount: number;
   totalExpenses: number;
   isThereBudgetLeft: boolean;
 }) => {
-  // Calculate the width percentage of the expense relative to the allocation
-  const expensePercentage = Math.min((totalExpenses / allocation) * 100, 100);
+  // Calculate the width percentage of the expense relative to the amount
+  const expensePercentage = Math.min((totalExpenses / amount) * 100, 100);
   return (
     <div className="bg-gray-200 h-5 w-full rounded-full relative">
       <div
@@ -27,7 +27,7 @@ const BudgetBar = ({
           isThereBudgetLeft ? "text-black" : "text-white"
         )}
       >
-        {`$${totalExpenses} of $${allocation}`}
+        {`$${totalExpenses} of $${amount}`}
       </div>
     </div>
   );

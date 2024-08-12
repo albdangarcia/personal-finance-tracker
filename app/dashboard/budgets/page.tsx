@@ -28,7 +28,7 @@ export default async function Page() {
             key={data.name}
             category={data.name}
             budgetId={data.budget?.id ?? ""}
-            allocation={data.budget?.allocation ?? 0}
+            amount={data.budget?.amount ?? 0}
             totalExpenses={data.totalExpenses}
           />
         ))}

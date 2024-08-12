@@ -2,7 +2,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
 
 export async function fetchAvailableCategories() {
-  noStore();
+  // noStore();
   // Fetch categories that do not have a budget
   try {
     const categories = await prisma.category.findMany({
@@ -40,7 +40,7 @@ export async function fetchUsedCategoryWithBudget() {
         budget: {
           select: {
             id: true,
-            allocation: true,
+            amount: true,
           },
         },
         expenses: {
@@ -63,10 +63,10 @@ export async function fetchUsedCategoryWithBudget() {
       };
     });
 
-    // Calculate the difference between allocation and total expenses, and sort by this difference
+    // Calculate the difference between amount and total expenses, and sort by this difference
     const sortedCategories = categoriesWithTotalExpenses.sort((a, b) => {
-      const aDifference = (a.budget?.allocation ?? 0) - a.totalExpenses;
-      const bDifference = (b.budget?.allocation ?? 0) - b.totalExpenses;
+      const aDifference = (a.budget?.amount ?? 0) - a.totalExpenses;
+      const bDifference = (b.budget?.amount ?? 0) - b.totalExpenses;
       return aDifference - bDifference;
     });
 
@@ -93,7 +93,7 @@ export async function fetchBudgetById(id: string) {
             name: true,
           },
         },
-        allocation: true,
+        amount: true,
       },
     });
     return budget;

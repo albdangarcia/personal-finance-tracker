@@ -4,7 +4,7 @@ import { z } from "zod";
 export type BudgetFormErrorState = {
   errors?: {
     categoryId?: string[];
-    allocation?: string[];
+    amount?: string[];
   };
   message?: string | null;
 };
@@ -12,7 +12,7 @@ export type BudgetFormErrorState = {
 // schema for budget form
 export const BudgetSchema = z.object({
   categoryId: z.string().min(1),
-  allocation: z.coerce
+  amount: z.coerce
     .number()
     .gt(0, { message: "Please enter an amount greater than $0." }),
 });

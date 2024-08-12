@@ -4,6 +4,7 @@ import { createBudget } from "@/app/lib/actions/budget";
 import { BudgetFormErrorState } from "@/app/lib/zod-schemas";
 import { AvailableCategoryProps } from "@/app/lib/types";
 import FormButtons from "../form-buttons";
+import clsx from "clsx";
 
 export default function CreateBudgetForm({
   categories,
@@ -19,11 +20,17 @@ export default function CreateBudgetForm({
   );
   return (
     <div>
-      <form action={dispatch}>
-        {/* Display the available categories */}
+      <form action={dispatch} className="grid gap-y-3">
         <div>
-          <label htmlFor="category">Category</label>
-          <select name="category" id="category" required>
+          {/* Display the available categories */}
+          <label htmlFor="categoryId">Category</label>
+          <select
+            name="categoryId"
+            id="categoryId"
+            required
+            autoComplete="off"
+            aria-describedby="categoryId-error"
+          >
             {categories.map((category) => (
               <option
                 key={category.id}
@@ -34,36 +41,43 @@ export default function CreateBudgetForm({
               </option>
             ))}
           </select>
+          {/* Category errors */}
+          <div id="categoryId-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.categoryId &&
+              state.errors.categoryId.map((error: string) => (
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                  {error}
+                </p>
+              ))}
+          </div>
         </div>
-        {/* Category errors */}
-        <div id="categoryId-error" aria-live="polite" aria-atomic="true">
-          {state.errors?.categoryId &&
-            state.errors.categoryId.map((error: string) => (
-              <p className="mt-2 text-sm text-red-500" key={error}>
-                {error}
-              </p>
-            ))}
-        </div>
-        {/* Display the allocation input */}
+        {/* Display the amount input */}
         <div>
-          <label htmlFor="allocation">Allocation</label>
-          <input
-            type="number"
-            name="allocation"
-            id="allocation"
-            aria-describedby="allocation-error"
-            required
-            className="border"
-          />
-        </div>
-        {/* Input errors */}
-        <div id="allocation-error" aria-live="polite" aria-atomic="true">
-          {state.errors?.allocation &&
-            state.errors.allocation.map((error: string) => (
-              <p className="mt-2 text-sm text-red-500" key={error}>
-                {error}
-              </p>
-            ))}
+          <label htmlFor="amount">Amount</label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span className="text-gray-500 sm:text-sm sm:leading-5">$</span>
+            </div>
+            <input
+              type="number"
+              name="amount"
+              id="amount"
+              autoComplete="off"
+              placeholder="0.00"
+              aria-describedby="amount-error"
+              required
+              className="pl-6"
+            />
+          </div>
+          {/* Input errors */}
+          <div id="amount-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.amount &&
+              state.errors.amount.map((error: string) => (
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                  {error}
+                </p>
+              ))}
+          </div>
         </div>
         {/* General errors */}
         <div id="budget-error" aria-live="polite" aria-atomic="true">
