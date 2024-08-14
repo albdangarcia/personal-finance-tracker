@@ -1,10 +1,10 @@
 import { fetchAvailableCategories, fetchBudgetById } from "@/app/lib/data";
 import EditBudgetForm from "@/app/ui/budgets/edit-form";
 import { notFound } from "next/navigation";
-import FormWrapper from "@/app/ui/budgets/form-wrapper";
+import FormWrapper from "@/app/ui/form-wrapper";
 
 // Page for editing a budget
-export default async function Page({ params }: { params: { id: string } }) {
+const Page = async ({ params }: { params: { id: string } }) => {
   // get id from params
   const id = params.id;
   // get all available categories
@@ -17,8 +17,10 @@ export default async function Page({ params }: { params: { id: string } }) {
   }
 
   return (
-      <FormWrapper formTitle="Edit Budget">
-        <EditBudgetForm budget={budget} categories={categories} />
-      </FormWrapper>
+    <FormWrapper formTitle="Edit Budget">
+      <EditBudgetForm budget={budget} categories={categories} />
+    </FormWrapper>
   );
-}
+};
+
+export default Page;

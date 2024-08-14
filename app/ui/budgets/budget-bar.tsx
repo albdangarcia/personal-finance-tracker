@@ -1,15 +1,17 @@
 import clsx from "clsx";
 
+type BudgetBarProps = {
+  amount: number;
+  totalExpenses: number;
+  isThereBudgetLeft: boolean;
+};
+
 // Budget bar component
 const BudgetBar = ({
   amount,
   totalExpenses,
   isThereBudgetLeft,
-}: {
-  amount: number;
-  totalExpenses: number;
-  isThereBudgetLeft: boolean;
-}) => {
+}: BudgetBarProps) => {
   // Calculate the width percentage of the expense relative to the amount
   const expensePercentage = Math.min((totalExpenses / amount) * 100, 100);
   return (
@@ -32,4 +34,5 @@ const BudgetBar = ({
     </div>
   );
 };
+
 export default BudgetBar;

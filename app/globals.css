@@ -11,23 +11,24 @@ body {
   }
 }
 
-[type='text'],
-[type='email'],
-[type='url'],
-[type='password'],
-[type='number'],
-[type='date'],
-[type='datetime-local'],
-[type='month'],
-[type='search'],
-[type='tel'],
-[type='time'],
-[type='week'],
+[type="text"],
+[type="email"],
+[type="url"],
+[type="password"],
+[type="number"],
+[type="date"],
+[type="datetime-local"],
+[type="month"],
+[type="search"],
+[type="tel"],
+[type="time"],
+[type="week"],
 [multiple],
 textarea,
 select {
-  @apply mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  sm:text-sm sm:leading-6 ring-gray-300 focus:ring-1 focus:ring-inset focus:ring-indigo-400 focus:outline-4 focus:outline-offset-0 focus:outline-indigo-400/25;
+  @apply mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset sm:text-sm sm:leading-6 ring-gray-300 focus:ring-1 focus:ring-inset focus:ring-indigo-400 focus:outline-4 focus:outline-offset-0 focus:outline-indigo-400/25 placeholder:text-gray-400 placeholder:font-light;
 }
+
 label {
   @apply block text-sm font-medium leading-6 text-gray-900;
 }

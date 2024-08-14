@@ -1,12 +1,13 @@
-import BudgetCard from "@/app/ui/budgets/budget-card";
 import Link from "next/link";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import BudgetChart from "@/app/ui/budgets/budget-chart";
 import { fetchUsedCategoryWithBudget } from "@/app/lib/data";
+import BudgetCards from "@/app/ui/budgets/budget-cards";
 
-export default async function Page() {
+const Page = async () => {
   // get all the budgets by category
   const budgetData = await fetchUsedCategoryWithBudget();
+  
   return (
     <div>
       {/* Budget Chart */}
@@ -22,17 +23,9 @@ export default async function Page() {
         </Link>
       </div>
       {/* Budget Cards */}
-      <div className="grid grid-col-1 sm:grid-cols-3 gap-5 p-3">
-        {budgetData.map((data) => (
-          <BudgetCard
-            key={data.name}
-            category={data.name}
-            budgetId={data.budget?.id ?? ""}
-            amount={data.budget?.amount ?? 0}
-            totalExpenses={data.totalExpenses}
-          />
-        ))}
-      </div>
+      <BudgetCards budgetData={budgetData} />
     </div>
   );
-}
+};
+
+export default Page;

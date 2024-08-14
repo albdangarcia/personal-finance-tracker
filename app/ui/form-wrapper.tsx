@@ -1,11 +1,9 @@
-import React from 'react';
-
-interface FormWrapperProps {
+type FormWrapperProps = {
   children: React.ReactNode;
   formTitle: string;
 }
 
-const FormWrapper: React.FC<FormWrapperProps> = ({ children, formTitle }) => {
+const FormWrapper = ({ children, formTitle } : FormWrapperProps) => {
   return (
     <div className="flex justify-center mt-7">
       <div className="bg-white shadow w-96 rounded-lg p-6">

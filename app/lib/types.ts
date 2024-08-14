@@ -1,4 +1,4 @@
-export type AvailableCategoryProps = {
+export type CategoryProps = {
   id: string;
   name: string;
 };

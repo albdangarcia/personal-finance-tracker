@@ -1,5 +1,5 @@
 "use client";
-import { getRandomColor} from "@/app/lib/utils";
+import { getRandomColor } from "@/app/lib/utils";
 import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip } from "chart.js";
 Chart.register(ArcElement, Tooltip);
@@ -7,15 +7,11 @@ Chart.register(ArcElement, Tooltip);
 type BudgetDataType = {
   name: string;
   budget: {
-      amount: number;
+    amount: number;
   } | null;
-}
+};
 
-export default function BudgetChart({
-  budgetData,
-}: {
-  budgetData: BudgetDataType[];
-}) {
+const BudgetChart = ({ budgetData }: { budgetData: BudgetDataType[] }) => {
   // Generate random colors for the chart slices
   const backgroundColors = budgetData.map(() => getRandomColor());
   // Chart data
@@ -37,4 +33,6 @@ export default function BudgetChart({
       </div>
     </div>
   );
-}
+};
+
+export default BudgetChart;
