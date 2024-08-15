@@ -1,29 +1,41 @@
 "use client";
 import { useFormState } from "react-dom";
-import { createBudget } from "@/app/lib/actions/budget";
-import { BudgetFormErrorState } from "@/app/lib/zod-schemas";
+import { updateSavingsGoals } from "@/app/lib/actions/savings-goals";
+import { SavingsGoalFormErrorState } from "@/app/lib/zod-schemas";
 import { CategoryProps } from "@/app/lib/types";
 import FormButtons from "../form-buttons";
 
-const CreateBudgetForm = ({ categories }: { categories: CategoryProps[] }) => {
+type EditFormProps = {
+    categories: CategoryProps[];
+    savingsGoal: {
+        name: string;
+        amount: number;
+        id: string;
+        categoryId: string;
+    };
+};
+
+const EditSavingsGoalForm = ({ categories, savingsGoal }: EditFormProps) => {
+    const updateSavingsGoalWithId = updateSavingsGoals.bind(null, savingsGoal.id);
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<BudgetFormErrorState, FormData>(
-        createBudget,
+    const [state, dispatch] = useFormState<SavingsGoalFormErrorState, FormData>(
+        updateSavingsGoalWithId,
         initialState
     );
     return (
         <div>
             <form action={dispatch} className="grid gap-y-3">
                 <div>
-                    {/* Display the available categories */}
+                    {/* Display the all categories */}
                     <label htmlFor="categoryId">Category</label>
                     <select
                         name="categoryId"
                         id="categoryId"
                         required
                         autoComplete="off"
+                        defaultValue={savingsGoal.categoryId}
                         aria-describedby="categoryId-error"
                     >
                         {categories.map((category) => (
@@ -53,9 +65,35 @@ const CreateBudgetForm = ({ categories }: { categories: CategoryProps[] }) => {
                             ))}
                     </div>
                 </div>
-                {/* Display the amount input */}
+                {/* Savings Goal name */}
                 <div>
-                    <label htmlFor="amount">Amount</label>
+                    <label htmlFor="name">Savings Goal Name</label>
+                    <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        autoComplete="off"
+                        required
+                        placeholder="Enter savings goal name"
+                        defaultValue={savingsGoal.name}
+                        aria-describedby="name-error"
+                    />
+                    {/* Name errors */}
+                    <div id="name-error" aria-live="polite" aria-atomic="true">
+                        {state.errors?.name &&
+                            state.errors.name.map((error: string) => (
+                                <p
+                                    className="mt-2 text-sm text-red-500"
+                                    key={error}
+                                >
+                                    {error}
+                                </p>
+                            ))}
+                    </div>
+                </div>
+                {/* Display the target amount input */}
+                <div>
+                    <label htmlFor="amount">Target Amount</label>
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <span className="text-gray-500 sm:text-sm sm:leading-5">
@@ -68,6 +106,7 @@ const CreateBudgetForm = ({ categories }: { categories: CategoryProps[] }) => {
                             id="amount"
                             autoComplete="off"
                             placeholder="0.00"
+                            defaultValue={savingsGoal.amount}
                             aria-describedby="amount-error"
                             required
                             className="pl-6"
@@ -91,7 +130,7 @@ const CreateBudgetForm = ({ categories }: { categories: CategoryProps[] }) => {
                     </div>
                 </div>
                 {/* General errors */}
-                <div id="budget-error" aria-live="polite" aria-atomic="true">
+                <div id="savings-goal-error" aria-live="polite" aria-atomic="true">
                     {state.message && (
                         <p
                             className="mt-2 text-sm text-red-500"
@@ -102,10 +141,10 @@ const CreateBudgetForm = ({ categories }: { categories: CategoryProps[] }) => {
                     )}
                 </div>
                 {/* Form buttons */}
-                <FormButtons redirectTo="/dashboard/budgets" />
+                <FormButtons redirectTo="/dashboard/savings-goals" />
             </form>
         </div>
     );
 };
 
-export default CreateBudgetForm;
+export default EditSavingsGoalForm;

@@ -2,98 +2,95 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import prisma from "@/app/lib/prisma";
-import { ExpenseFormErrorState, ExpenseSchema } from "../zod-schemas";
+import { SavingsGoalFormErrorState, SavingsGoalSchema } from "../zod-schemas";
 
-export async function deleteExpense(expenseId: string) {
+export async function deleteSavingsGoal(id: string) {
+    // Delete the saving goal
     try {
-        await prisma.expense.delete({
+        await prisma.savingsGoal.delete({
             where: {
-                id: expenseId,
+                id,
             },
         });
+        // Revalidate the path
+        revalidatePath("/dashboard/savings-goals");
+        redirect("/dashboard/savings-goals");
     } catch (error) {
-        console.error("Failed to delete expense:", error);
-        throw new Error("Failed to delete expense");
+        console.error("Failed to delete saving goal:", error);
+        throw new Error("Failed to delete saving goal.");
     }
-    // Revalidate the cache
-    revalidatePath("/dashboard/expenses");
-    // Redirect the user
-    redirect("/dashboard/expenses");
 }
 
-export async function createExpense(
-    prevState: ExpenseFormErrorState,
+export async function createSavingsGoal(
+    prevState: SavingsGoalFormErrorState,
     formData: FormData
 ) {
     // Validate form fields using Zod
-    const validatedFields = ExpenseSchema.safeParse({
+    const validatedFields = SavingsGoalSchema.safeParse({
         name: formData.get("name"),
         amount: formData.get("amount"),
         categoryId: formData.get("categoryId"),
-        date: formData.get("date"),
     });
 
     // If form validation fails, return errors early. Otherwise, continue.
     if (!validatedFields.success) {
         return {
             errors: validatedFields.error.flatten().fieldErrors,
-            message: "Missing Fields. Failed to Create Expense.",
+            message: "Missing Fields. Failed to Create Savings Goal.",
         };
     }
 
     // Extract validated fields
-    const { name, amount, categoryId, date } = validatedFields.data;
+    const { name, amount, categoryId } = validatedFields.data;
 
-    // Create the expense
+    // Create the savings goal
     try {
-        await prisma.expense.create({
+        await prisma.savingsGoal.create({
             data: {
                 name: name,
                 amount: amount,
                 categoryId: categoryId,
-                date: date,
                 userId: "clziqqbgy000108l7dmts0vng",
             },
         });
     } catch (error) {
-        console.error("Failed to create Expense:", error);
+        console.error("Failed to create Savings Goal:", error);
         return {
-            message: "Database Error: Failed to Create Expense.",
+            message: "Database Error: Failed to Create Savings Goal.",
         };
     }
     // Revalidate the cache
-    revalidatePath("/dashboard/expenses");
+    revalidatePath("/dashboard/savings-goals");
     // Redirect the user
-    redirect("/dashboard/expenses");
+    redirect("/dashboard/savings-goals");
 }
 
-export async function updateExpense(
+export async function updateSavingsGoals(
     id: string,
-    prevState: ExpenseFormErrorState,
+    prevState: SavingsGoalFormErrorState,
     formData: FormData
 ) {
     // Validate form fields using Zod
-    const validatedFields = ExpenseSchema.safeParse({
+    const validatedFields = SavingsGoalSchema.safeParse({
         name: formData.get("name"),
         amount: formData.get("amount"),
         categoryId: formData.get("categoryId"),
-        date: formData.get("date"),
     });
 
     // If form validation fails, return errors early. Otherwise, continue.
     if (!validatedFields.success) {
         return {
             errors: validatedFields.error.flatten().fieldErrors,
-            message: "Missing Fields. Failed to Update Expense.",
+            message: "Missing Fields. Failed to Update Savings Goal.",
         };
     }
 
     // Extract validated fields
-    const { name, amount, categoryId, date } = validatedFields.data;
+    const { name, amount, categoryId } = validatedFields.data;
 
-    // Update the expense
+    // Update the savings goal
     try {
-        await prisma.expense.update({
+        await prisma.savingsGoal.update({
             where: {
                 id: id,
             },
@@ -101,17 +98,16 @@ export async function updateExpense(
                 name: name,
                 amount: amount,
                 categoryId: categoryId,
-                date: date,
             },
         });
     } catch (error) {
-        console.error("Failed to update Expense:", error);
+        console.error("Failed to update Savings Goal:", error);
         return {
-            message: "Database Error: Failed to Update Expense.",
+            message: "Database Error: Failed to Update Savings Goal.",
         };
     }
     // Revalidate the cache
-    revalidatePath("/dashboard/expenses");
+    revalidatePath("/dashboard/savings-goals");
     // Redirect the user
-    redirect("/dashboard/expenses");
+    redirect("/dashboard/savings-goals");
 }

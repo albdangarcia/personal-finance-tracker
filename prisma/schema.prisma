@@ -71,14 +71,26 @@ model IrregularIncome {
 }
 
 model SavingsGoal {
-    id        String   @id @default(cuid())
-    name      String
-    amount    Float
-    category  String // ["emergency fund", "vacation", "other"]
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    userId    String
-    User      User     @relation(fields: [userId], references: [id])
+    id            String         @id @default(cuid())
+    name          String
+    amount        Float
+    categoryId    String
+    category      Category       @relation(fields: [categoryId], references: [id])
+    contributions Contribution[]
+    createdAt     DateTime       @default(now())
+    updatedAt     DateTime       @updatedAt
+    userId        String
+    User          User           @relation(fields: [userId], references: [id])
+}
+
+model Contribution {
+    id            String      @id @default(cuid())
+    amount        Float
+    date          DateTime
+    savingsGoalId String
+    savingsGoal   SavingsGoal @relation(fields: [savingsGoalId], references: [id])
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
 }
 
 model Debt {
@@ -119,7 +131,7 @@ model Expense {
 
 model Budget {
     id         String   @id @default(cuid())
-    amount Float // The planned budget amount
+    amount     Float // The planned budget amount
     categoryId String   @unique
     category   Category @relation(fields: [categoryId], references: [id])
     userId     String
@@ -131,8 +143,9 @@ model Budget {
 model Category {
     id        String    @id @default(cuid())
     name      String    @unique // ["groceries", "transportation", "entertainment", "other"]
-    budget    Budget?   // One-to-one relationship with Budget
-    expenses   Expense[] // One-to-many relationship with Expense
+    budget    Budget? // One-to-one relationship with Budget
+    expenses  Expense[] // One-to-many relationship with Expense
+    savingsGoals SavingsGoal[] // One-to-many relationship with SavingsGoal
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
 }

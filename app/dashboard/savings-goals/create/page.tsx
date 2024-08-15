@@ -1,16 +1,16 @@
 import { fetchCategories } from "@/app/lib/data";
-import CreateExpenseForm from "@/app/ui/expenses/create-form";
+import CreateSavingsGoalForm from "@/app/ui/savings-goals/create-form";
 import FormWrapper from "@/app/ui/form-wrapper";
 
-// Page for creating a expense
+// Page for creating a Savings Goal
 const Page = async () => {
     // Fetch all categories from the database
     const categories = await fetchCategories();
 
     return (
-        <FormWrapper title="Expense" description="Fill out the form below.">
+        <FormWrapper title="Create Savings Goal" description="Fill out the form below">
             {/* Pass categories to the Form component */}
-            <CreateExpenseForm categories={categories} />
+            <CreateSavingsGoalForm categories={categories} />
         </FormWrapper>
     );
 };

@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 body {
-  background-color: #f1f1f1;
+    background-color: #f1f1f1;
 }
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+    .text-balance {
+        text-wrap: balance;
+    }
 }
 
 [type="text"],
@@ -26,9 +26,9 @@ body {
 [multiple],
 textarea,
 select {
-  @apply mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset sm:text-sm sm:leading-6 ring-gray-300 focus:ring-1 focus:ring-inset focus:ring-indigo-400 focus:outline-4 focus:outline-offset-0 focus:outline-indigo-400/25 placeholder:text-gray-400 placeholder:font-light;
+    @apply mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset sm:text-sm sm:leading-6 ring-gray-300 focus:ring-1 focus:ring-inset focus:ring-indigo-400 focus:outline-4 focus:outline-offset-0 focus:outline-indigo-400/25 placeholder:text-gray-400 placeholder:font-light;
 }
 
 label {
-  @apply block text-sm font-medium leading-6 text-gray-900;
+    @apply block text-sm font-medium leading-6 text-gray-900;
 }
