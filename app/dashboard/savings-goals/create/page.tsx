@@ -8,7 +8,7 @@ const Page = async () => {
     const categories = await fetchCategories();
 
     return (
-        <FormWrapper title="Create Savings Goal" description="Fill out the form below">
+        <FormWrapper title="Savings Goal" description="Please provide the details for your savings goal below.">
             {/* Pass categories to the Form component */}
             <CreateSavingsGoalForm categories={categories} />
         </FormWrapper>

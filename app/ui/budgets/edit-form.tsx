@@ -23,7 +23,7 @@ const EditBudgetForm = ({ budget, categories }: editBudgetFormProps) => {
     );
     return (
         <div>
-            <form action={dispatch} className="grid gap-y-3">
+            <form action={dispatch} className="grid gap-y-4">
                 <div>
                     {/* Display the available categories */}
                     <label htmlFor="categoryId">Category</label>

@@ -19,7 +19,7 @@ const CreateSavingsGoalForm = ({
     );
     return (
         <div>
-            <form action={dispatch} className="grid gap-y-3">
+            <form action={dispatch} className="grid gap-y-4">
                 <div>
                     {/* Display the all categories */}
                     <label htmlFor="categoryId">Category</label>

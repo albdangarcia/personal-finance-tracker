@@ -16,7 +16,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
     }
 
     return (
-        <FormWrapper title="Savings" description="Edit the infomation below for Savings Goal.">
+        <FormWrapper title="Savings Goal" description="Modify the information for your Savings Goal.">
             <EditSavingsGoalForm savingsGoal={savingsGoal} categories={categories} />
         </FormWrapper>
     );

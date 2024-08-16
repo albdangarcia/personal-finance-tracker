@@ -1,13 +1,10 @@
 "use client";
-import {
-    PencilSquareIcon,
-    TrashIcon,
-    PlusIcon,
-} from "@heroicons/react/24/outline";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useState } from "react";
 import { Button, Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { deleteExpense } from "@/app/lib/actions/expense";
+import CreateButton from "../create-new-button";
 
 type ExpensesProps = {
     id: string;
@@ -52,20 +49,15 @@ const ExpensesTable = ({ expenses }: { expenses: ExpensesProps[] }) => {
     };
 
     return (
-        <div className="mt-6 bg-white border border-gray-200 rounded-md shadow-sm pb-4 pt-10 px-8">
+        <div className="antialiased mt-6 bg-white border border-gray-200 rounded-md shadow-sm pb-4 pt-10 px-8">
             <div className="flex justify-between">
                 <div>
                     <h4 className="font-medium">Expenses</h4>
-                    <p className="py-3 font-light text-sm text-gray-600">
+                    <p className="mt-2.5 mb-5 text-sm text-gray-500">
                         All the expenses you have added are listed here.
                     </p>
                 </div>
-                <Link
-                    href="/dashboard/expenses/create"
-                    className="bg-blue-600 rounded flex h-9 w-9 text-white justify-center items-center hover:bg-blue-700"
-                >
-                    <PlusIcon className="h-5 w-5" />
-                </Link>
+                <CreateButton hrefLink="/dashboard/expenses/create" />
             </div>
 
             {/* table headers */}
@@ -84,16 +76,16 @@ const ExpensesTable = ({ expenses }: { expenses: ExpensesProps[] }) => {
                         key={expense.id}
                         className="grid items-center grid-cols-[minmax(150px,1fr)_repeat(3,minmax(10px,1fr))_minmax(80px,1fr)] gap-y-0 gap-4 py-4 sm:py-2.5 text-gray-900 hover:bg-gray-100/50"
                     >
-                        <div className="truncate font-light text-gray-500">
+                        <div className="truncate text-gray-500">
                             {expense.name}
                         </div>
-                        <div className="font-light text-gray-800">
+                        <div className=" text-gray-800">
                             ${expense.amount}
                         </div>
                         <div className="font-medium antialiased text-gray-900">
                             {expense.category.name}
                         </div>
-                        <div className="font-light text-gray-500">
+                        <div className=" text-gray-500">
                             {expense.date.toLocaleDateString()}
                         </div>
                         <div className="flex justify-end sm:justify-center gap-x-5">
@@ -119,25 +111,25 @@ const ExpensesTable = ({ expenses }: { expenses: ExpensesProps[] }) => {
                 className="relative z-10 focus:outline-none"
                 onClose={close}
             >
-                <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-gradient-to-b from-black/10 to-black/50">
                     <div className="flex min-h-full items-center justify-center p-4">
                         <DialogPanel
                             transition
-                            className="w-full max-w-md rounded-xl bg-black/25 p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
+                            className="text-gray-900 w-full max-w-md rounded-xl bg-white p-6 duration-300 ease-out transform data-[closed]:scale-95 data-[closed]:opacity-0"
                         >
                             <DialogTitle
                                 as="h3"
-                                className="text-base/7 font-medium text-white"
+                                className="text-base/7 font-medium"
                             >
                                 Delete Expense
                             </DialogTitle>
-                            <p className="mt-2 text-sm/6 text-white/80">
+                            <p className="mt-2 text-sm/6 text-gray-600">
                                 Are you sure you want to delete the Expense for{" "}
-                                {expenseName}?
+                                <span className="text-black">{expenseName}</span>?
                             </p>
-                            <div className="mt-4 flex gap-x-2">
+                            <div className="mt-4 flex gap-x-2 border-t pt-4">
                                 <Button
-                                    className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
+                                    className="inline-flex items-center gap-2 rounded-md bg-black py-1.5 px-3 text-sm/6 font-semibold text-white shadow-white/10 focus:outline-none data-[hover]:bg-gray-800 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
                                     onClick={close}
                                 >
                                     Cancel
@@ -156,4 +148,5 @@ const ExpensesTable = ({ expenses }: { expenses: ExpensesProps[] }) => {
         </div>
     );
 };
+
 export default ExpensesTable;

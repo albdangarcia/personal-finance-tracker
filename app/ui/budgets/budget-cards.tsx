@@ -45,7 +45,7 @@ const BudgetCards = ({ budgetData }: { budgetData: BudgetsProps[] }) => {
         }
     };
     return (
-        <div className="grid grid-col-1 sm:grid-cols-3 gap-5 p-3">
+        <div className="grid grid-col-1 sm:grid-cols-3 gap-5 mt-4">
             {budgetData.map((category) => {
                 const budgetAmount = category.budget?.amount ?? 0;
                 const totalExpenses = category.totalExpenses;
@@ -54,14 +54,14 @@ const BudgetCards = ({ budgetData }: { budgetData: BudgetsProps[] }) => {
                 return (
                     <div
                         key={category.name}
-                        className="bg-white shadow rounded p-5"
+                        className="bg-white shadow-sm rounded p-5 border border-gray-200/80"
                     >
                         <div className="flex justify-between">
-                            <h1 className="font-medium mb-3 text-gray-800">
+                            <h1 className="antialiased font-medium mb-3 text-gray-900">
                                 {category.name}
                             </h1>
                             {/* Link to the budget edit page */}
-                            <div className="flex gap-x-2">
+                            <div className="flex gap-x-2 items-start">
                                 <Link
                                     href={`/dashboard/budgets/${category.budget?.id}`}
                                     className="items-center justify-center inline-flex"
@@ -84,7 +84,7 @@ const BudgetCards = ({ budgetData }: { budgetData: BudgetsProps[] }) => {
                         <h4>
                             <span
                                 className={clsx(
-                                    "text-sm",
+                                    "text-sm font-medium",
                                     isThereBudgetLeft
                                         ? "text-green-800"
                                         : "text-red-500"
@@ -109,25 +109,25 @@ const BudgetCards = ({ budgetData }: { budgetData: BudgetsProps[] }) => {
                 className="relative z-10 focus:outline-none"
                 onClose={close}
             >
-                <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-gradient-to-b from-black/10 to-black/50">
                     <div className="flex min-h-full items-center justify-center p-4">
                         <DialogPanel
                             transition
-                            className="w-full max-w-md rounded-xl bg-black/25 p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
+                            className="text-gray-900 w-full max-w-md rounded-xl bg-white p-6 duration-300 ease-out transform data-[closed]:scale-95 data-[closed]:opacity-0"
                         >
                             <DialogTitle
                                 as="h3"
-                                className="text-base/7 font-medium text-white"
+                                className="text-base/7 font-medium"
                             >
                                 Delete Expense
                             </DialogTitle>
-                            <p className="mt-2 text-sm/6 text-white/80">
+                            <p className="mt-2 text-sm/6 text-gray-600">
                                 Are you sure you want to delete the Budget for{" "}
-                                {categoryName}?
+                                <span className="text-black">{categoryName}</span>?
                             </p>
-                            <div className="mt-4 flex gap-x-2">
+                            <div className="mt-4 flex gap-x-2 border-t pt-4">
                                 <Button
-                                    className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
+                                    className="inline-flex items-center gap-2 rounded-md bg-black py-1.5 px-3 text-sm/6 font-semibold text-white shadow-white/10 focus:outline-none data-[hover]:bg-gray-800 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
                                     onClick={close}
                                 >
                                     Cancel

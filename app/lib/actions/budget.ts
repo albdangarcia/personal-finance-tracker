@@ -1,5 +1,4 @@
 "use server";
-import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import prisma from "@/app/lib/prisma";
@@ -52,9 +51,11 @@ export async function updateBudget(
     prevState: BudgetFormErrorState,
     formData: FormData
 ) {
+    console.log(formData.get("category"));
+
     // Validate form fields using Zod
     const validatedFields = BudgetSchema.safeParse({
-        categoryId: formData.get("category"),
+        categoryId: formData.get("categoryId"),
         amount: formData.get("amount"),
     });
 

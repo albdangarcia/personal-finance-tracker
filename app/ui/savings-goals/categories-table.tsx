@@ -2,13 +2,13 @@
 import {
     PencilSquareIcon,
     TrashIcon,
-    PlusIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useState } from "react";
 import { Button, Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { deleteSavingsGoal } from "@/app/lib/actions/savings-goals";
 import clsx from "clsx";
+import CreateButton from "../create-new-button";
 
 type Props = {
     savingsGoals: {
@@ -63,16 +63,11 @@ const CategoriesTable = ({
             <div className="flex justify-between">
                 <div>
                     <h4 className="font-medium">Savings Goals</h4>
-                    <p className="mt-2.5 mb-5 text-sm text-gray-600">
+                    <p className="mt-2.5 mb-5 text-sm text-gray-500">
                         All the savings goals you have added are listed here.
                     </p>
                 </div>
-                <Link
-                    href="/dashboard/savings-goals/create"
-                    className="bg-blue-600 rounded flex h-9 w-9 text-white justify-center items-center hover:bg-blue-700"
-                >
-                    <PlusIcon className="h-5 w-5" />
-                </Link>
+                <CreateButton hrefLink="/dashboard/savings-goals/create" />
             </div>
 
             {/* table headers */}
@@ -148,11 +143,11 @@ const CategoriesTable = ({
                 className="relative z-10 focus:outline-none"
                 onClose={close}
             >
-                <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-                    <div className="flex min-h-full items-center justify-center p-4 bg-gray-200/55">
+                <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-gradient-to-b from-black/10 to-black/50">
+                    <div className="flex min-h-full items-center justify-center p-4">
                         <DialogPanel
                             transition
-                            className="w-full max-w-md rounded-xl bg-white/25 p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
+                            className="text-gray-900 w-full max-w-md rounded-xl bg-white p-6 duration-300 ease-out transform data-[closed]:scale-95 data-[closed]:opacity-0"
                         >
                             <DialogTitle
                                 as="h3"
@@ -160,14 +155,14 @@ const CategoriesTable = ({
                             >
                                 Delete Saving Goal
                             </DialogTitle>
-                            <p className="mt-2 text-sm/6 text-black/80">
+                            <p className="mt-2 text-sm/6 text-gray-600">
                                 Are you sure you want to delete the Saving Goal {" "}
-                                "{savingsGoalName}"? 
-                                <p className="text-xs/6 text-red-600">This action cannot be undone and all the contributions will be lost.</p>
+                                <span className="text-black">{savingsGoalName}</span>? 
+                                <span className="block mt-2 text-xs/6 text-red-600">This action cannot be undone and all the contributions will be lost.</span>
                             </p>
-                            <div className="mt-4 flex gap-x-2">
+                            <div className="mt-4 flex gap-x-2 border-t pt-4">
                                 <Button
-                                    className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
+                                    className="inline-flex items-center gap-2 rounded-md bg-black py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-800 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
                                     onClick={close}
                                 >
                                     Cancel
