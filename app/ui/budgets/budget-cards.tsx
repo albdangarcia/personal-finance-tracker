@@ -1,11 +1,11 @@
 "use client";
-import { Button, Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { deleteBudget } from "@/app/lib/actions/budget";
 import { useState } from "react";
 import clsx from "clsx";
 import BudgetBar from "./budget-bar";
 import Link from "next/link";
+import DialogComponent from "../delete-dialog";
 
 type BudgetsProps = {
     totalExpenses: number;
@@ -103,7 +103,14 @@ const BudgetCards = ({ budgetData }: { budgetData: BudgetsProps[] }) => {
                     </div>
                 );
             })}
-            <Dialog
+            <DialogComponent
+                isOpen={isOpen}
+                close={close}
+                title="Budget"
+                itemName={categoryName}
+                handleDelete={handleDeleteBudget}
+            />
+            {/* <Dialog
                 open={isOpen}
                 as="div"
                 className="relative z-10 focus:outline-none"
@@ -142,7 +149,7 @@ const BudgetCards = ({ budgetData }: { budgetData: BudgetsProps[] }) => {
                         </DialogPanel>
                     </div>
                 </div>
-            </Dialog>
+            </Dialog> */}
         </div>
     );
 };

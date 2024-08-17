@@ -16,7 +16,10 @@ type EditFormProps = {
 };
 
 const EditSavingsGoalForm = ({ categories, savingsGoal }: EditFormProps) => {
-    const updateSavingsGoalWithId = updateSavingsGoals.bind(null, savingsGoal.id);
+    const updateSavingsGoalWithId = updateSavingsGoals.bind(
+        null,
+        savingsGoal.id
+    );
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
@@ -130,7 +133,11 @@ const EditSavingsGoalForm = ({ categories, savingsGoal }: EditFormProps) => {
                     </div>
                 </div>
                 {/* General errors */}
-                <div id="savings-goal-error" aria-live="polite" aria-atomic="true">
+                <div
+                    id="savings-goal-error"
+                    aria-live="polite"
+                    aria-atomic="true"
+                >
                     {state.message && (
                         <p
                             className="mt-2 text-sm text-red-500"

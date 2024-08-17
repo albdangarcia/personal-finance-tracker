@@ -56,3 +56,20 @@ export type SavingsGoalFormErrorState = {
     };
     message?: string | null;
 };
+
+// schema for contribution form
+export const ContributionSchema = z.object({
+    amount: z.coerce
+        .number()
+        .gt(0, { message: "Please enter an amount greater than $0." }),
+    date: z.coerce.date(),
+});
+
+// error state for contribution form
+export type ContributionFormErrorState = {
+    errors?: {
+        amount?: string[];
+        date?: string[];
+    };
+    message?: string | null;
+};

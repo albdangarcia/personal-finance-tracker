@@ -290,3 +290,64 @@ export async function fetchSavingsGoalById(id: string) {
         throw new Error("Failed to fetch savings goal.");
     }
 }
+
+export async function fetchContributionsBySavingsGoalId(id: string) {
+    noStore();
+    try {
+        const savingsGoal = await prisma.savingsGoal.findUnique({
+            where: {
+                id: id,
+            },
+            select: {
+                id: true,
+                name: true,
+                amount: true,
+                contributions: {
+                    select: {
+                        id: true,
+                        amount: true,
+                        date: true,
+                    },
+                    orderBy: {
+                        date: "desc",
+                    },
+                },
+                category: {
+                    select: {
+                        name: true,
+                    },
+                },
+            },
+        });
+        return savingsGoal;
+    } catch (error) {
+        console.error("Failed to fetch contributions:", error);
+        throw new Error("Failed to fetch contributions.");
+    }
+}
+
+export async function fetchContributionById(id: string) {
+    noStore();
+    try {
+        const contribution = await prisma.contribution.findUnique({
+            where: {
+                id: id,
+            },
+            select: {
+                id: true,
+                amount: true,
+                date: true,
+                savingsGoal: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+            },
+        });
+        return contribution;
+    } catch (error) {
+        console.error("Failed to fetch contribution:", error);
+        throw new Error("Failed to fetch contribution.");
+    }
+}

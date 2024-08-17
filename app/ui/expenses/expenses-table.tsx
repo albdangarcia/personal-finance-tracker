@@ -1,10 +1,15 @@
 "use client";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
 import { useState } from "react";
-import { Button, Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { deleteExpense } from "@/app/lib/actions/expense";
-import CreateButton from "../create-new-button";
+import { SectionWrapper, SectionHeader } from "../page-section-wrapper";
+import {
+    Table,
+    TableHeader,
+    TableContents,
+    TableRow,
+} from "../tables/simple-table";
+import EditDeleteButtons from "../edit-delete-buttons";
+import DialogComponent from "../delete-dialog";
 
 type ExpensesProps = {
     id: string;
@@ -38,7 +43,6 @@ const ExpensesTable = ({ expenses }: { expenses: ExpensesProps[] }) => {
         if (!expenseId) {
             return;
         }
-        console.log("Deleting Expense:", expenseName);
         try {
             await deleteExpense(expenseId);
             close();
@@ -49,63 +53,58 @@ const ExpensesTable = ({ expenses }: { expenses: ExpensesProps[] }) => {
     };
 
     return (
-        <div className="antialiased mt-6 bg-white border border-gray-200 rounded-md shadow-sm pb-4 pt-10 px-8">
-            <div className="flex justify-between">
-                <div>
-                    <h4 className="font-medium">Expenses</h4>
-                    <p className="mt-2.5 mb-5 text-sm text-gray-500">
-                        All the expenses you have added are listed here.
-                    </p>
-                </div>
-                <CreateButton hrefLink="/dashboard/expenses/create" />
-            </div>
+        <SectionWrapper>
+            <SectionHeader
+                title="Expenses"
+                subtitle="All the expenses you have added are listed here."
+                buttonLink="/dashboard/expenses/create"
+            />
 
-            {/* table headers */}
-            <div className="hidden border-b mt-1 gap-4 py-4 rounded-t-md text-sm font-medium sm:grid grid-cols-[minmax(150px,1fr)_repeat(3,minmax(10px,1fr))_minmax(80px,1fr)]">
-                <div className="text-nowrap">Name</div>
-                <div className="text-nowrap">Amount</div>
-                <div className="text-nowrap">Category</div>
-                <div className="text-nowrap">Date</div>
-                <div className="text-nowrap text-center sr-only">Edit</div>
-            </div>
+            <Table>
+                {/* table headers */}
+                <TableHeader columns="grid-cols-5">
+                    <div className="">Name</div>
+                    <div className="">Amount</div>
+                    <div className="">Category</div>
+                    <div className="">Date</div>
+                    <div className=" text-center sr-only">Edit</div>
+                </TableHeader>
 
-            {/* table contents */}
-            <div className="text-sm [&>div:not(:last-child)]:border-b">
-                {expenses.map((expense) => (
-                    <div
-                        key={expense.id}
-                        className="grid items-center grid-cols-[minmax(150px,1fr)_repeat(3,minmax(10px,1fr))_minmax(80px,1fr)] gap-y-0 gap-4 py-4 sm:py-2.5 text-gray-900 hover:bg-gray-100/50"
-                    >
-                        <div className="truncate text-gray-500">
-                            {expense.name}
-                        </div>
-                        <div className=" text-gray-800">
-                            ${expense.amount}
-                        </div>
-                        <div className="font-medium antialiased text-gray-900">
-                            {expense.category.name}
-                        </div>
-                        <div className=" text-gray-500">
-                            {expense.date.toLocaleDateString()}
-                        </div>
-                        <div className="flex justify-end sm:justify-center gap-x-5">
-                            <Link
-                                href={`/dashboard/expenses/${expense.id}`}
-                                className="items-center justify-center inline-flex"
-                            >
-                                <PencilSquareIcon className="h-5 w-5 text-gray-500 hover:text-gray-800" />
-                            </Link>
-                            <button
-                                onClick={() => open(expense.name, expense.id)}
-                                className="items-center justify-center inline-flex"
-                            >
-                                <TrashIcon className="h-5 w-5 text-gray-500 hover:text-gray-800" />
-                            </button>
-                        </div>
-                    </div>
-                ))}
-            </div>
-            <Dialog
+                {/* table contents */}
+                <TableContents>
+                    {expenses.map((expense) => (
+                        <TableRow columns="grid-cols-5" key={expense.id}>
+                            <div className="truncate text-gray-500">
+                                {expense.name}
+                            </div>
+                            <div className=" text-gray-800">
+                                ${expense.amount}
+                            </div>
+                            <div className="font-medium antialiased text-gray-900">
+                                {expense.category.name}
+                            </div>
+                            <div className=" text-gray-500">
+                                {expense.date.toLocaleDateString()}
+                            </div>
+                            <EditDeleteButtons
+                                editLink={`/dashboard/expenses/${expense.id}`}
+                                propName={expense.name}
+                                propId={expenseId}
+                                open={open}
+                            />
+                        </TableRow>
+                    ))}
+                </TableContents>
+            </Table>
+            {/* Dialog */}
+            <DialogComponent
+                isOpen={isOpen}
+                close={close}
+                title="Expense"
+                itemName={expenseName}
+                handleDelete={handleDeleteExpense}
+            />
+            {/* <Dialog
                 open={isOpen}
                 as="div"
                 className="relative z-10 focus:outline-none"
@@ -125,7 +124,10 @@ const ExpensesTable = ({ expenses }: { expenses: ExpensesProps[] }) => {
                             </DialogTitle>
                             <p className="mt-2 text-sm/6 text-gray-600">
                                 Are you sure you want to delete the Expense for{" "}
-                                <span className="text-black">{expenseName}</span>?
+                                <span className="text-black">
+                                    {expenseName}
+                                </span>
+                                ?
                             </p>
                             <div className="mt-4 flex gap-x-2 border-t pt-4">
                                 <Button
@@ -144,8 +146,8 @@ const ExpensesTable = ({ expenses }: { expenses: ExpensesProps[] }) => {
                         </DialogPanel>
                     </div>
                 </div>
-            </Dialog>
-        </div>
+            </Dialog> */}
+        </SectionWrapper>
     );
 };
 
