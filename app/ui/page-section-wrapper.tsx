@@ -4,7 +4,7 @@ import CreateButton from "./create-new-button";
 // Main component
 const SectionWrapper = ({ children }: { children: ReactNode }) => {
     return (
-        <div className="antialiased mt-6 bg-white border border-gray-200 rounded-md shadow-sm pb-4 pt-10 px-8">
+        <div className="antialiased bg-white border border-gray-200 rounded-md shadow-sm pb-4 pt-10 px-8">
             {children}
         </div>
     );

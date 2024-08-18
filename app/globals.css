@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    background-color: #f1f1f1;
-}
 @layer utilities {
     .text-balance {
         text-wrap: balance;
@@ -31,4 +28,30 @@ select {
 
 label {
     @apply block text-sm font-medium leading-6 text-gray-900;
+}
+
+@keyframes openAnimation {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes closeAnimation {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+.open-dialog {
+    animation: openAnimation 300ms ease-out forwards;
+}
+
+.close-dialog {
+    animation: closeAnimation 300ms ease-out forwards;
 }

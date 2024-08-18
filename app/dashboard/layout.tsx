@@ -1,31 +1,26 @@
-import Link from "next/link";
 import { ReactNode } from "react";
+import LeftSidebar from "../ui/dashboard/nav/left-sidebar";
+import TopNavBar from "../ui/dashboard/nav/top-nav-bar";
 
 // Typing children
 type Props = { children: ReactNode };
 
-const navItems = [
-    { href: "/", label: "Home" },
-    { href: "/dashboard", label: "Dashboard" },
-    { href: "/dashboard/budgets", label: "Budgets" },
-    { href: "/dashboard/expenses", label: "Expenses" },
-    { href: "/dashboard/savings-goals", label: "Saving Goals" },
-];
-
 const DashboardLayout = ({ children }: Props) => {
     return (
-        <>
-            <nav>
-                <ul className="flex gap-x-5 font-medium">
-                    {navItems.map((item) => (
-                        <li key={item.href}>
-                            <Link href={item.href}>{item.label}</Link>
-                        </li>
-                    ))}
-                </ul>
-            </nav>
-            {children}
-        </>
+        <div className="bg-[#F8F9FB] min-h-screen">
+            {/* left side bar */}
+            <div className="hidden border-r z-50 flex-col bg-white w-72 lg:z-50 lg:inset-y-0 lg:fixed lg:flex">
+                <LeftSidebar />
+            </div>
+
+            {/* top nav bar */}
+            <TopNavBar />
+
+            {/* right content */}
+            <main className="py-10 lg:pl-72">
+                <div className="lg:px-8 sm:px-6">{children}</div>
+            </main>
+        </div>
     );
 };
 
