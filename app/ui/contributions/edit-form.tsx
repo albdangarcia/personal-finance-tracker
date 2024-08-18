@@ -67,7 +67,7 @@ const EditContributionForm = ({ contribution }: EditFormProps) => {
                     </div>
                 </div>
                 {/* Date input */}
-                <div className="date-input-container">
+                <div>
                     <label htmlFor="date">Date</label>
                     <input
                         type="date"

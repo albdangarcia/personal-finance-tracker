@@ -12,7 +12,7 @@ import LeftSidebar from "./left-sidebar";
 const TopNavBar = () => {
     let [isOpen, setIsOpen] = useState(false);
     return (
-        <div className="py-4 bg-white gap-x-6 items-center flex z-40 top-0 sticky pr-6 sm:pl-6 shadow-sm lg:hidden">
+        <div className="py-4 bg-white gap-x-6 items-center flex z-40 top-0 sticky px-3 sm:pl-6 shadow-sm lg:hidden">
             {/* stack button */}
             <button className="p-2.5 -m-2.5" onClick={() => setIsOpen(true)}>
                 <span className="sr-only">Open sidebar</span>

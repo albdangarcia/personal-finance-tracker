@@ -6,14 +6,13 @@ import Link from "next/link";
 type BreadcrumbsType = {
     label: string;
     href: string;
-    active?: boolean;
 };
 
 const Breadcrumbs = ({ breadcrumbs }: { breadcrumbs: BreadcrumbsType[] }) => {
     return (
         <nav aria-label="Breadcrumb" className="mb-6 block">
             <ol className="flex text-xs font-medium gap-x-1">
-                <li className="flex text-gray-400 gap-x-1">
+                <li className="flex text-gray-400 gap-x-1 items-center">
                     <Link href="/dashboard">
                         <HomeIcon className="w-4 h-4" />
                     </Link>
@@ -22,12 +21,11 @@ const Breadcrumbs = ({ breadcrumbs }: { breadcrumbs: BreadcrumbsType[] }) => {
                 {breadcrumbs.map((breadcrumb, index) => (
                     <li
                         key={breadcrumb.href}
-                        aria-current={breadcrumb.active}
+                        aria-current={
+                            index === breadcrumbs.length - 1 ? true : undefined
+                        }
                         className={clsx(
-                            "flex gap-x-1",
-                            breadcrumb.active
-                                ? "text-gray-700"
-                                : "text-gray-400"
+                            "flex gap-x-1 text-gray-400 last:text-gray-700"
                         )}
                     >
                         <Link href={breadcrumb.href}>{breadcrumb.label}</Link>

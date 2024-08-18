@@ -2,6 +2,22 @@ import { fetchCategories, fetchSavingsGoalById } from "@/app/lib/data";
 import FormWrapper from "@/app/ui/form-wrapper";
 import { notFound } from "next/navigation";
 import EditSavingsGoalForm from "@/app/ui/savings-goals/edit-form";
+import Breadcrumbs from "@/app/ui/breadcrumbs";
+
+const breadcrumbs = (id: string) => [
+    {
+        label: "Dashboard",
+        href: "/dashboard",
+    },
+    {
+        label: "Savings Goals",
+        href: "/dashboard/savings-goals",
+    },
+    {
+        label: "Edit",
+        href: `/dashboard/savings-goals/${id}`,
+    },
+];
 
 const Page = async ({ params }: { params: { id: string } }) => {
     // get id from params
@@ -16,9 +32,18 @@ const Page = async ({ params }: { params: { id: string } }) => {
     }
 
     return (
-        <FormWrapper title="Savings Goal" description="Modify the information for your Savings Goal.">
-            <EditSavingsGoalForm savingsGoal={savingsGoal} categories={categories} />
-        </FormWrapper>
+        <div>
+            <Breadcrumbs breadcrumbs={breadcrumbs(id)} />
+            <FormWrapper
+                title="Savings Goal"
+                description="Modify the information for your Savings Goal."
+            >
+                <EditSavingsGoalForm
+                    savingsGoal={savingsGoal}
+                    categories={categories}
+                />
+            </FormWrapper>
+        </div>
     );
 };
 

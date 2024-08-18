@@ -2,6 +2,22 @@ import { fetchCategories, fetchExpenseById } from "@/app/lib/data";
 import FormWrapper from "@/app/ui/form-wrapper";
 import { notFound } from "next/navigation";
 import EditExpenseForm from "@/app/ui/expenses/edit-form";
+import Breadcrumbs from "@/app/ui/breadcrumbs";
+
+const breadcrumbs = (id: string) => [
+    {
+        label: "Dashboard",
+        href: "/dashboard",
+    },
+    {
+        label: "Expenses",
+        href: "/dashboard/expenses",
+    },
+    {
+        label: "Edit",
+        href: `/dashboard/expenses/${id}`,
+    },
+];
 
 const Page = async ({ params }: { params: { id: string } }) => {
     // get id from params
@@ -16,9 +32,12 @@ const Page = async ({ params }: { params: { id: string } }) => {
     }
 
     return (
-        <FormWrapper title="Expense" description="Modify the information for your expense.">
-            <EditExpenseForm expense={expense} categories={categories} />
-        </FormWrapper>
+        <div>
+            <Breadcrumbs breadcrumbs={breadcrumbs(id)} />
+            <FormWrapper title="Expense" description="Modify the information for your expense.">
+                <EditExpenseForm expense={expense} categories={categories} />
+            </FormWrapper>
+        </div>
     );
 };
 

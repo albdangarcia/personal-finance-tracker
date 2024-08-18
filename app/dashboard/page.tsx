@@ -1,7 +1,17 @@
-import Link from "next/link";
+import Breadcrumbs from "../ui/breadcrumbs";
+
+const breadcrumbs = [
+    {
+        label: "Dashboard",
+        href: "/dashboard",
+    },
+];
 
 export default function Page() {
     return (
-        <div>Dashboard content</div>
+        <div>
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
+            Dashboard content
+        </div>
     )
 }

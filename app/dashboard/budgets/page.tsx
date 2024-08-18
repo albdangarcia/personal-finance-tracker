@@ -2,6 +2,18 @@ import BudgetChart from "@/app/ui/budgets/budget-chart";
 import { fetchUsedCategoryWithBudget } from "@/app/lib/data";
 import BudgetCards from "@/app/ui/budgets/budget-cards";
 import { SectionHeader, SectionWrapper } from "@/app/ui/page-section-wrapper";
+import Breadcrumbs from "@/app/ui/breadcrumbs";
+
+const breadcrumbs = [
+    {
+        label: "Dashboard",
+        href: "/dashboard",
+    },
+    {
+        label: "Budgets",
+        href: "/dashboard/budgets",
+    },
+];
 
 const Page = async () => {
     // get all the budgets by category
@@ -9,6 +21,8 @@ const Page = async () => {
 
     return (
         <div>
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
+
             {/* Budget Chart */}
             <BudgetChart budgetData={budgetData} />
 
