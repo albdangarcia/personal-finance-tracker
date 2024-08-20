@@ -1,5 +1,5 @@
 "use client";
-import { getRandomColor } from "@/app/lib/utils";
+import { getRandomColor } from "@/app/lib/utils/utils";
 import { Pie } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip } from "chart.js";
 Chart.register(ArcElement, Tooltip);
@@ -26,7 +26,7 @@ const ExpenseChart = ({ expenseData }: { expenseData: ExpenseDataType[] }) => {
         ),
         datasets: [
             {
-                label: "Expenses",
+                label: "Expense",
                 data: expenseData.map((expense) => expense._sum.amount ?? 0),
                 backgroundColor: backgroundColors,
                 hoverOffset: 4,

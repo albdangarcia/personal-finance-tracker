@@ -1,5 +1,5 @@
 "use client";
-import { getRandomColor } from "@/app/lib/utils";
+import { getRandomColor } from "@/app/lib/utils/utils";
 import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip } from "chart.js";
 Chart.register(ArcElement, Tooltip);

@@ -1,8 +1,13 @@
 import BudgetChart from "@/app/ui/budgets/budget-chart";
 import { fetchUsedCategoryWithBudget } from "@/app/lib/data";
 import BudgetCards from "@/app/ui/budgets/budget-cards";
-import { SectionHeader, SectionWrapper } from "@/app/ui/page-section-wrapper";
+import {
+    MainWrapper,
+    SectionHeader,
+    SectionWrapper,
+} from "@/app/ui/page-section-wrapper";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
+import BudgetMonthChart from "@/app/ui/budgets/budgets-month-chart";
 
 const breadcrumbs = [
     {
@@ -23,18 +28,35 @@ const Page = async () => {
         <div>
             <Breadcrumbs breadcrumbs={breadcrumbs} />
 
-            {/* Budget Chart */}
-            <BudgetChart budgetData={budgetData} />
+            <MainWrapper>
+                <SectionWrapper>
+                    <SectionHeader
+                        title="Doughnut Chart"
+                        subtitle="All the expenses by category."
+                    />
+                    <BudgetChart budgetData={budgetData} />
+                </SectionWrapper>
 
-            <SectionWrapper>
-                <SectionHeader
-                    title="Budgets"
-                    subtitle="All the budgets you have added are listed here."
-                    buttonLink="/dashboard/budgets/create"
-                />
-                {/* Budget Cards */}
-                <BudgetCards budgetData={budgetData} />
-            </SectionWrapper>
+                <SectionWrapper>
+                    <SectionHeader
+                        title="Months"
+                        subtitle="All the budgets by month."
+                    />
+                    <BudgetMonthChart budgetData={budgetData} />
+                </SectionWrapper>
+
+                <div className="sm:col-span-2">
+                    <SectionWrapper>
+                        <SectionHeader
+                            title="Budgets"
+                            subtitle="All the budgets you have added are listed here."
+                            buttonLink="/dashboard/budgets/create"
+                        />
+                        {/* Budget Cards */}
+                        <BudgetCards budgetData={budgetData} />
+                    </SectionWrapper>
+                </div>
+            </MainWrapper>
         </div>
     );
 };

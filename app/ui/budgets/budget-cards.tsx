@@ -81,24 +81,12 @@ const BudgetCards = ({ budgetData }: { budgetData: BudgetsProps[] }) => {
                                 </button>
                             </div>
                         </div>
-                        <h4>
-                            <span
-                                className={clsx(
-                                    "text-sm font-medium",
-                                    isThereBudgetLeft
-                                        ? "text-green-800"
-                                        : "text-red-500"
-                                )}
-                            >
-                                ${Math.abs(budgetLeft)}{" "}
-                                {isThereBudgetLeft ? "left" : "over"}
-                            </span>
-                        </h4>
                         {/* Budget bar */}
                         <BudgetBar
                             amount={budgetAmount}
                             totalExpenses={category.totalExpenses}
                             isThereBudgetLeft={isThereBudgetLeft}
+                            budgetLeft={budgetLeft}
                         />
                     </div>
                 );

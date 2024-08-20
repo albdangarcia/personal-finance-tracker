@@ -1,10 +1,17 @@
 import { ReactNode } from "react";
 import CreateButton from "./create-new-button";
 
-// Main component
+// Main Wrapper
+const MainWrapper = ({ children }: { children: ReactNode }) => {
+    return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">{children}</div>
+    );
+};
+
+// Sub-component: Wrapper
 const SectionWrapper = ({ children }: { children: ReactNode }) => {
     return (
-        <div className="antialiased bg-white border border-gray-200 rounded-md shadow-sm pb-4 pt-10 px-8">
+        <div className="antialiased bg-white border border-gray-200 rounded-md shadow-sm py-10 px-8">
             {children}
         </div>
     );
@@ -23,11 +30,9 @@ const SectionHeader = ({ title, subtitle, buttonLink }: SectionHeaderProps) => {
                 <h4 className="font-medium">{title}</h4>
                 <p className="mt-2 mb-5 text-sm text-gray-500">{subtitle}</p>
             </div>
-            {buttonLink && (
-                <CreateButton hrefLink={buttonLink} />
-            )}
+            {buttonLink && <CreateButton hrefLink={buttonLink} />}
         </div>
     );
 };
 
-export { SectionWrapper, SectionHeader };
+export { SectionWrapper, SectionHeader, MainWrapper };
