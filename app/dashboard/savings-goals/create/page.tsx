@@ -1,4 +1,4 @@
-import { fetchCategories } from "@/app/lib/data";
+import { fetchCategories } from "@/app/lib/data/categories";
 import CreateSavingsGoalForm from "@/app/ui/savings-goals/create-form";
 import FormWrapper from "@/app/ui/form-wrapper";
 import Breadcrumbs from "@/app/ui/breadcrumbs";

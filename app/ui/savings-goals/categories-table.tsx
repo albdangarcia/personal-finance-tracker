@@ -6,26 +6,27 @@ import clsx from "clsx";
 import DialogComponent from "../delete-dialog";
 import EditDeleteButtons from "../edit-delete-buttons";
 import { SectionHeader, SectionWrapper } from "../page-section-wrapper";
+import SearchBar from "../search-bar";
+import Pagination from "../pagination";
 
 type Props = {
-    savingsGoals: {
-        totalContributions: number;
+    categoriesWithGoals: {
+        savingsGoals: {
+            totalContributions: number;
+            id: string;
+            name: string;
+            amount: number;
+            contributions: {
+                amount: number;
+            }[];
+        }[];
         id: string;
         name: string;
-        amount: number;
-        contributions: {
-            amount: number;
-        }[];
     }[];
-    id: string;
-    name: string;
+    totalPages: number;
 };
 
-const CategoriesTable = ({
-    categoriesWithGoals,
-}: {
-    categoriesWithGoals: Props[];
-}) => {
+const CategoriesTable = ({ categoriesWithGoals, totalPages }: Props) => {
     // State to manage the dialog open/close
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [savingsGoalName, setSavingsGoalName] = useState<string>("");
@@ -63,8 +64,13 @@ const CategoriesTable = ({
                 buttonLink="/dashboard/savings-goals/create"
             />
 
+            {/* Search bar */}
+            <div className="w-80 mt-1 mb-5">
+                <SearchBar placeholder="Seach name" />
+            </div>
+
             {/* table headers */}
-            <div className="pl-3 border-b mt-1 gap-4 py-4 rounded-t-md text-sm font-medium grid grid-cols-[minmax(10px,2fr)_repeat(5,minmax(10px,1fr))]">
+            <div className="pl-3 border-b mt-1 gap-4 items-center py-4 rounded-t-md text-sm font-medium grid grid-cols-[minmax(10px,2fr)_repeat(5,minmax(10px,1fr))]">
                 <div className="">Name</div>
                 <div className="">Target Amount</div>
                 <div className="">Total Contributions</div>
@@ -108,18 +114,23 @@ const CategoriesTable = ({
                                     ${goal.totalContributions}
                                 </p>
                                 <p className="text-gray-500">
-                                    {Math.min((goal.totalContributions / goal.amount) *
-                                        100, 100)}
+                                    {Math.min(
+                                        (goal.totalContributions /
+                                            goal.amount) *
+                                            100,
+                                        100
+                                    )}
                                     %
                                 </p>
                                 <div>
-                                    {goal.contributions.length > 0 && <Link
-                                        href={`/dashboard/savings-goals/${goal.id}/contributions`}
-                                        className="text-indigo-600 font-medium"
-                                    >
-                                        View Details
-                                    </Link>
-                                    }
+                                    {goal.contributions.length > 0 && (
+                                        <Link
+                                            href={`/dashboard/savings-goals/${goal.id}/contributions`}
+                                            className="text-indigo-600 font-medium"
+                                        >
+                                            View Details
+                                        </Link>
+                                    )}
                                 </div>
                                 <EditDeleteButtons
                                     editLink={`/dashboard/savings-goals/${goal.id}`}
@@ -132,6 +143,13 @@ const CategoriesTable = ({
                     </div>
                 ))}
             </div>
+
+            {/* Pagination buttons */}
+            <div className="mt-5 flex w-full justify-center">
+                <Pagination totalPages={totalPages} />
+            </div>
+
+            {/* Dialog */}
             <DialogComponent
                 isOpen={isOpen}
                 close={close}

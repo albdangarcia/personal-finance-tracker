@@ -1,4 +1,4 @@
-import { fetchAvailableCategories, fetchBudgetById } from "@/app/lib/data";
+import { fetchAvailableBudgetCategories, fetchBudgetById } from "@/app/lib/data/budget";
 import EditBudgetForm from "@/app/ui/budgets/edit-form";
 import { notFound } from "next/navigation";
 import FormWrapper from "@/app/ui/form-wrapper";
@@ -24,7 +24,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
     // get id from params
     const id = params.id;
     // get all available categories
-    const categories = await fetchAvailableCategories();
+    const categories = await fetchAvailableBudgetCategories();
     // get budget by id
     const budget = await fetchBudgetById(id);
     // if budget is not found, return nextjs default not found page

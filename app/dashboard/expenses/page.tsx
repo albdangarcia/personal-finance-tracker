@@ -1,9 +1,14 @@
 import ExpenseChart from "@/app/ui/expenses/expense-chart";
-import { fetchExpenses, fetchExpensesByCategory } from "@/app/lib/data";
+import { fetchExpensesByCategory, fetchFilteredExpenses } from "@/app/lib/data/expense";
 import ExpensesTable from "@/app/ui/expenses/expenses-table";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import { MainWrapper, SectionHeader, SectionWrapper } from "@/app/ui/page-section-wrapper";
+import {
+    MainWrapper,
+    SectionHeader,
+    SectionWrapper,
+} from "@/app/ui/page-section-wrapper";
 import ExpenseBudgetChart from "@/app/ui/expenses/expense-budget-chart";
+import { fetchExpensePages } from "@/app/lib/data/expense";
 
 const breadcrumbs = [
     {
@@ -16,10 +21,23 @@ const breadcrumbs = [
     },
 ];
 
-const Page = async () => {
-    // get all the expenses
-    const expenses = await fetchExpenses();
+type PageProps = {
+    searchParams?: {
+        query?: string;
+        page?: string;
+    }
+};
+
+const Page = async ({ searchParams }: PageProps) => {
+    // Data for the charts
     const expensesByCategory = await fetchExpensesByCategory();
+
+    const query = searchParams?.query || "";
+    const currentPage = Number(searchParams?.page) || 1;
+    const totalPages = await fetchExpensePages(query);
+    
+    // Fetch the expenses for the table
+    const expenses = await fetchFilteredExpenses(query, currentPage);
 
     return (
         <div>
@@ -43,7 +61,7 @@ const Page = async () => {
                 </SectionWrapper>
 
                 <div className="sm:col-span-2">
-                    <ExpensesTable expenses={expenses} />
+                    <ExpensesTable expenses={expenses} totalPages={totalPages} />
                 </div>
             </MainWrapper>
         </div>

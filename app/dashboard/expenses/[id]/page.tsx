@@ -1,4 +1,5 @@
-import { fetchCategories, fetchExpenseById } from "@/app/lib/data";
+import { fetchExpenseById } from "@/app/lib/data/expense";
+import { fetchCategories } from "@/app/lib/data/categories";
 import FormWrapper from "@/app/ui/form-wrapper";
 import { notFound } from "next/navigation";
 import EditExpenseForm from "@/app/ui/expenses/edit-form";

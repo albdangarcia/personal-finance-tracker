@@ -1,4 +1,4 @@
-import { fetchContributionsBySavingsGoalId } from "@/app/lib/data";
+import { fetchContributionsBySavingsGoalId } from "@/app/lib/data/contribution";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import ContributionsTable from "@/app/ui/contributions/contributions-table";
 import { notFound } from "next/navigation";

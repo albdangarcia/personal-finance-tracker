@@ -1,4 +1,4 @@
-import { fetchAvailableCategories } from "@/app/lib/data";
+import { fetchAvailableBudgetCategories } from "@/app/lib/data/budget";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import CreateBudgetForm from "@/app/ui/budgets/create-form";
 import FormWrapper from "@/app/ui/form-wrapper";
@@ -21,7 +21,7 @@ const breadcrumbs = [
 // Page for creating a budget
 const Page = async () => {
     // Fetch categories from the database
-    const categories = await fetchAvailableCategories();
+    const categories = await fetchAvailableBudgetCategories();
 
     return (
         <div>

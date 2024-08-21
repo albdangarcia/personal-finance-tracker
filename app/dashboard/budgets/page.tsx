@@ -1,5 +1,5 @@
 import BudgetChart from "@/app/ui/budgets/budget-chart";
-import { fetchUsedCategoryWithBudget } from "@/app/lib/data";
+import { fetchUsedCategoryWithBudget } from "@/app/lib/data/budget";
 import BudgetCards from "@/app/ui/budgets/budget-cards";
 import {
     MainWrapper,
@@ -8,6 +8,7 @@ import {
 } from "@/app/ui/page-section-wrapper";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import BudgetMonthChart from "@/app/ui/budgets/budgets-month-chart";
+import SearchBar from "@/app/ui/search-bar";
 
 const breadcrumbs = [
     {
@@ -20,9 +21,19 @@ const breadcrumbs = [
     },
 ];
 
-const Page = async () => {
-    // get all the budgets by category
-    const budgetData = await fetchUsedCategoryWithBudget();
+type PageProps = {
+    searchParams?: {
+        query?: string;
+        page?: string;
+    }
+};
+
+const Page = async ({ searchParams }: PageProps) => {
+    // Get the query from the search params
+    const query = searchParams?.query || "";
+
+    // Fetch the budget data
+    const budgetData = await fetchUsedCategoryWithBudget(query);
 
     return (
         <div>
@@ -52,6 +63,10 @@ const Page = async () => {
                             subtitle="All the budgets you have added are listed here."
                             buttonLink="/dashboard/budgets/create"
                         />
+                        {/* Search bar */}
+                        <div className="w-80 mt-1 mb-9">
+                            <SearchBar placeholder="Seach category" />
+                        </div>
                         {/* Budget Cards */}
                         <BudgetCards budgetData={budgetData} />
                     </SectionWrapper>

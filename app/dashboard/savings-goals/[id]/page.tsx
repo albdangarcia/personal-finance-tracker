@@ -1,4 +1,5 @@
-import { fetchCategories, fetchSavingsGoalById } from "@/app/lib/data";
+import { fetchSavingsGoalById } from "@/app/lib/data/savings-goal";
+import { fetchCategories } from "@/app/lib/data/categories";
 import FormWrapper from "@/app/ui/form-wrapper";
 import { notFound } from "next/navigation";
 import EditSavingsGoalForm from "@/app/ui/savings-goals/edit-form";

@@ -8,6 +8,9 @@ import {
     ChartPieIcon,
     ChartBarIcon,
     PlusCircleIcon,
+    InformationCircleIcon,
+    QuestionMarkCircleIcon,
+    ChatBubbleLeftEllipsisIcon
 } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
@@ -19,9 +22,9 @@ const quickActionItems = [
 ];
 
 const helpItems = [
-    { href: "#", label: "Help Center" },
-    { href: "#", label: "Contact Support" },
-    { href: "#", label: "Send Feedback" },
+    { href: "#", label: "Help Center", icon: QuestionMarkCircleIcon },
+    { href: "#", label: "Contact Support", icon: InformationCircleIcon },
+    { href: "#", label: "Send Feedback", icon: ChatBubbleLeftEllipsisIcon },
 ];
 
 const navItems = [
@@ -102,17 +105,19 @@ const NavLinks = () => {
                         Help
                     </div>
                     <ul className="-mx-2">
-                        {helpItems.map((item) => (
+                        {helpItems.map((item) => {
+                            const IconName = item.icon;
+                            return (
                             <li key={item.label} className="group text-slate-700 rounded-md hover:text-black">
                                 <Link
                                     href={item.href}
                                     className="flex items-center gap-2 text-xs/6 font-medium px-2 py-0.5 rounded-md"
                                 >
-                                    <PlusCircleIcon className="w-4 h-4 text-gray-400/85 group-hover:text-slate-600" />
+                                    <IconName className="w-4 h-4 text-gray-400/85 group-hover:text-slate-600" />
                                     {item.label}
                                 </Link>
                             </li>
-                        ))}
+                        )})}
                     </ul>
                 </li>
 

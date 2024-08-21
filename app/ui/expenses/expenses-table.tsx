@@ -10,19 +10,24 @@ import {
 } from "../tables/simple-table";
 import EditDeleteButtons from "../edit-delete-buttons";
 import DialogComponent from "../delete-dialog";
+import Pagination from "../pagination";
+import SearchBar from "../search-bar";
 
 type ExpensesProps = {
-    id: string;
-    name: string;
-    amount: number;
-    category: {
+    totalPages: number;
+    expenses: {
         id: string;
         name: string;
-    };
-    date: Date;
+        amount: number;
+        category: {
+            id: string;
+            name: string;
+        };
+        date: Date;
+    }[];
 };
 
-const ExpensesTable = ({ expenses }: { expenses: ExpensesProps[] }) => {
+const ExpensesTable = ({ expenses, totalPages }: ExpensesProps) => {
     // State to manage the dialog open/close
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [expenseName, setExpenseName] = useState<string>("");
@@ -59,6 +64,11 @@ const ExpensesTable = ({ expenses }: { expenses: ExpensesProps[] }) => {
                 subtitle="All the expenses you have added are listed here."
                 buttonLink="/dashboard/expenses/create"
             />
+            
+            {/* Search bar */}
+            <div className="w-80 mt-3 mb-5">
+                <SearchBar placeholder="Seach name" />
+            </div>
 
             <Table>
                 {/* table headers */}
@@ -96,6 +106,12 @@ const ExpensesTable = ({ expenses }: { expenses: ExpensesProps[] }) => {
                     ))}
                 </TableContents>
             </Table>
+
+            {/* Pagination buttons */}
+            <div className="mt-5 flex w-full justify-center">
+                <Pagination totalPages={totalPages} />
+            </div>
+
             {/* Dialog */}
             <DialogComponent
                 isOpen={isOpen}
@@ -104,49 +120,6 @@ const ExpensesTable = ({ expenses }: { expenses: ExpensesProps[] }) => {
                 itemName={expenseName}
                 handleDelete={handleDeleteExpense}
             />
-            {/* <Dialog
-                open={isOpen}
-                as="div"
-                className="relative z-10 focus:outline-none"
-                onClose={close}
-            >
-                <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-gradient-to-b from-black/10 to-black/50">
-                    <div className="flex min-h-full items-center justify-center p-4">
-                        <DialogPanel
-                            transition
-                            className="text-gray-900 w-full max-w-md rounded-xl bg-white p-6 duration-300 ease-out transform data-[closed]:scale-95 data-[closed]:opacity-0"
-                        >
-                            <DialogTitle
-                                as="h3"
-                                className="text-base/7 font-medium"
-                            >
-                                Delete Expense
-                            </DialogTitle>
-                            <p className="mt-2 text-sm/6 text-gray-600">
-                                Are you sure you want to delete the Expense for{" "}
-                                <span className="text-black">
-                                    {expenseName}
-                                </span>
-                                ?
-                            </p>
-                            <div className="mt-4 flex gap-x-2 border-t pt-4">
-                                <Button
-                                    className="inline-flex items-center gap-2 rounded-md bg-black py-1.5 px-3 text-sm/6 font-semibold text-white shadow-white/10 focus:outline-none data-[hover]:bg-gray-800 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
-                                    onClick={close}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    className="inline-flex items-center gap-2 rounded-md bg-red-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-red-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
-                                    onClick={handleDeleteExpense}
-                                >
-                                    Delete
-                                </Button>
-                            </div>
-                        </DialogPanel>
-                    </div>
-                </div>
-            </Dialog> */}
         </SectionWrapper>
     );
 };

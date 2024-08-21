@@ -1,4 +1,4 @@
-import { fetchContributionById } from "@/app/lib/data";
+import { fetchContributionById } from "@/app/lib/data/contribution";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import EditContributionForm from "@/app/ui/contributions/edit-form";
 import FormWrapper from "@/app/ui/form-wrapper";

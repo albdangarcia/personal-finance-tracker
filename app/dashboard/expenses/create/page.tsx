@@ -1,4 +1,4 @@
-import { fetchCategories } from "@/app/lib/data";
+import { fetchCategories } from "@/app/lib/data/categories";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import CreateExpenseForm from "@/app/ui/expenses/create-form";
 import FormWrapper from "@/app/ui/form-wrapper";
