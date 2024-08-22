@@ -1,8 +1,9 @@
-import { fetchAvailableBudgetCategories, fetchBudgetById } from "@/app/lib/data/budget";
+import { fetchBudgetById } from "@/app/lib/data/budget";
 import EditBudgetForm from "@/app/ui/budgets/edit-form";
 import { notFound } from "next/navigation";
 import FormWrapper from "@/app/ui/form-wrapper";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
+import { fetchCategories } from "@/app/lib/data/categories";
 
 const breadcrumbs = (id: string) => [
     {
@@ -23,10 +24,13 @@ const breadcrumbs = (id: string) => [
 const Page = async ({ params }: { params: { id: string } }) => {
     // get id from params
     const id = params.id;
+
     // get all available categories
-    const categories = await fetchAvailableBudgetCategories();
+    const categories = await fetchCategories();
+    
     // get budget by id
     const budget = await fetchBudgetById(id);
+    
     // if budget is not found, return nextjs default not found page
     if (!budget) {
         return notFound();

@@ -12,6 +12,7 @@ export async function createBudget(
     const validatedFields = BudgetSchema.safeParse({
         categoryId: formData.get("categoryId"),
         amount: formData.get("amount"),
+        yearMonth: formData.get("yearMonth"),
     });
 
     // If form validation fails, return errors early. Otherwise, continue.
@@ -23,7 +24,41 @@ export async function createBudget(
     }
 
     // Extract validated fields
-    const { categoryId, amount } = validatedFields.data;
+    const { categoryId, amount, yearMonth } = validatedFields.data;
+
+    // Check if the category exists
+    const categoryExists = await prisma.category.findUnique({
+        where: {
+            id: categoryId,
+        },
+    });
+
+    if (!categoryExists) {
+        return {
+            errors: {
+                categoryId: ["Select a valid category."],
+            },
+            message: "The selected category does not exist.",
+        };
+    }
+
+    // Check if there is another budget with the same category on same month/year
+    const existingBudget = await prisma.budget.findFirst({
+        where: {
+            categoryId: categoryId,
+            yearMonth: yearMonth,
+        },
+    });
+
+    if (existingBudget) {
+        return {
+            errors: {
+                categoryId: ["Select a different category."],
+            },
+            message:
+                "A budget with the same category and month/year already exists.",
+        };
+    }
 
     // Create the budget
     try {
@@ -31,6 +66,7 @@ export async function createBudget(
             data: {
                 categoryId: categoryId,
                 amount: amount,
+                yearMonth: yearMonth,
                 userId: "clziqqbgy000108l7dmts0vng",
             },
         });
@@ -47,16 +83,15 @@ export async function createBudget(
 }
 
 export async function updateBudget(
-    id: string,
+    budgetId: string,
     prevState: BudgetFormErrorState,
     formData: FormData
 ) {
-    console.log(formData.get("category"));
-
     // Validate form fields using Zod
     const validatedFields = BudgetSchema.safeParse({
         categoryId: formData.get("categoryId"),
         amount: formData.get("amount"),
+        yearMonth: formData.get("yearMonth"),
     });
 
     // If form validation fails, return errors early. Otherwise, continue.
@@ -68,29 +103,56 @@ export async function updateBudget(
     }
 
     // Extract validated fields
-    const { categoryId, amount } = validatedFields.data;
+    const { categoryId, amount, yearMonth } = validatedFields.data;
 
     // Check if the category exists
-    if (categoryId) {
-        const categoryExists = await prisma.category.findUnique({
-            where: {
-                id: categoryId,
+    const categoryExists = await prisma.category.findUnique({
+        where: {
+            id: categoryId,
+        },
+    });
+
+    if (!categoryExists) {
+        return {
+            errors: {
+                categoryId: ["Select a valid category."],
             },
-        });
-        if (!categoryExists) {
-            throw new Error("Category ID does not exist");
-        }
+            message: "The selected category does not exist.",
+        };
+    }
+
+    // Check if there is another budget with the same category on same month/year
+    const existingBudget = await prisma.budget.findFirst({
+        where: {
+            categoryId: categoryId,
+            yearMonth: yearMonth,
+            // Excludes the budget with the specified id from the results.
+            NOT: {
+                id: budgetId,
+            },
+        },
+    });
+
+    if (existingBudget) {
+        return {
+            errors: {
+                categoryId: ["Select a different category."],
+            },
+            message:
+                "A budget with the same category and month/year already exists.",
+        };
     }
 
     // Update the budget
     try {
         await prisma.budget.update({
             where: {
-                id: id,
+                id: budgetId,
             },
             data: {
                 categoryId: categoryId,
                 amount: amount,
+                yearMonth: yearMonth,
             },
         });
     } catch (error) {
@@ -99,8 +161,10 @@ export async function updateBudget(
             message: "Database Error: Failed to Edit Budget.",
         };
     }
+    
     // Revalidate the cache
     revalidatePath("/dashboard/budgets");
+
     // Redirect the user
     redirect("/dashboard/budgets");
 }

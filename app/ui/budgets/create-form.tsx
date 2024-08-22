@@ -4,6 +4,7 @@ import { createBudget } from "@/app/lib/actions/budget";
 import { BudgetFormErrorState } from "@/app/lib/zod-schemas";
 import { CategoryProps } from "@/app/lib/types";
 import FormButtons from "../form-buttons";
+import getCurrentYearMonth from "@/app/lib/utils/currentMonthYear";
 
 const CreateBudgetForm = ({ categories }: { categories: CategoryProps[] }) => {
     // Error state for the form
@@ -16,8 +17,8 @@ const CreateBudgetForm = ({ categories }: { categories: CategoryProps[] }) => {
     return (
         <div>
             <form action={dispatch} className="grid gap-y-4">
+                {/* Display the categories */}
                 <div>
-                    {/* Display the available categories */}
                     <label htmlFor="categoryId">Category</label>
                     <select
                         name="categoryId"
@@ -90,6 +91,35 @@ const CreateBudgetForm = ({ categories }: { categories: CategoryProps[] }) => {
                             ))}
                     </div>
                 </div>
+                <div>
+                    <label htmlFor="yearMonth">Month Year</label>
+                    <input
+                        type="month"
+                        name="yearMonth"
+                        id="yearMonth"
+                        autoComplete="off"
+                        aria-describedby="yearMonth-error"
+                        required
+                        defaultValue={getCurrentYearMonth()}
+                    />
+                    {/* Month Year errors */}
+                    <div
+                        id="yearMonth-error"
+                        aria-live="polite"
+                        aria-atomic="true"
+                    >
+                        {state.errors?.yearMonth &&
+                            state.errors.yearMonth.map((error: string) => (
+                                <p
+                                    className="mt-2 text-sm text-red-500"
+                                    key={error}
+                                >
+                                    {error}
+                                </p>
+                            ))}
+                    </div>
+                </div>
+
                 {/* General errors */}
                 <div id="budget-error" aria-live="polite" aria-atomic="true">
                     {state.message && (

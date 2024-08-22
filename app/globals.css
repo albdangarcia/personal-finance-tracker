@@ -15,7 +15,7 @@
 [type="number"],
 [type="date"],
 [type="datetime-local"],
-[type="month"],
+form [type="month"],
 [type="search"],
 [type="tel"],
 [type="time"],

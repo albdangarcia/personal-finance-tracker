@@ -15,8 +15,10 @@ export async function deleteExpense(expenseId: string) {
         console.error("Failed to delete expense:", error);
         throw new Error("Failed to delete expense");
     }
+    
     // Revalidate the cache
     revalidatePath("/dashboard/expenses");
+
     // Redirect the user
     redirect("/dashboard/expenses");
 }
@@ -61,8 +63,10 @@ export async function createExpense(
             message: "Database Error: Failed to Create Expense.",
         };
     }
+
     // Revalidate the cache
     revalidatePath("/dashboard/expenses");
+
     // Redirect the user
     redirect("/dashboard/expenses");
 }
@@ -110,8 +114,10 @@ export async function updateExpense(
             message: "Database Error: Failed to Update Expense.",
         };
     }
+
     // Revalidate the cache
     revalidatePath("/dashboard/expenses");
+
     // Redirect the user
     redirect("/dashboard/expenses");
 }

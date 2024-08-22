@@ -2,25 +2,20 @@
 import getRandomColor from "@/app/lib/utils/getRandomColor";
 import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip } from "chart.js";
+import { FilteredBudgets } from "@/app/lib/types";
 Chart.register(ArcElement, Tooltip);
 
-type BudgetDataType = {
-    name: string;
-    budget: {
-        amount: number;
-    } | null;
-};
 
-const BudgetChart = ({ budgetData }: { budgetData: BudgetDataType[] }) => {
+const BudgetChart = ({ budgetData }: { budgetData: FilteredBudgets[] }) => {
     // Generate random colors for the chart slices
     const backgroundColors = budgetData.map(() => getRandomColor());
     // Chart data
     const data = {
-        labels: budgetData.map((data) => data.name),
+        labels: budgetData.map((budget) => budget.categoryName),
         datasets: [
             {
                 label: "Budgets",
-                data: budgetData.map((data) => data.budget?.amount ?? 0),
+                data: budgetData.map((budget) => budget.amount),
                 backgroundColor: backgroundColors,
                 hoverOffset: 4,
             },

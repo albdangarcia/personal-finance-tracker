@@ -10,6 +10,8 @@ import {
     LineElement,
     BarElement,
 } from "chart.js";
+import { FilteredBudgets } from "@/app/lib/types";
+import getCurrentYearMonth from "@/app/lib/utils/currentMonthYear";
 Chart.register(
     ArcElement,
     Tooltip,
@@ -20,14 +22,8 @@ Chart.register(
     BarElement,
 );
 
-type BudgetDataType = {
-    name: string;
-    budget: {
-        amount: number;
-    } | null;
-};
+const BudgetMonthChart = ({ budgetData }: { budgetData: FilteredBudgets[] }) => {
 
-const BudgetMonthChart = ({ budgetData }: { budgetData: BudgetDataType[] }) => {
     // Chart data
     const labels = [
         "January",

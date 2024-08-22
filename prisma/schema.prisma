@@ -132,20 +132,23 @@ model Expense {
 model Budget {
     id         String   @id @default(cuid())
     amount     Float // The planned budget amount
-    categoryId String   @unique
+    categoryId String
     category   Category @relation(fields: [categoryId], references: [id])
     userId     String
     User       User     @relation(fields: [userId], references: [id])
+    yearMonth  String // The year and month of the budget in YYYY-MM format
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
+
+    @@unique([categoryId, yearMonth])
 }
 
 model Category {
-    id        String    @id @default(cuid())
-    name      String    @unique // ["groceries", "transportation", "entertainment", "other"]
-    budget    Budget? // One-to-one relationship with Budget
-    expenses  Expense[] // One-to-many relationship with Expense
+    id           String        @id @default(cuid())
+    name         String        @unique // ["groceries", "transportation", "entertainment", "other"]
+    budget       Budget[] // One-to-many relationship with Budget
+    expenses     Expense[] // One-to-many relationship with Expense
     savingsGoals SavingsGoal[] // One-to-many relationship with SavingsGoal
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
 }

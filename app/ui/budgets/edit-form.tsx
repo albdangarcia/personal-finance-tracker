@@ -4,13 +4,10 @@ import { updateBudget } from "@/app/lib/actions/budget";
 import { BudgetFormErrorState } from "@/app/lib/zod-schemas";
 import { useFormState } from "react-dom";
 import FormButtons from "@/app/ui/form-buttons";
+import { BudgetByIdType } from "@/app/lib/types";
 
 type editBudgetFormProps = {
-    budget: {
-        category: CategoryProps;
-        id: string;
-        amount: number;
-    };
+    budget: BudgetByIdType,
     categories: CategoryProps[];
 };
 
@@ -44,13 +41,6 @@ const EditBudgetForm = ({ budget, categories }: editBudgetFormProps) => {
                                 {category.name}
                             </option>
                         ))}
-                        <option
-                            key={budget.category.id}
-                            className="capitalize"
-                            value={budget.category.id}
-                        >
-                            {budget.category.name}
-                        </option>
                     </select>
                     {/* Category errors */}
                     <div
@@ -90,7 +80,7 @@ const EditBudgetForm = ({ budget, categories }: editBudgetFormProps) => {
                             className="pl-6"
                         />
                     </div>
-                    {/* Input errors */}
+                    {/* Amount errors */}
                     <div
                         id="amount-error"
                         aria-live="polite"
@@ -107,6 +97,36 @@ const EditBudgetForm = ({ budget, categories }: editBudgetFormProps) => {
                             ))}
                     </div>
                 </div>
+                <div>
+                    <label htmlFor="yearMonth">Month Year</label>
+                    <input
+                        type="month"
+                        name="yearMonth"
+                        id="yearMonth"
+                        autoComplete="off"
+                        aria-describedby="yearMonth-error"
+                        required
+                        defaultValue={budget.yearMonth}
+                    />
+                    {/* Month Year errors */}
+                    <div
+                        id="yearMonth-error"
+                        aria-live="polite"
+                        aria-atomic="true"
+                    >
+                        {state.errors?.yearMonth &&
+                            state.errors.yearMonth.map((error: string) => (
+                                <p
+                                    className="mt-2 text-sm text-red-500"
+                                    key={error}
+                                >
+                                    {error}
+                                </p>
+                            ))}
+                    </div>
+                </div>
+
+                {/* Display general error message */}
                 <div id="budget-error" aria-live="polite" aria-atomic="true">
                     {state.message && (
                         <p
