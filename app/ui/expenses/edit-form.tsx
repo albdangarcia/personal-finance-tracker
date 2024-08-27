@@ -2,18 +2,12 @@
 import { useFormState } from "react-dom";
 import { updateExpense } from "@/app/lib/actions/expense";
 import { ExpenseFormErrorState } from "@/app/lib/zod-schemas";
-import { CategoryProps } from "@/app/lib/types";
+import { CategoryProps, ExpenseById } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 
-type EditFormProps = {
+interface EditFormProps {
     categories: CategoryProps[];
-    expense: {
-        name: string;
-        amount: number;
-        date: Date;
-        id: string;
-        category: CategoryProps;
-    };
+    expense: ExpenseById;
 };
 
 const EditExpenseForm = ({ categories, expense }: EditFormProps) => {

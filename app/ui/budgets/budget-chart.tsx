@@ -2,7 +2,7 @@
 import getRandomColor from "@/app/lib/utils/getRandomColor";
 import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip } from "chart.js";
-import { FilteredBudgets } from "@/app/lib/types";
+import { FilteredBudgets } from "@/app/lib/interfaces";
 Chart.register(ArcElement, Tooltip);
 
 

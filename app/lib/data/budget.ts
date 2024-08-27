@@ -1,6 +1,10 @@
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
-import { BudgetByIdType, FilteredBudgets } from "../types";
+import {
+    BudgetByIdType,
+    FilteredBudgets,
+    MonthlyBudgets,
+} from "../interfaces";
 import getCurrentYearMonth from "../utils/currentMonthYear";
 import { YearMonthSchema } from "../zod-schemas";
 
@@ -60,7 +64,7 @@ const fetchFilteredBudgets = async (
                         expenses: {
                             select: {
                                 amount: true,
-                                date: true,
+                                yearMonth: true,
                             },
                         },
                     },
@@ -68,21 +72,20 @@ const fetchFilteredBudgets = async (
             },
         });
 
+        // Map over each budget in the budgets array
         const results = budgets.map((budget) => {
-            const totalExpenses = budget.category.expenses
-                .filter((expense) => {
-                    // Create a Date object from the expense date
-                    const expenseDate = new Date(expense.date);
-                    // Extract year and month, format as YYYY-MM
-                    const expenseyearMonth = `${expenseDate.getFullYear()}-${String(
-                        expenseDate.getMonth() + 1
-                    ).padStart(2, "0")}`;
-                    // Check if the expense year and month match the budget year and month
-                    return expenseyearMonth === validatedYearMonth;
-                })
-                // Sum the amounts of the filtered expenses
-                .reduce((sum, expense) => sum + expense.amount, 0);
+            // Calculate the total expenses for the current budget's category
+            const totalExpenses = budget.category.expenses.reduce(
+                (sum, expense) => {
+                    // If the expense's yearMonth matches the validatedYearMonth, add its amount to the sum
+                    return expense.yearMonth === validatedYearMonth
+                        ? sum + expense.amount
+                        : sum; // Otherwise, keep the sum unchanged
+                },
+                0 // Initialize the sum to 0
+            );
 
+            // Return a new object with the budget details and the calculated total expenses
             return {
                 id: budget.id,
                 amount: budget.amount,
@@ -133,4 +136,80 @@ const fetchBudgetById = async (id: string): Promise<BudgetByIdType | null> => {
     }
 };
 
-export { fetchBudgetById, fetchFilteredBudgets };
+/**
+ * Fetches the budget data for the last six months and aggregates it by month.
+ *
+ * @returns {Promise<MonthlyBudgets[]>} A promise that resolves to an array of objects,
+ * each containing the month name and the total amount for that month.
+ *
+ */
+const fetchLastSixMonthsBudgets = async (): Promise<MonthlyBudgets[]> => {
+    // Function to format the date to YYYY-MM
+    const formatYearMonth = (date: Date) => date.toISOString().slice(0, 7);
+
+    // Create a new date object starting from the current date
+    const sixMonthsAgo = new Date();
+
+    // Subtract 5 months to get the date 6 months ago and set the month
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
+
+    // Query to get the budget data for the last 6 months and aggregate by month
+    const budgets = await prisma.budget.groupBy({
+        // Group the results by yearMonth
+        by: ["yearMonth"],
+        // Filter budgets where yearMonth is greater than or equal to the formatted date 6 months ago.
+        where: {
+            yearMonth: {
+                gte: formatYearMonth(sixMonthsAgo),
+            },
+        },
+        // Sum the amount for each group.
+        _sum: {
+            amount: true,
+        },
+        // Order the results by yearMonth in ascending order.
+        orderBy: {
+            yearMonth: "asc",
+        },
+    });
+
+    // Create a map of the months as a key and the total amount as the value
+    const budgetMap = new Map(
+        budgets.map((budget) => [budget.yearMonth, budget._sum.amount])
+    );
+
+    // Initialize an array to hold the last 6 months
+    const lastSixMonths = [];
+
+    // Get the current date
+    const currentDate = new Date();
+
+    for (let i = 0; i < 6; i++) {
+        // Create a new date object starting from the current date
+        const tempDate = new Date(currentDate);
+
+        // Subtract i months starting from the current month
+        tempDate.setMonth(currentDate.getMonth() - i);
+
+        // Format the date to YYYY-MM
+        const formattedYearMonth = formatYearMonth(tempDate);
+
+        // Get the total amount for the month from the map, defaulting to 0 if not found
+        const totalAmount = budgetMap.get(formattedYearMonth) || 0;
+
+        // Get the month name from the toLocaleString method
+        const monthLabel = tempDate.toLocaleString("default", {
+            month: "long",
+        });
+
+        // Add the month and total amount to the array from the left starting from the current month
+        lastSixMonths.unshift({
+            month: monthLabel,
+            totalAmount: totalAmount,
+        });
+    }
+
+    return lastSixMonths;
+};
+
+export { fetchBudgetById, fetchFilteredBudgets, fetchLastSixMonthsBudgets };

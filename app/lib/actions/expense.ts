@@ -15,7 +15,7 @@ export async function deleteExpense(expenseId: string) {
         console.error("Failed to delete expense:", error);
         throw new Error("Failed to delete expense");
     }
-    
+
     // Revalidate the cache
     revalidatePath("/dashboard/expenses");
 
@@ -46,6 +46,11 @@ export async function createExpense(
     // Extract validated fields
     const { name, amount, categoryId, date } = validatedFields.data;
 
+    // Extract year and month from the date
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Ensure month is two digits
+    const yearMonth = `${year}-${month}`;
+
     // Create the expense
     try {
         await prisma.expense.create({
@@ -54,6 +59,7 @@ export async function createExpense(
                 amount: amount,
                 categoryId: categoryId,
                 date: date,
+                yearMonth: yearMonth,
                 userId: "clziqqbgy000108l7dmts0vng",
             },
         });

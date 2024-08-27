@@ -8,21 +8,10 @@ import EditDeleteButtons from "../edit-delete-buttons";
 import { SectionHeader, SectionWrapper } from "../page-section-wrapper";
 import SearchBar from "../search-bar";
 import Pagination from "../pagination";
+import { CategoriesWithGoals } from "@/app/lib/interfaces";
 
-type Props = {
-    categoriesWithGoals: {
-        savingsGoals: {
-            totalContributions: number;
-            id: string;
-            name: string;
-            amount: number;
-            contributions: {
-                amount: number;
-            }[];
-        }[];
-        id: string;
-        name: string;
-    }[];
+interface Props {
+    categoriesWithGoals: CategoriesWithGoals[];
     totalPages: number;
 };
 

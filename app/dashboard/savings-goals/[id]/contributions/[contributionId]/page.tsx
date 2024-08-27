@@ -23,7 +23,11 @@ const breadcrumbs = (id: string, goalId: string) => [
     },
 ];
 
-const Page = async ({ params }: { params: { id: string, contributionId: string } }) => {
+interface Props {
+    params: { id: string; contributionId: string };
+}
+
+const Page = async ({ params }: Props) => {
     // get id from params
     const id = params.contributionId;
     const goalId = params.id;
@@ -39,11 +43,14 @@ const Page = async ({ params }: { params: { id: string, contributionId: string }
     return (
         <div>
             <Breadcrumbs breadcrumbs={breadcrumbs(id, goalId)} />
-            <FormWrapper title="Contribution" description="Modify the information for your Contribution.">
+            <FormWrapper
+                title="Contribution"
+                description="Modify the information for your Contribution."
+            >
                 <EditContributionForm contribution={contribution} />
             </FormWrapper>
         </div>
     );
-}
+};
 
 export default Page;

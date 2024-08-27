@@ -10,24 +10,13 @@ import {
 } from "@/app/ui/tables/simple-table";
 import { useState } from "react";
 import DialogComponent from "../delete-dialog";
+import { GoalWithContributions } from "@/app/lib/interfaces";
 
-type savingsGoalProps = {
-    savingsGoal: {
-        id: string;
-        name: string;
-        amount: number;
-        category: {
-            name: string;
-        };
-        contributions: {
-            id: string;
-            amount: number;
-            date: Date;
-        }[];
-    };
-};
+interface Props {
+    savingsGoal: GoalWithContributions;
+}
 
-const ContributionsTable = ({ savingsGoal }: savingsGoalProps) => {
+const ContributionsTable = ({ savingsGoal }: Props) => {
     // State to manage the dialog open/close
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [contributionName, setContributionName] = useState<string>("");
@@ -39,6 +28,8 @@ const ContributionsTable = ({ savingsGoal }: savingsGoalProps) => {
         setContributionName(contribution);
         setIsOpen(true);
     };
+    
+    // Close dialog
     const close = () => {
         setIsOpen(false);
     };
@@ -73,9 +64,9 @@ const ContributionsTable = ({ savingsGoal }: savingsGoalProps) => {
                 {/* table contents */}
                 <TableContents>
                     <TableRow columns="grid-cols-3">
-                        <div className="">{savingsGoal.name}</div>
-                        <div className="">{savingsGoal.category.name}</div>
-                        <div className="font-medium">${savingsGoal.amount}</div>
+                        <div className="text-gray-700">{savingsGoal.name}</div>
+                        <div className="text-gray-700">{savingsGoal.category.name}</div>
+                        <div className="text-gray-700">${savingsGoal.amount}</div>
                     </TableRow>
                 </TableContents>
             </Table>

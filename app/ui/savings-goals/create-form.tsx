@@ -2,7 +2,7 @@
 import { useFormState } from "react-dom";
 import { createSavingsGoal } from "@/app/lib/actions/savings-goals";
 import { SavingsGoalFormErrorState } from "@/app/lib/zod-schemas";
-import { CategoryProps } from "@/app/lib/types";
+import { CategoryProps } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 
 const CreateSavingsGoalForm = ({

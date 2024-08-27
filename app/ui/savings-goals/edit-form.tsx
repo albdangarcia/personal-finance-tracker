@@ -2,20 +2,15 @@
 import { useFormState } from "react-dom";
 import { updateSavingsGoals } from "@/app/lib/actions/savings-goals";
 import { SavingsGoalFormErrorState } from "@/app/lib/zod-schemas";
-import { CategoryProps } from "@/app/lib/types";
+import { CategoryProps, SavingsGoal } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 
-type EditFormProps = {
+interface Props {
     categories: CategoryProps[];
-    savingsGoal: {
-        name: string;
-        amount: number;
-        id: string;
-        categoryId: string;
-    };
+    savingsGoal: SavingsGoal;
 };
 
-const EditSavingsGoalForm = ({ categories, savingsGoal }: EditFormProps) => {
+const EditSavingsGoalForm = ({ categories, savingsGoal }: Props) => {
     const updateSavingsGoalWithId = updateSavingsGoals.bind(
         null,
         savingsGoal.id

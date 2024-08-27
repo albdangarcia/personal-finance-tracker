@@ -17,7 +17,7 @@ const SectionWrapper = ({ children }: { children: ReactNode }) => {
     );
 };
 
-type SectionHeaderProps = {
+interface SectionHeaderProps {
     title: string;
     subtitle: string;
     buttonLink?: string;

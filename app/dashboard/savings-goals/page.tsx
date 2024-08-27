@@ -14,7 +14,7 @@ const breadcrumbs = [
     },
 ];
 
-type PageProps = {
+interface PageProps {
     searchParams?: {
         query?: string;
         page?: string;

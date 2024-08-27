@@ -1,5 +1,5 @@
-import ExpenseChart from "@/app/ui/expenses/expense-chart";
-import { fetchExpensesByCategory, fetchFilteredExpenses } from "@/app/lib/data/expense";
+import ExpenseCategoryChart from "@/app/ui/expenses/expense-chart";
+import { fetchExpensePages, fetchExpensesByCategory, fetchFilteredExpenses, fetchLastSixMonthsExpenses } from "@/app/lib/data/expense";
 import ExpensesTable from "@/app/ui/expenses/expenses-table";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import {
@@ -7,8 +7,7 @@ import {
     SectionHeader,
     SectionWrapper,
 } from "@/app/ui/page-section-wrapper";
-import ExpenseBudgetChart from "@/app/ui/expenses/expense-budget-chart";
-import { fetchExpensePages } from "@/app/lib/data/expense";
+import ExpenseMonthChart from "@/app/ui/expenses/expense-month-chart";
 
 const breadcrumbs = [
     {
@@ -21,23 +20,33 @@ const breadcrumbs = [
     },
 ];
 
-type PageProps = {
+interface PageProps {
     searchParams?: {
         query?: string;
         page?: string;
+        year?: string;
+        month?: string;
     }
 };
 
 const Page = async ({ searchParams }: PageProps) => {
-    // Data for the charts
-    const expensesByCategory = await fetchExpensesByCategory();
-
+    // Get the query from the search params
     const query = searchParams?.query || "";
+
+    const year = searchParams?.year || "";
+    const month = searchParams?.month || "";
+
     const currentPage = Number(searchParams?.page) || 1;
-    const totalPages = await fetchExpensePages(query);
+    const totalPages = await fetchExpensePages(query, year, month);
+    
+    // Data for the pie chart
+    const expensesByCategory = await fetchExpensesByCategory(year, month);
     
     // Fetch the expenses for the table
-    const expenses = await fetchFilteredExpenses(query, currentPage);
+    const expenses = await fetchFilteredExpenses(query, currentPage, year, month);
+
+    // fetch last six months expenses
+    const expensesByMonth = await fetchLastSixMonthsExpenses();
 
     return (
         <div>
@@ -47,17 +56,17 @@ const Page = async ({ searchParams }: PageProps) => {
                 <SectionWrapper>
                     <SectionHeader
                         title="Pie Chart"
-                        subtitle="All the expenses by category."
+                        subtitle="Expenses by category for the selected month."
                     />
-                    <ExpenseChart expenseData={expensesByCategory} />
+                    <ExpenseCategoryChart expenseData={expensesByCategory} />
                 </SectionWrapper>
 
                 <SectionWrapper>
                     <SectionHeader
                         title="Months"
-                        subtitle="Your highest expense was in March."
+                        subtitle="Expenses for the last six months."
                     />
-                    <ExpenseBudgetChart expenseData={expensesByCategory} />
+                    <ExpenseMonthChart expenseData={expensesByMonth} />
                 </SectionWrapper>
 
                 <div className="sm:col-span-2">

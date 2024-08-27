@@ -2,7 +2,7 @@
 import { useFormState } from "react-dom";
 import { createExpense } from "@/app/lib/actions/expense";
 import { ExpenseFormErrorState } from "@/app/lib/zod-schemas";
-import { CategoryProps } from "@/app/lib/types";
+import { CategoryProps } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 
 const CreateExpenseForm = ({ categories }: { categories: CategoryProps[] }) => {

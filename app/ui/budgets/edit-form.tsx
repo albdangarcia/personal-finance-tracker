@@ -1,10 +1,10 @@
 "use client";
-import { CategoryProps } from "@/app/lib/types";
+import { CategoryProps } from "@/app/lib/interfaces";
 import { updateBudget } from "@/app/lib/actions/budget";
 import { BudgetFormErrorState } from "@/app/lib/zod-schemas";
 import { useFormState } from "react-dom";
 import FormButtons from "@/app/ui/form-buttons";
-import { BudgetByIdType } from "@/app/lib/types";
+import { BudgetByIdType } from "@/app/lib/interfaces";
 
 type editBudgetFormProps = {
     budget: BudgetByIdType,

@@ -1,31 +1,19 @@
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
+import { CategoriesWithGoals, SavingsGoal } from "../interfaces";
 
-type TotalContributions = {
-    savingsGoals: {
-        totalContributions: number;
-        id: string;
-        name: string;
-        amount: number;
-        contributions: {
-            amount: number;
-        }[];
-    }[];
-    id: string;
-    name: string;
-}
 /**
  * Fetches filtered savings goals from the database based on a query string and the current page number.
  * 
  * @param {string} query - The query string to filter savings goals by name.
  * @param {number} currentPage - The current page number for pagination.
- * @returns {Promise<TotalContributions[]>} - A promise that resolves to an array of categories with their savings goals and total contributions.
+ * @returns {Promise<CategoriesWithGoals[]>} - A promise that resolves to an array of categories with their savings goals and total contributions.
  * @throws {Error} - Throws an error if the fetch operation fails.
  */
 const fetchFilteredSavingGoals = async (
     query: string,
     currentPage: number
-): Promise<TotalContributions[]> => {
+): Promise<CategoriesWithGoals[]> => {
     // Disable caching for this function
     noStore();
 
@@ -96,12 +84,6 @@ const fetchFilteredSavingGoals = async (
     }
 }
 
-type SavingsGoal = {
-    id: string;
-    name: string;
-    amount: number;
-    categoryId: string;
-}
 /**
  * Fetches a savings goal by its ID from the database.
  * 

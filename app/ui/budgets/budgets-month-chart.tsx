@@ -1,5 +1,5 @@
 "use client";
-import { Line, Bar } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import {
     Chart,
     ArcElement,
@@ -10,8 +10,7 @@ import {
     LineElement,
     BarElement,
 } from "chart.js";
-import { FilteredBudgets } from "@/app/lib/types";
-import getCurrentYearMonth from "@/app/lib/utils/currentMonthYear";
+import { MonthlyBudgets, MonthlyExpenses } from "@/app/lib/interfaces";
 Chart.register(
     ArcElement,
     Tooltip,
@@ -19,31 +18,36 @@ Chart.register(
     LinearScale,
     PointElement,
     LineElement,
-    BarElement,
+    BarElement
 );
 
-const BudgetMonthChart = ({ budgetData }: { budgetData: FilteredBudgets[] }) => {
+interface Props {
+    monthlyBudgets: MonthlyBudgets[];
+    monthlyExpenses: MonthlyExpenses[];
+}
 
+const BudgetMonthChart = ({ monthlyBudgets, monthlyExpenses }: Props) => {
     // Chart data
-    const labels = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-    ];
     const data = {
-        labels: labels,
+        labels: monthlyBudgets.map((budget) => budget.month),
         datasets: [
             {
                 label: "Budget",
-                data: [65, 59, 80, 81, 56, 55, 40],
-                backgroundColor: "#73ca93",
+                data: monthlyBudgets.map((budget) => budget.totalAmount),
+                backgroundColor: "rgba(115, 202, 147, 0.82)",
+                borderColor: "rgba(51, 202, 147, 1)",
+                borderWidth: 1,
+            },
+            {
+                label: "Expense",
+                data: monthlyExpenses.map((expense) => expense.totalAmount),
+                backgroundColor: "rgba(241, 50, 50, 0.68)",
+                borderColor: "red",
+                borderWidth: 1,
             },
         ],
     };
+
     return (
         <div className="flex">
             <div className="w-80 h-w-80 mx-auto">
@@ -52,4 +56,5 @@ const BudgetMonthChart = ({ budgetData }: { budgetData: FilteredBudgets[] }) => 
         </div>
     );
 };
+
 export default BudgetMonthChart;

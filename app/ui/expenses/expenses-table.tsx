@@ -12,22 +12,15 @@ import EditDeleteButtons from "../edit-delete-buttons";
 import DialogComponent from "../delete-dialog";
 import Pagination from "../pagination";
 import SearchBar from "../search-bar";
+import YearMonthInput from "../year-month-input";
+import { FilteredExpenses } from "@/app/lib/interfaces";
 
-type ExpensesProps = {
+interface Props {
     totalPages: number;
-    expenses: {
-        id: string;
-        name: string;
-        amount: number;
-        category: {
-            id: string;
-            name: string;
-        };
-        date: Date;
-    }[];
+    expenses: FilteredExpenses[];
 };
 
-const ExpensesTable = ({ expenses, totalPages }: ExpensesProps) => {
+const ExpensesTable = ({ expenses, totalPages }: Props) => {
     // State to manage the dialog open/close
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [expenseName, setExpenseName] = useState<string>("");
@@ -64,10 +57,16 @@ const ExpensesTable = ({ expenses, totalPages }: ExpensesProps) => {
                 subtitle="All the expenses you have added are listed here."
                 buttonLink="/dashboard/expenses/create"
             />
-            
-            {/* Search bar */}
-            <div className="w-80 mt-3 mb-5">
-                <SearchBar placeholder="Seach name" />
+
+            <div className="flex gap-x-3 mt-1 mb-9 justify-between">
+                {/* Search bar */}
+                <div className="w-80">
+                    <SearchBar placeholder="Seach name" />
+                </div>
+                {/* Year Month input */}
+                <div>
+                    <YearMonthInput />
+                </div>
             </div>
 
             <Table>

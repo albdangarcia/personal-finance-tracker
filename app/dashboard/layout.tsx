@@ -2,7 +2,6 @@ import { ReactNode } from "react";
 import LeftSidebar from "../ui/nav/left-sidebar";
 import TopNavBar from "../ui/nav/top-nav-bar";
 
-// Typing children
 type Props = { children: ReactNode };
 
 const DashboardLayout = ({ children }: Props) => {

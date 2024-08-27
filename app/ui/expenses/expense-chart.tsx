@@ -2,32 +2,24 @@
 import getRandomColor from "@/app/lib/utils/getRandomColor";
 import { Pie } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip } from "chart.js";
+import { ExpensesByCategories } from "@/app/lib/interfaces";
 Chart.register(ArcElement, Tooltip);
 
-type ExpenseDataType = {
-    _sum: {
-        amount: number | null;
-    };
-    category:
-        | {
-              id: string;
-              name: string;
-          }
-        | undefined;
-};
+interface Props {
+    expenseData: ExpensesByCategories[];
+}
 
-const ExpenseChart = ({ expenseData }: { expenseData: ExpenseDataType[] }) => {
+const ExpenseCategoryChart = ({ expenseData }: Props) => {
     // Generate random colors for the chart slices
     const backgroundColors = expenseData.map(() => getRandomColor());
+    
     // Chart data
     const data = {
-        labels: expenseData.map(
-            (expense) => expense.category?.name ?? "Unknown"
-        ),
+        labels: expenseData.map((expense) => expense.categoryName),
         datasets: [
             {
                 label: "Expense",
-                data: expenseData.map((expense) => expense._sum.amount ?? 0),
+                data: expenseData.map((expense) => expense.totalAmount),
                 backgroundColor: backgroundColors,
                 hoverOffset: 4,
             },
@@ -41,4 +33,4 @@ const ExpenseChart = ({ expenseData }: { expenseData: ExpenseDataType[] }) => {
         </div>
     );
 };
-export default ExpenseChart;
+export default ExpenseCategoryChart;

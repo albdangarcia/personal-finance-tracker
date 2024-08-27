@@ -2,7 +2,7 @@
 import { useFormState } from "react-dom";
 import { createBudget } from "@/app/lib/actions/budget";
 import { BudgetFormErrorState } from "@/app/lib/zod-schemas";
-import { CategoryProps } from "@/app/lib/types";
+import { CategoryProps } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 import getCurrentYearMonth from "@/app/lib/utils/currentMonthYear";
 

@@ -3,20 +3,14 @@ import { useFormState } from "react-dom";
 import { updateContribution } from "@/app/lib/actions/contribution";
 import { ContributionFormErrorState, ExpenseFormErrorState } from "@/app/lib/zod-schemas";
 import FormButtons from "../form-buttons";
+import { ContributionInfo } from "@/app/lib/interfaces";
 
-type EditFormProps = {
-    contribution: {
-        amount: number;
-        date: Date;
-        id: string;
-        savingsGoal: {
-            name: string;
-            id: string;
-        };
-    }
-};
 
-const EditContributionForm = ({ contribution }: EditFormProps) => {
+interface Props {
+    contribution: ContributionInfo;
+}
+
+const EditContributionForm = ({ contribution }: Props) => {
     const updateContributionWithId = updateContribution.bind(null, contribution.id, contribution.savingsGoal.id);
     // Error state for the form
     const initialState = { message: null, errors: {} };
