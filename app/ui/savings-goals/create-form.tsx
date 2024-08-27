@@ -5,11 +5,11 @@ import { SavingsGoalFormErrorState } from "@/app/lib/zod-schemas";
 import { CategoryProps } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 
-const CreateSavingsGoalForm = ({
-    categories,
-}: {
+interface Props {
     categories: CategoryProps[];
-}) => {
+}
+
+const CreateSavingsGoalForm = ({ categories }: Props) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
@@ -21,7 +21,7 @@ const CreateSavingsGoalForm = ({
         <div>
             <form action={dispatch} className="grid gap-y-4">
                 <div>
-                    {/* Display the all categories */}
+                    {/* Display all categories */}
                     <label htmlFor="categoryId">Category</label>
                     <select
                         name="categoryId"
@@ -99,6 +99,7 @@ const CreateSavingsGoalForm = ({
                             placeholder="0.00"
                             aria-describedby="amount-error"
                             required
+                            step="0.01"
                             className="pl-6"
                         />
                     </div>
@@ -120,7 +121,11 @@ const CreateSavingsGoalForm = ({
                     </div>
                 </div>
                 {/* General errors */}
-                <div id="savings-goal-error" aria-live="polite" aria-atomic="true">
+                <div
+                    id="savings-goal-error"
+                    aria-live="polite"
+                    aria-atomic="true"
+                >
                     {state.message && (
                         <p
                             className="mt-2 text-sm text-red-500"

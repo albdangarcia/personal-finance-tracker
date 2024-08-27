@@ -33,6 +33,7 @@ const CreateContributionForm = ({ goalId }: { goalId: string }) => {
                             placeholder="0.00"
                             aria-describedby="amount-error"
                             required
+                            step="0.01"
                             className="pl-6"
                         />
                     </div>

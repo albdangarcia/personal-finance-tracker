@@ -39,10 +39,10 @@ const DialogComponent = ({
                         Delete {title}
                     </DialogTitle>
                     <Description>
-                        <p className="text-sm">
+                        <span className="text-sm block">
                             Are you sure you want to delete the {title} for{" "}
                             <span className="text-black">{itemName}</span>?
-                        </p>
+                        </span>
                         {warnings && (
                             <span className="block mt-2 text-xs/6 text-red-600">
                                 {warnings}

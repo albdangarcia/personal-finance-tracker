@@ -1,18 +1,14 @@
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
-
-type Categories = {
-    id: string;
-    name: string;
-};
+import { CategoryProps } from "../interfaces";
 
 /**
  * Fetches all categories from the database.
  * 
- * @returns {Promise<Categories[]>} - A promise that resolves to an array of category objects.
+ * @returns {Promise<CategoryProps[]>} - A promise that resolves to an array of category objects.
  * @throws {Error} - Throws an error if the fetch operation fails.
  */
-const fetchCategories = async (): Promise<Categories[]> => {
+const fetchCategories = async (): Promise<CategoryProps[]> => {
     // Disable caching for this function
     noStore();
 

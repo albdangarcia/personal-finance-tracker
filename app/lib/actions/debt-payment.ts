@@ -2,32 +2,30 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import prisma from "@/app/lib/prisma";
-import { ContributionFormErrorState, ContributionSchema } from "../zod-schemas";
+import { PaymentFormErrorState, PaymentSchema } from "../zod-schemas";
 
-export async function deleteContribution(id: string) {
+export async function deletePayment(id: string, debtId: string) {
     try {
-        await prisma.contribution.delete({
+        await prisma.debtPayment.delete({
             where: {
                 id: id,
             },
         });
     } catch (error) {
-        console.error("Failed to delete Contribution:", error);
-        throw new Error("Failed to delete Contribution");
+        console.error("Failed to delete Debt:", error);
+        throw new Error("Failed to delete Debt");
     }
     // Revalidate the cache
-    revalidatePath("/dashboard/contributions");
-    // Redirect the user
-    redirect("/dashboard/contributions");
+    revalidatePath(`/dashboard/debts/${debtId}/payments`);
 }
 
-export async function createContribution(
-    savingsGoalId: string,
-    prevState: ContributionFormErrorState,
+export async function createPayment(
+    debtId: string,
+    prevState: PaymentFormErrorState,
     formData: FormData
 ) {
     // Validate form fields using Zod
-    const validatedFields = ContributionSchema.safeParse({
+    const validatedFields = PaymentSchema.safeParse({
         amount: formData.get("amount"),
         date: formData.get("date"),
     });
@@ -36,44 +34,44 @@ export async function createContribution(
     if (!validatedFields.success) {
         return {
             errors: validatedFields.error.flatten().fieldErrors,
-            message: "Missing Fields. Failed to Create Contribution.",
+            message: "Missing Fields. Failed to Create Payment.",
         };
     }
 
     // Extract validated fields
     const { amount, date } = validatedFields.data;
 
-    // Create the contribution
+    // Create the payment
     try {
-        await prisma.contribution.create({
+        await prisma.debtPayment.create({
             data: {
                 amount: Number(amount),
                 date: new Date(date.toString()),
-                savingsGoalId: savingsGoalId,
+                debtId: debtId,
             },
         });
     } catch (error) {
-        console.error("Failed to create Contribution:", error);
+        console.error("Failed to create Payment:", error);
         return {
-            message: "Database Error: Failed to Create Contribution.",
+            message: "Database Error: Failed to Create Payment.",
         };
     }
 
     // Revalidate the cache
-    revalidatePath(`/dashboard/savings-goals/${savingsGoalId}/contributions`);
-
-    // Redirect the user
-    redirect(`/dashboard/savings-goals/${savingsGoalId}/contributions`);
+    revalidatePath(`/dashboard/debts/${debtId}/payments`);
+   
+    // Redirect to the payments page
+    redirect(`/dashboard/debts/${debtId}/payments`);
 }
 
-export async function updateContribution(
+export async function updatePayment(
     id: string,
-    goalId: string,
-    prevState: ContributionFormErrorState,
+    debtId: string,
+    prevState: PaymentFormErrorState,
     formData: FormData
 ) {
     // Validate form fields using Zod
-    const validatedFields = ContributionSchema.safeParse({
+    const validatedFields = PaymentSchema.safeParse({
         amount: formData.get("amount"),
         date: formData.get("date"),
     });
@@ -82,16 +80,16 @@ export async function updateContribution(
     if (!validatedFields.success) {
         return {
             errors: validatedFields.error.flatten().fieldErrors,
-            message: "Missing Fields. Failed to Update Contribution.",
+            message: "Missing Fields. Failed to Update Payment.",
         };
     }
 
     // Extract validated fields
     const { amount, date } = validatedFields.data;
 
-    // Update the contribution
+    // Update the payment
     try {
-        await prisma.contribution.update({
+        await prisma.debtPayment.update({
             where: {
                 id: id,
             },
@@ -101,15 +99,15 @@ export async function updateContribution(
             },
         });
     } catch (error) {
-        console.error("Failed to update Contribution:", error);
+        console.error("Failed to update Payment:", error);
         return {
-            message: "Database Error: Failed to Update Contribution.",
+            message: "Database Error: Failed to Update Payment.",
         };
     }
 
     // Revalidate the cache
-    revalidatePath(`/dashboard/savings-goals/${goalId}/contributions`);
+    revalidatePath(`/dashboard/debts/${debtId}/payments`);
 
-    // Redirect the user
-    redirect(`/dashboard/savings-goals/${goalId}/contributions`);
+    // Redirect to the payments page
+    redirect(`/dashboard/debts/${debtId}/payments`);
 }

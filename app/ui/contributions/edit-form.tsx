@@ -1,7 +1,7 @@
 "use client";
 import { useFormState } from "react-dom";
 import { updateContribution } from "@/app/lib/actions/contribution";
-import { ContributionFormErrorState, ExpenseFormErrorState } from "@/app/lib/zod-schemas";
+import { ContributionFormErrorState } from "@/app/lib/zod-schemas";
 import FormButtons from "../form-buttons";
 import { ContributionInfo } from "@/app/lib/interfaces";
 
@@ -40,6 +40,7 @@ const EditContributionForm = ({ contribution }: Props) => {
                             defaultValue={contribution.amount}
                             aria-describedby="amount-error"
                             required
+                            step="0.01"
                             className="pl-6"
                         />
                     </div>

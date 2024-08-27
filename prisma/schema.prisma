@@ -88,19 +88,23 @@ model Contribution {
     amount        Float
     date          DateTime
     savingsGoalId String
-    savingsGoal   SavingsGoal @relation(fields: [savingsGoalId], references: [id])
+    savingsGoal   SavingsGoal @relation(fields: [savingsGoalId], references: [id], onDelete: Cascade)
     createdAt     DateTime    @default(now())
     updatedAt     DateTime    @updatedAt
 }
 
 model Debt {
     id        String        @id @default(cuid())
+    name      String
     amount    Float
-    category  String // ["credit card", "student loan", "mortgage", "other"]
     interest  Float
+    payments  DebtPayment[] // One-to-many relationship with Payment
+    categoryId String
+    category  Category      @relation(fields: [categoryId], references: [id])
+    // dueDate   DateTime
+    // paid      Boolean  @default(false)
     createdAt DateTime      @default(now())
     updatedAt DateTime      @updatedAt
-    payments  DebtPayment[] // One-to-many relationship with Payment
     userId    String
     User      User          @relation(fields: [userId], references: [id])
 }
@@ -108,10 +112,9 @@ model Debt {
 model DebtPayment {
     id        String   @id @default(cuid())
     amount    Float
-    dueDate   DateTime
-    paid      Boolean  @default(false)
+    date      DateTime
     debtId    String
-    debt      Debt     @relation(fields: [debtId], references: [id])
+    debt      Debt     @relation(fields: [debtId], references: [id], onDelete: Cascade)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -150,6 +153,7 @@ model Category {
     budget       Budget[] // One-to-many relationship with Budget
     expenses     Expense[] // One-to-many relationship with Expense
     savingsGoals SavingsGoal[] // One-to-many relationship with SavingsGoal
+    debts        Debt[] // One-to-many relationship with Debt
     createdAt    DateTime      @default(now())
     updatedAt    DateTime      @updatedAt
 }

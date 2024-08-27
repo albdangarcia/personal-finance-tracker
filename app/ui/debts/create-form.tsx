@@ -1,28 +1,27 @@
 "use client";
-import { CategoryProps } from "@/app/lib/interfaces";
-import { updateBudget } from "@/app/lib/actions/budget";
-import { BudgetFormErrorState } from "@/app/lib/zod-schemas";
 import { useFormState } from "react-dom";
-import FormButtons from "@/app/ui/form-buttons";
-import { BudgetByIdType } from "@/app/lib/interfaces";
+import { DebtFormErrorState } from "@/app/lib/zod-schemas";
+import { CategoryProps } from "@/app/lib/interfaces";
+import FormButtons from "../form-buttons";
+import { createDebt } from "@/app/lib/actions/debt";
 
-type editBudgetFormProps = {
-    budget: BudgetByIdType,
+interface Props {
     categories: CategoryProps[];
-};
+}
 
-const EditBudgetForm = ({ budget, categories }: editBudgetFormProps) => {
-    const updateBudgetWithId = updateBudget.bind(null, budget.id);
+const CreateDebtForm = ({ categories }: Props) => {
+    // Error state for the form
     const initialState = { message: null, errors: {} };
-    const [state, dispatch] = useFormState<BudgetFormErrorState, FormData>(
-        updateBudgetWithId,
+    // Form state
+    const [state, dispatch] = useFormState<DebtFormErrorState, FormData>(
+        createDebt,
         initialState
     );
     return (
         <div>
             <form action={dispatch} className="grid gap-y-4">
                 <div>
-                    {/* Display the available categories */}
+                    {/* Display all categories */}
                     <label htmlFor="categoryId">Category</label>
                     <select
                         name="categoryId"
@@ -30,7 +29,6 @@ const EditBudgetForm = ({ budget, categories }: editBudgetFormProps) => {
                         required
                         autoComplete="off"
                         aria-describedby="categoryId-error"
-                        defaultValue={budget.category.id}
                     >
                         {categories.map((category) => (
                             <option
@@ -59,7 +57,34 @@ const EditBudgetForm = ({ budget, categories }: editBudgetFormProps) => {
                             ))}
                     </div>
                 </div>
-                {/* Display the amount input */}
+
+                {/* Debt name */}
+                <div>
+                    <label htmlFor="name">Name</label>
+                    <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        autoComplete="off"
+                        required
+                        placeholder="Enter debt name"
+                        aria-describedby="name-error"
+                    />
+                    {/* Input name errors */}
+                    <div id="name-error" aria-live="polite" aria-atomic="true">
+                        {state.errors?.name &&
+                            state.errors.name.map((error: string) => (
+                                <p
+                                    className="mt-2 text-sm text-red-500"
+                                    key={error}
+                                >
+                                    {error}
+                                </p>
+                            ))}
+                    </div>
+                </div>
+
+                {/* Display amount input */}
                 <div>
                     <label htmlFor="amount">Amount</label>
                     <div className="relative">
@@ -77,11 +102,10 @@ const EditBudgetForm = ({ budget, categories }: editBudgetFormProps) => {
                             aria-describedby="amount-error"
                             required
                             step="0.01"
-                            defaultValue={budget.amount}
                             className="pl-6"
                         />
                     </div>
-                    {/* Amount errors */}
+                    {/* Input amount errors */}
                     <div
                         id="amount-error"
                         aria-live="polite"
@@ -98,25 +122,36 @@ const EditBudgetForm = ({ budget, categories }: editBudgetFormProps) => {
                             ))}
                     </div>
                 </div>
+
+                {/* Interest Input */}
                 <div>
-                    <label htmlFor="yearMonth">Month Year</label>
-                    <input
-                        type="month"
-                        name="yearMonth"
-                        id="yearMonth"
-                        autoComplete="off"
-                        aria-describedby="yearMonth-error"
-                        required
-                        defaultValue={budget.yearMonth}
-                    />
-                    {/* Month Year errors */}
+                    <label htmlFor="interest">Interest Rate</label>
+                    <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+                            <span className="text-gray-500 sm:text-sm sm:leading-5">
+                                %
+                            </span>
+                        </div>
+                        <input
+                            type="number"
+                            name="interest"
+                            id="interest"
+                            autoComplete="off"
+                            placeholder="0"
+                            aria-describedby="interest-error"
+                            required
+                            step="0.01"
+                            className="pl-6"
+                        />
+                    </div>
+                    {/* Input interest errors */}
                     <div
-                        id="yearMonth-error"
+                        id="interest-error"
                         aria-live="polite"
                         aria-atomic="true"
                     >
-                        {state.errors?.yearMonth &&
-                            state.errors.yearMonth.map((error: string) => (
+                        {state.errors?.interest &&
+                            state.errors.interest.map((error: string) => (
                                 <p
                                     className="mt-2 text-sm text-red-500"
                                     key={error}
@@ -127,8 +162,12 @@ const EditBudgetForm = ({ budget, categories }: editBudgetFormProps) => {
                     </div>
                 </div>
 
-                {/* Display general error message */}
-                <div id="budget-error" aria-live="polite" aria-atomic="true">
+                {/* General errors */}
+                <div
+                    id="savings-goal-error"
+                    aria-live="polite"
+                    aria-atomic="true"
+                >
                     {state.message && (
                         <p
                             className="mt-2 text-sm text-red-500"
@@ -138,10 +177,11 @@ const EditBudgetForm = ({ budget, categories }: editBudgetFormProps) => {
                         </p>
                     )}
                 </div>
-                <FormButtons redirectTo="/dashboard/budgets" />
+                {/* Form buttons */}
+                <FormButtons redirectTo="/dashboard/debts" />
             </form>
         </div>
     );
 };
 
-export default EditBudgetForm;
+export default CreateDebtForm;

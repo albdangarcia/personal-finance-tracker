@@ -40,7 +40,7 @@ const ContributionsTable = ({ savingsGoal }: Props) => {
             return;
         }
         try {
-            await deleteContribution(contributionId);
+            await deleteContribution(contributionId, savingsGoal.id);
             close();
         } catch (error) {
             console.error("Failed to delete Contribution:", error);

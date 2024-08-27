@@ -82,3 +82,33 @@ export type ContributionFormErrorState = {
 export const YearMonthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, {
     message: "Please enter a valid yearMonth in the format YYYY-MM.",
 });
+
+export type DebtFormErrorState = {
+    errors?: {
+        name?: string[];
+        categoryId?: string[];
+        amount?: string[];
+        interest?: string[];
+    };
+    message?: string | null;
+};
+
+export const DebtSchema = z.object({
+    name: z.string().min(1),
+    categoryId: z.string().min(1),
+    amount: z.coerce.number().gt(0, { message: "Please enter an amount greater than $0." }),
+    interest: z.coerce.number().gte(0, { message: "Please enter an interest rate of 0 or greater." }),
+});
+
+export type PaymentFormErrorState = {
+    errors?: {
+        amount?: string[];
+        date?: string[];
+    };
+    message?: string | null;
+};
+
+export const PaymentSchema = z.object({
+    amount: z.coerce.number().gt(0, { message: "Please enter an amount greater than $0." }),
+    date: z.coerce.date(),
+});

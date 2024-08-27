@@ -349,6 +349,10 @@ async function seedCategories() {
                     id: "clzn21eq3000q08l6f974e4q9",
                     name: "Gas & Fuel",
                 },
+                {
+                    id: "cm0bu5boh000008lb2ol28llt",
+                    name: "Credit Card"
+                }
             ],
         });
     } catch (error) {
@@ -375,58 +379,6 @@ async function seedIrregularIncomes() {
         throw error;
     }
 }
-
-// async function seedFixedExpenses() {
-//   console.log("Seeding fixed expenses...");
-//   try {
-//     await prisma.fixedExpense.createMany({
-//       data: [
-//         {
-//           amount: 1000,
-//           category: "rent",
-//           frequency: "MONTHLY",
-//           date: new Date("2024-01-01"),
-//           userId: user1.id,
-//         },
-//         {
-//           amount: 800,
-//           category: "rent",
-//           frequency: "MONTHLY",
-//           date: new Date("2024-01-01"),
-//           userId: user2.id,
-//         },
-//       ],
-//     });
-//   } catch (error) {
-//     console.error("Error seeding fixed expenses:", error);
-//     throw error;
-//   }
-// }
-
-// async function seedVariableExpenses() {
-//   console.log("Seeding variable expenses...");
-//   try {
-//     await prisma.variableExpense.createMany({
-//       data: [
-//         {
-//           amount: 300,
-//           category: "groceries",
-//           date: new Date("2024-01-15"),
-//           userId: user1.id,
-//         },
-//         {
-//           amount: 200,
-//           category: "groceries",
-//           date: new Date("2024-01-15"),
-//           userId: user2.id,
-//         },
-//       ],
-//     });
-//   } catch (error) {
-//     console.error("Error seeding variable expenses:", error);
-//     throw error;
-//   }
-// }
 
 async function seedSavingContributions() {
     console.log("Seeding contributions...");
@@ -514,30 +466,46 @@ async function seedSavingsGoals() {
 async function seedDebts() {
     console.log("Seeding debts...");
     try {
-        const debt1 = await prisma.debt.create({
-            data: {
-                amount: 10000,
-                category: "student loan",
-                interest: 5.0,
-                userId: user1.id,
-            },
+        await prisma.debt.createMany({
+            data: [
+                {
+                    id: "cm0bu9nl5000108lba11t74s2",
+                    name: "Student Loan",
+                    amount: 10000,
+                    categoryId: "clzn1vqi8000908l64ure8t1k",
+                    interest: 5.0,
+                    userId: user1.id,
+                },
+                {
+                    id: "cm0bugqzr000308lb3zmg2vo3",
+                    name: "Bank Credit Card",
+                    amount: 5000,
+                    categoryId: "cm0bu5boh000008lb2ol28llt",
+                    interest: 2.0,
+                    userId: user1.id,
+                }
+            ],
         });
-        return { debt1 };
     } catch (error) {
         console.error("Error seeding debts:", error);
         throw error;
     }
 }
 
-async function seedDebtPayments(debt1, debt2) {
+async function seedDebtPayments() {
     console.log("Seeding debt payments...");
     try {
         await prisma.debtPayment.createMany({
             data: [
                 {
                     amount: 200,
-                    dueDate: new Date("2024-03-01"),
-                    debtId: debt1.id,
+                    date: new Date("2024-08-01"),
+                    debtId: "cm0bugqzr000308lb3zmg2vo3",
+                },
+                {
+                    amount: 100,
+                    date: new Date("2024-08-01"),
+                    debtId: "cm0bu9nl5000108lba11t74s2",
                 },
             ],
         });
@@ -725,9 +693,8 @@ async function main() {
     // await seedVariableExpenses();
     await seedSavingsGoals();
     await seedSavingContributions();
-    // await seedDebts();
-    const { debt1, debt2 } = await seedDebts();
-    await seedDebtPayments(debt1, debt2);
+    await seedDebts();
+    await seedDebtPayments();
     await seedBudgets();
     console.log("Seeding finished.");
 }

@@ -26,7 +26,7 @@ const EditSavingsGoalForm = ({ categories, savingsGoal }: Props) => {
         <div>
             <form action={dispatch} className="grid gap-y-4">
                 <div>
-                    {/* Display the all categories */}
+                    {/* Display all categories */}
                     <label htmlFor="categoryId">Category</label>
                     <select
                         name="categoryId"
@@ -107,6 +107,7 @@ const EditSavingsGoalForm = ({ categories, savingsGoal }: Props) => {
                             defaultValue={savingsGoal.amount}
                             aria-describedby="amount-error"
                             required
+                            step="0.01"
                             className="pl-6"
                         />
                     </div>

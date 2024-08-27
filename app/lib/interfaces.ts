@@ -84,6 +84,8 @@ export interface ContributionInfo {
 }
 
 export interface CategoriesWithGoals {
+    id: string;
+    name: string;
     savingsGoals: {
         totalContributions: number;
         id: string;
@@ -93,8 +95,6 @@ export interface CategoriesWithGoals {
             amount: number;
         }[];
     }[];
-    id: string;
-    name: string;
 }
 
 export interface SavingsGoal {
@@ -102,4 +102,52 @@ export interface SavingsGoal {
     name: string;
     amount: number;
     categoryId: string;
+}
+
+export interface DebtWithCategories {
+    id: string;
+    name: string;
+    debts: {
+        totalPayments: number;
+        id: string;
+        name: string;
+        amount: number;
+        interest: number;
+        payments: {
+            amount: number;
+        }[];
+    }[];
+}
+
+export interface Debt {
+    id: string;
+    name: string;
+    amount: number;
+    interest: number;
+    categoryId: string;
+}
+
+export interface DebtWithPayments {
+    id: string;
+    name: string;
+    amount: number;
+    interest: number;
+    payments: {
+        id: string;
+        amount: number;
+        date: Date;
+    }[];
+    category: {
+        name: string;
+    };
+}
+
+export interface PaymentInfo {
+    id: string;
+    amount: number;
+    date: Date;
+    debt: {
+        id: string;
+        name: string;
+    };
 }

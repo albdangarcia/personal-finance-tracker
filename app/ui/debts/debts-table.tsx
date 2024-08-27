@@ -1,30 +1,30 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { deleteSavingsGoal } from "@/app/lib/actions/savings-goals";
+import { deleteDebt } from "@/app/lib/actions/debt";
 import clsx from "clsx";
 import DialogComponent from "../delete-dialog";
 import EditDeleteButtons from "../edit-delete-buttons";
 import { SectionHeader, SectionWrapper } from "../page-section-wrapper";
 import SearchBar from "../search-bar";
 import Pagination from "../pagination";
-import { CategoriesWithGoals } from "@/app/lib/interfaces";
+import { DebtWithCategories } from "@/app/lib/interfaces";
 
 interface Props {
-    categoriesWithGoals: CategoriesWithGoals[];
+    categoriesWithDebts: DebtWithCategories[];
     totalPages: number;
 }
 
-const CategoriesTable = ({ categoriesWithGoals, totalPages }: Props) => {
+const DebtsTable = ({ categoriesWithDebts, totalPages }: Props) => {
     // State to manage the dialog open/close
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [savingsGoalName, setSavingsGoalName] = useState<string>("");
-    const [savingGoalId, setSavingGoalId] = useState<string>("");
+    const [debtName, setDebtName] = useState<string>("");
+    const [debtId, setDebtId] = useState<string>("");
 
     // Dialog open/close
-    const open = (savingsGoal: string, savingsGoalId: string) => {
-        setSavingGoalId(savingsGoalId);
-        setSavingsGoalName(savingsGoal);
+    const open = (debt: string, debtId: string) => {
+        setDebtId(debtId);
+        setDebtName(debt);
         setIsOpen(true);
     };
     const close = () => {
@@ -32,25 +32,25 @@ const CategoriesTable = ({ categoriesWithGoals, totalPages }: Props) => {
     };
 
     // Handle delete
-    const handleDeleteGoal = async () => {
-        if (!savingGoalId) {
+    const handleDeleteDebt = async () => {
+        if (!debtId) {
             return;
         }
         try {
-            await deleteSavingsGoal(savingGoalId);
+            await deleteDebt(debtId);
             close();
         } catch (error) {
-            console.error("Failed to delete Savings Goal:", error);
-            throw new Error("Failed to delete Savings Goal");
+            console.error("Failed to delete Debt:", error);
+            throw new Error("Failed to delete Debt");
         }
     };
 
     return (
         <SectionWrapper>
             <SectionHeader
-                title="Savings Goals"
-                subtitle="All the savings goals you have added are listed here."
-                buttonLink="/dashboard/savings-goals/create"
+                title="Debts"
+                subtitle="All the debts you have added are listed here."
+                buttonLink="/dashboard/debts/create"
             />
 
             {/* Search bar */}
@@ -59,37 +59,36 @@ const CategoriesTable = ({ categoriesWithGoals, totalPages }: Props) => {
             </div>
 
             {/* table headers */}
-            <div className="pl-3 border-b mt-1 gap-4 items-center py-4 rounded-t-md text-sm font-medium grid grid-cols-[minmax(10px,2fr)_repeat(5,minmax(10px,1fr))]">
+            <div className="pl-3 border-b mt-1 gap-4 items-center py-4 rounded-t-md text-sm font-medium grid grid-cols-[minmax(10px,2fr)_repeat(6,minmax(10px,1fr))]">
                 <div className="">Name</div>
-                <div className="">Target Amount</div>
-                <div className="">Total Contributions</div>
+                <div className="">Amount</div>
+                <div className="">Total Payments</div>
+                <div className="">Interest</div>
                 <div className="">Progress</div>
-                <div>View Contributions</div>
+                <div>View Payments</div>
                 <div className="text-center sr-only">Edit</div>
             </div>
 
             {/* table contents */}
             <div className="text-sm">
-                {categoriesWithGoals.map((category) => (
+                {categoriesWithDebts.map((category) => (
                     <div key={category.id}>
                         <div className="font-semibold text-gray-900 bg-[#F9FAFB] py-2.5 pl-3 border-y border-gray-300/60">
                             {category.name}
                         </div>
-                        {category.savingsGoals.map((goal, index) => (
+                        {category.debts.map((debt, index) => (
                             <div
-                                key={goal.id}
+                                key={debt.id}
                                 className={clsx(
-                                    "items-center gap-y-0 gap-4 pl-3 py-4 text-gray-900 hover:bg-gray-100/50 grid grid-cols-[minmax(10px,2fr)_repeat(5,minmax(10px,1fr))]",
-                                    category.savingsGoals.length > 1 &&
-                                        index <
-                                            category.savingsGoals.length - 1 &&
+                                    "items-center gap-y-0 gap-4 pl-3 py-4 text-gray-900 hover:bg-gray-100/50 grid grid-cols-[minmax(10px,2fr)_repeat(6,minmax(10px,1fr))]",
+                                    category.debts.length > 1 &&
+                                        index < category.debts.length - 1 &&
                                         "border-b border-gray-300/60"
                                 )}
                             >
                                 <p className="text-gray-900 font-medium">
-                                    {goal.name}
-                                    {(goal.totalContributions / goal.amount) *
-                                        100 >
+                                    {debt.name}
+                                    {(debt.totalPayments / debt.amount) * 100 >
                                         100 && (
                                         <span className="ml-2 bg-green-300 sm:bg-white text-green-700 border border-green-500 text-xs px-1 py-0.5 rounded-full">
                                             <span className="hidden sm:inline">
@@ -98,24 +97,31 @@ const CategoriesTable = ({ categoriesWithGoals, totalPages }: Props) => {
                                         </span>
                                     )}
                                 </p>
-                                <p className="text-gray-500">${goal.amount}</p>
                                 <p className="text-gray-500">
-                                    ${goal.totalContributions}
+                                    ${debt.amount.toLocaleString()}
                                 </p>
+                                <p className="text-gray-500">
+                                    ${debt.totalPayments.toLocaleString()}
+                                </p>
+                                <p className="text-gray-500">
+                                    {debt.interest}%
+                                </p>
+                                {/* Payment progress */}
                                 <p className="text-gray-500">
                                     {Math.min(
                                         Math.round(
-                                            (goal.totalContributions / goal.amount) *
+                                            (debt.totalPayments / debt.amount) *
                                                 100
                                         ),
                                         100
                                     )}
                                     %
                                 </p>
+                                {/* View payments */}
                                 <div>
-                                    {goal.contributions.length > 0 && (
+                                    {debt.payments.length > 0 && (
                                         <Link
-                                            href={`/dashboard/savings-goals/${goal.id}/contributions`}
+                                            href={`/dashboard/debts/${debt.id}/payments`}
                                             className="text-indigo-600 font-medium"
                                         >
                                             View Details
@@ -123,9 +129,9 @@ const CategoriesTable = ({ categoriesWithGoals, totalPages }: Props) => {
                                     )}
                                 </div>
                                 <EditDeleteButtons
-                                    editLink={`/dashboard/savings-goals/${goal.id}`}
-                                    propName={goal.name}
-                                    propId={goal.id}
+                                    editLink={`/dashboard/debts/${debt.id}`}
+                                    propName={debt.name}
+                                    propId={debt.id}
                                     open={open}
                                 />
                             </div>
@@ -143,13 +149,13 @@ const CategoriesTable = ({ categoriesWithGoals, totalPages }: Props) => {
             <DialogComponent
                 isOpen={isOpen}
                 close={close}
-                title="Savings Goal"
-                itemName={savingsGoalName}
-                handleDelete={handleDeleteGoal}
-                warnings="This action cannot be undone and all the contributions will be lost."
+                title="Debt"
+                itemName={debtName}
+                handleDelete={handleDeleteDebt}
+                warnings="This action cannot be undone and all the payments will be lost."
             />
         </SectionWrapper>
     );
 };
 
-export default CategoriesTable;
+export default DebtsTable;

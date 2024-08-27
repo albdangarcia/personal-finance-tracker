@@ -1,59 +1,21 @@
 "use client";
 import { useFormState } from "react-dom";
-import { createBudget } from "@/app/lib/actions/budget";
-import { BudgetFormErrorState } from "@/app/lib/zod-schemas";
-import { CategoryProps } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
-import getCurrentYearMonth from "@/app/lib/utils/currentMonthYear";
+import { createPayment } from "@/app/lib/actions/debt-payment";
+import { PaymentFormErrorState } from "@/app/lib/zod-schemas";
 
-const CreateBudgetForm = ({ categories }: { categories: CategoryProps[] }) => {
+const CreatePaymentForm = ({ debtId }: { debtId: string }) => {
+    const createPaymentWithId = createPayment.bind(null, debtId);
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<BudgetFormErrorState, FormData>(
-        createBudget,
+    const [state, dispatch] = useFormState<PaymentFormErrorState, FormData>(
+        createPaymentWithId,
         initialState
     );
     return (
         <div>
             <form action={dispatch} className="grid gap-y-4">
-                {/* Display the categories */}
-                <div>
-                    <label htmlFor="categoryId">Category</label>
-                    <select
-                        name="categoryId"
-                        id="categoryId"
-                        required
-                        autoComplete="off"
-                        aria-describedby="categoryId-error"
-                    >
-                        {categories.map((category) => (
-                            <option
-                                key={category.id}
-                                className="capitalize"
-                                value={category.id}
-                            >
-                                {category.name}
-                            </option>
-                        ))}
-                    </select>
-                    {/* Category errors */}
-                    <div
-                        id="categoryId-error"
-                        aria-live="polite"
-                        aria-atomic="true"
-                    >
-                        {state.errors?.categoryId &&
-                            state.errors.categoryId.map((error: string) => (
-                                <p
-                                    className="mt-2 text-sm text-red-500"
-                                    key={error}
-                                >
-                                    {error}
-                                </p>
-                            ))}
-                    </div>
-                </div>
                 {/* Display the amount input */}
                 <div>
                     <label htmlFor="amount">Amount</label>
@@ -92,25 +54,21 @@ const CreateBudgetForm = ({ categories }: { categories: CategoryProps[] }) => {
                             ))}
                     </div>
                 </div>
+                {/* Date input */}
                 <div>
-                    <label htmlFor="yearMonth">Month Year</label>
+                    <label htmlFor="date">Date</label>
                     <input
-                        type="month"
-                        name="yearMonth"
-                        id="yearMonth"
+                        type="date"
+                        name="date"
+                        id="date"
                         autoComplete="off"
-                        aria-describedby="yearMonth-error"
                         required
-                        defaultValue={getCurrentYearMonth()}
+                        aria-describedby="date-error"
                     />
-                    {/* Month Year errors */}
-                    <div
-                        id="yearMonth-error"
-                        aria-live="polite"
-                        aria-atomic="true"
-                    >
-                        {state.errors?.yearMonth &&
-                            state.errors.yearMonth.map((error: string) => (
+                    {/* Date errors */}
+                    <div id="date-error" aria-live="polite" aria-atomic="true">
+                        {state.errors?.date &&
+                            state.errors.date.map((error: string) => (
                                 <p
                                     className="mt-2 text-sm text-red-500"
                                     key={error}
@@ -120,9 +78,8 @@ const CreateBudgetForm = ({ categories }: { categories: CategoryProps[] }) => {
                             ))}
                     </div>
                 </div>
-
                 {/* General errors */}
-                <div id="budget-error" aria-live="polite" aria-atomic="true">
+                <div id="expense-error" aria-live="polite" aria-atomic="true">
                     {state.message && (
                         <p
                             className="mt-2 text-sm text-red-500"
@@ -133,10 +90,10 @@ const CreateBudgetForm = ({ categories }: { categories: CategoryProps[] }) => {
                     )}
                 </div>
                 {/* Form buttons */}
-                <FormButtons redirectTo="/dashboard/budgets" />
+                <FormButtons redirectTo={`/dashboard/debts/${debtId}/payments`} />
             </form>
         </div>
     );
 };
 
-export default CreateBudgetForm;
+export default CreatePaymentForm;

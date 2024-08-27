@@ -9,12 +9,11 @@ export async function deleteSavingsGoal(id: string) {
     try {
         await prisma.savingsGoal.delete({
             where: {
-                id,
+                id: id,
             },
         });
         // Revalidate the path
         revalidatePath("/dashboard/savings-goals");
-        redirect("/dashboard/savings-goals");
     } catch (error) {
         console.error("Failed to delete saving goal:", error);
         throw new Error("Failed to delete saving goal.");

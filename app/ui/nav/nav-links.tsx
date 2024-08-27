@@ -10,14 +10,16 @@ import {
     PlusCircleIcon,
     InformationCircleIcon,
     QuestionMarkCircleIcon,
-    ChatBubbleLeftEllipsisIcon
+    ChatBubbleLeftEllipsisIcon,
+    CreditCardIcon,
 } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 
 const quickActionItems = [
-    { href: "/dashboard/expenses/create", label: "Add Expense" },
     { href: "/dashboard/budgets/create", label: "Add Budget" },
+    { href: "/dashboard/expenses/create", label: "Add Expense" },
+    { href: "/dashboard/debts/create", label: "Add Debt" },
     { href: "/dashboard/savings-goals/create", label: "Add Goal" },
 ];
 
@@ -32,6 +34,7 @@ const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: ChartPieIcon },
     { href: "/dashboard/budgets", label: "Budgets", icon: ChartBarIcon },
     { href: "/dashboard/expenses", label: "Expenses", icon: CalculatorIcon },
+    { href: "/dashboard/debts", label: "Debts", icon: CreditCardIcon },
     {
         href: "/dashboard/savings-goals",
         label: "Saving Goals",
