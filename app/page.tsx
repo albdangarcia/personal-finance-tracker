@@ -9,13 +9,20 @@ const Home = () => {
             <div className="bg-white overflow-hidden isolate relative">
                 <div className="lg:py-40 lg:px-8 lg:flex sm:pb-32 pt-10 pb-6 px-6 max-w-7xl mx-auto">
                     <div className="relative mt-20 lg:pt-8 lg:flex-shrink-0 lg:max-w-xl lg:mx-0 max-w-2xl mx-auto">
-                        <div className="-z-10 left-80 top-96 absolute rounded-full w-48 h-48 blur-3xl opacity-60 bg-gradient-to-r from-indigo-500 to-pink-500" />
+                        {/* Gradients */}
+                        <div className="-z-10 left-10 -top-40 absolute rounded-full w-40 h-40 blur-3xl opacity-40 bg-gradient-to-r from-indigo-500 to-blue-500" />
+                        <div className="-z-10 left-80 top-96 absolute rounded-full w-48 h-48 blur-3xl opacity-40 bg-gradient-to-r from-indigo-500 to-pink-500" />
+
+                        {/* Homepage tagline */}
                         <h1
                             className={`${montserrat.className} text-6xl font-medium mt-10 text-gray-900`}
                         >
                             Simplify Your Finances, Amplify Your Life
                         </h1>
-                        <p className="text-gray-600 text-lg/8 mt-6"></p>
+                        <p className="text-slate-600 text-lg/8 mt-6">
+                            Track your spending, set budgets, and manage your
+                            money with ease. Get started today!
+                        </p>
                         <div className="flex gap-x-6 items-center mt-12">
                             <a
                                 href="#"
@@ -34,8 +41,10 @@ const Home = () => {
                     <div className="max-w-2xl flex mt-16 mx-auto sm:mt-24 lg:flex lg:max-w-none lg:mt-0 lg:ml-10">
                         <div className="flex-none max-w-3xl sm:max-w-5xl lg:max-w-none">
                             <div className="relative bg-slate-300/15 rounded-xl -m-2 lg:rounded-2xl lg:-m-4">
+                                {/* Gradients behind the images */}
                                 <div className="-z-10 inset-0 absolute rounded-full w-24 h-24 blur-3xl opacity-90 bg-gradient-to-r from-indigo-500 to-pink-500" />
                                 <div className="-z-10 top-0 left-96 absolute rounded-full w-24 h-24 blur-xl opacity-90 bg-gradient-to-r from-indigo-500 to-pink-500" />
+                                {/* App screenshot */}
                                 <Image
                                     src={screenShotImage}
                                     alt="screenshot"

@@ -1,7 +1,8 @@
 import { fetchDebts, fetchDebtsPages } from "@/app/lib/data/debt";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
+import DebtCategoryChart from "@/app/ui/debts/debts-chart";
 import DebtsTable from "@/app/ui/debts/debts-table";
-import { MainWrapper } from "@/app/ui/page-section-wrapper";
+import { MainWrapper, SectionHeader, SectionWrapper } from "@/app/ui/page-section-wrapper";
 
 const breadcrumbs = [
     {
@@ -23,15 +24,26 @@ interface Props {
 
 const Page = async ({ searchParams }: Props) => {
     const query = searchParams?.query || "";
+    
     const currentPage = Number(searchParams?.page) || 1;
     const totalPages = await fetchDebtsPages(query);
+
     const debts = await fetchDebts(query, currentPage);
 
     return (
         <div>
             <Breadcrumbs breadcrumbs={breadcrumbs} />
             <MainWrapper>
-                <div className="sm:col-span-2">
+                <div className="col-span-2">
+                    <SectionWrapper>
+                        <SectionHeader
+                            title="Polar Area Chart"
+                            subtitle="Debts by category."
+                        />
+                        <DebtCategoryChart debtData={debts} />
+                    </SectionWrapper>
+                </div>
+                <div className="col-span-2">
                     <DebtsTable
                         categoriesWithDebts={debts}
                         totalPages={totalPages}
