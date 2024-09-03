@@ -1,19 +1,19 @@
 "use client";
 import { useFormState } from "react-dom";
-import { DebtFormErrorState } from "@/app/lib/zod-schemas";
-import { CategoryProps } from "@/app/lib/interfaces";
+import { DebtFormError } from "@/app/lib/zod-schemas";
+import { CategoryInfo } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 import { createDebt } from "@/app/lib/actions/debt";
 
 interface Props {
-    categories: CategoryProps[];
+    categories: CategoryInfo[];
 }
 
 const CreateDebtForm = ({ categories }: Props) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<DebtFormErrorState, FormData>(
+    const [state, dispatch] = useFormState<DebtFormError, FormData>(
         createDebt,
         initialState
     );

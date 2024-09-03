@@ -1,6 +1,6 @@
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
-import { CategoriesWithGoals, SavingsGoal } from "../interfaces";
+import { CategoriesWithGoals, SavingsGoalById } from "../interfaces";
 
 /**
  * Fetches filtered savings goals from the database based on a query string and the current page number.
@@ -88,10 +88,10 @@ const fetchFilteredSavingGoals = async (
  * Fetches a savings goal by its ID from the database.
  * 
  * @param {string} id - The ID of the savings goal to fetch.
- * @returns {Promise<SavingsGoal | null>} - A promise that resolves to the savings goal object if found, otherwise null.
+ * @returns {Promise<SavingsGoalById | null>} - A promise that resolves to the savings goal object if found, otherwise null.
  * @throws {Error} - Throws an error if the fetch operation fails.
  */
-const fetchSavingsGoalById = async (id: string): Promise<SavingsGoal | null> => {
+const fetchSavingsGoalById = async (id: string): Promise<SavingsGoalById | null> => {
     // Disable caching for this function
     noStore();
 

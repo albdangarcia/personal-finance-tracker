@@ -8,10 +8,10 @@ import EditDeleteButtons from "../edit-delete-buttons";
 import { SectionHeader, SectionWrapper } from "../page-section-wrapper";
 import SearchBar from "../search-bar";
 import Pagination from "../pagination";
-import { DebtWithCategories } from "@/app/lib/interfaces";
+import { CategoriesWithDebts } from "@/app/lib/interfaces";
 
 interface Props {
-    categoriesWithDebts: DebtWithCategories[];
+    categoriesWithDebts: CategoriesWithDebts[];
     totalPages: number;
 }
 

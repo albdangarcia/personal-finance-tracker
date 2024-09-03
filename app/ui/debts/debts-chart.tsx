@@ -2,10 +2,10 @@
 import getRandomColor from "@/app/lib/utils/getRandomColor";
 import { PolarArea } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip, RadialLinearScale } from "chart.js";
-import { DebtWithCategories } from "@/app/lib/interfaces";
+import { CategoriesWithDebts } from "@/app/lib/interfaces";
 Chart.register(ArcElement, Tooltip, RadialLinearScale);
 
-function groupDebtsByCategory(debtsWithCategories: DebtWithCategories[]) {
+function groupDebtsByCategory(debtsWithCategories: CategoriesWithDebts[]) {
     const groupedDebts = debtsWithCategories.reduce<Record<string, number>>((acc, debtCategory) => {
         const categoryName = debtCategory.name;
         const totalAmount = debtCategory.debts.reduce((sum, debt) => sum + debt.amount, 0);
@@ -27,7 +27,7 @@ function groupDebtsByCategory(debtsWithCategories: DebtWithCategories[]) {
 
 
 interface Props {
-    debtData: DebtWithCategories[];
+    debtData: CategoriesWithDebts[];
 }
 
 const DebtCategoryChart = ({ debtData }: Props) => {

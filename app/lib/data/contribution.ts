@@ -1,6 +1,9 @@
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
-import { ContributionInfo, GoalWithContributions } from "../interfaces";
+import { ContributionById, GoalWithContributions } from "../interfaces";
+import { Prisma } from "@prisma/client";
+
+export type SavingsGoalType = Prisma.PromiseReturnType<typeof prisma.savingsGoal.findUnique>;
 
 /**
  * Fetches contributions for a specific savings goal by its ID.
@@ -51,10 +54,10 @@ const fetchContributionsBySavingsGoalId = async (id: string): Promise<GoalWithCo
  * Fetches a contribution by its ID from the database.
  * 
  * @param {string} id - The ID of the contribution to fetch.
- * @returns {Promise<ContributionInfo | null>} - A promise that resolves to the contribution object if found, otherwise null.
+ * @returns {Promise<ContributionById | null>} - A promise that resolves to the contribution object if found, otherwise null.
  * @throws {Error} - Throws an error if the fetch operation fails.
  */
-const fetchContributionById = async (id: string): Promise<ContributionInfo | null> => {
+const fetchContributionById = async (id: string): Promise<ContributionById | null> => {
     // Disable caching for this function
     noStore();
     

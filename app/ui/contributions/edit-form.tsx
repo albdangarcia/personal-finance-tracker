@@ -1,13 +1,13 @@
 "use client";
 import { useFormState } from "react-dom";
 import { updateContribution } from "@/app/lib/actions/contribution";
-import { ContributionFormErrorState } from "@/app/lib/zod-schemas";
+import { ContributionFormError } from "@/app/lib/zod-schemas";
 import FormButtons from "../form-buttons";
-import { ContributionInfo } from "@/app/lib/interfaces";
+import { ContributionById } from "@/app/lib/interfaces";
 
 
 interface Props {
-    contribution: ContributionInfo;
+    contribution: ContributionById;
 }
 
 const EditContributionForm = ({ contribution }: Props) => {
@@ -15,7 +15,7 @@ const EditContributionForm = ({ contribution }: Props) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<ContributionFormErrorState, FormData>(
+    const [state, dispatch] = useFormState<ContributionFormError, FormData>(
         updateContributionWithId,
         initialState
     );

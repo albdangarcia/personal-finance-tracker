@@ -2,14 +2,19 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import prisma from "@/app/lib/prisma";
-import { BudgetSchema, BudgetFormErrorState } from "@/app/lib/zod-schemas";
+import {
+    BudgetFormSchema,
+    BudgetFormError,
+    CreateBudgetFormSchema,
+    IdSchema,
+} from "@/app/lib/zod-schemas";
 
 export async function createBudget(
-    prevState: BudgetFormErrorState,
+    prevState: BudgetFormError,
     formData: FormData
 ) {
     // Validate form fields using Zod
-    const validatedFields = BudgetSchema.safeParse({
+    const validatedFields = CreateBudgetFormSchema.safeParse({
         categoryId: formData.get("categoryId"),
         amount: formData.get("amount"),
         yearMonth: formData.get("yearMonth"),
@@ -84,11 +89,12 @@ export async function createBudget(
 
 export async function updateBudget(
     budgetId: string,
-    prevState: BudgetFormErrorState,
+    prevState: BudgetFormError,
     formData: FormData
 ) {
     // Validate form fields using Zod
-    const validatedFields = BudgetSchema.safeParse({
+    const validatedFields = BudgetFormSchema.safeParse({
+        id: budgetId,
         categoryId: formData.get("categoryId"),
         amount: formData.get("amount"),
         yearMonth: formData.get("yearMonth"),
@@ -103,7 +109,7 @@ export async function updateBudget(
     }
 
     // Extract validated fields
-    const { categoryId, amount, yearMonth } = validatedFields.data;
+    const { id, categoryId, amount, yearMonth } = validatedFields.data;
 
     // Check if the category exists
     const categoryExists = await prisma.category.findUnique({
@@ -128,7 +134,7 @@ export async function updateBudget(
             yearMonth: yearMonth,
             // Excludes the budget with the specified id from the results.
             NOT: {
-                id: budgetId,
+                id: id,
             },
         },
     });
@@ -147,7 +153,7 @@ export async function updateBudget(
     try {
         await prisma.budget.update({
             where: {
-                id: budgetId,
+                id: id,
             },
             data: {
                 categoryId: categoryId,
@@ -161,7 +167,7 @@ export async function updateBudget(
             message: "Database Error: Failed to Edit Budget.",
         };
     }
-    
+
     // Revalidate the cache
     revalidatePath("/dashboard/budgets");
 
@@ -170,11 +176,22 @@ export async function updateBudget(
 }
 
 export async function deleteBudget(id: string) {
-    // Delete the budget
+    // Validate the id
+    const parsedId = IdSchema.safeParse(id);
+    
+    // If ID validation fails, throw an error
+    if (!parsedId.success) {
+        console.error("Invalid ID format:", parsedId.error);
+        throw new Error("Invalid ID format");
+    }
+
+    // Extract the ID from the parsed data
+    const budgetId = parsedId.data;
+
     try {
         await prisma.budget.delete({
             where: {
-                id: id,
+                id: budgetId,
             },
         });
     } catch (error) {

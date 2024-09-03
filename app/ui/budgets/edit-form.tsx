@@ -1,20 +1,20 @@
 "use client";
-import { CategoryProps } from "@/app/lib/interfaces";
+import { CategoryInfo } from "@/app/lib/interfaces";
 import { updateBudget } from "@/app/lib/actions/budget";
-import { BudgetFormErrorState } from "@/app/lib/zod-schemas";
+import { BudgetFormError } from "@/app/lib/zod-schemas";
 import { useFormState } from "react-dom";
 import FormButtons from "@/app/ui/form-buttons";
-import { BudgetByIdType } from "@/app/lib/interfaces";
+import { BudgetById } from "@/app/lib/interfaces";
 
 type editBudgetFormProps = {
-    budget: BudgetByIdType,
-    categories: CategoryProps[];
+    budget: BudgetById,
+    categories: CategoryInfo[];
 };
 
 const EditBudgetForm = ({ budget, categories }: editBudgetFormProps) => {
     const updateBudgetWithId = updateBudget.bind(null, budget.id);
     const initialState = { message: null, errors: {} };
-    const [state, dispatch] = useFormState<BudgetFormErrorState, FormData>(
+    const [state, dispatch] = useFormState<BudgetFormError, FormData>(
         updateBudgetWithId,
         initialState
     );

@@ -3,8 +3,7 @@ import prisma from "@/app/lib/prisma";
 import {
     ExpenseById,
     ExpensesByCategories,
-    FilteredExpenses,
-    MonthlyExpenses,
+    MonthlyObject,
 } from "../interfaces";
 import getCurrentYearMonth from "../utils/currentMonthYear";
 import { YearMonthSchema } from "../zod-schemas";
@@ -53,7 +52,7 @@ const fetchExpensesByCategory = async (
     year: string,
     month: string
 ): Promise<ExpensesByCategories[]> => {
-    // Disable caching for this function
+    // Disable caching
     noStore();
 
     let yearMonth: string;
@@ -123,7 +122,7 @@ const fetchFilteredExpenses = async (
     currentPage: number,
     year: string,
     month: string
-): Promise<FilteredExpenses[]> => {
+): Promise<ExpenseById[]> => {
     // Disable caching for this function
     noStore();
 
@@ -187,11 +186,14 @@ const fetchFilteredExpenses = async (
 /**
  * Fetches and calculates the total expenses for the last six months.
  *
- * @returns {Promise<MonthlyExpenses[]>} A promise that resolves to an array of objects,
+ * @returns {Promise<MonthlyObject[]>} A promise that resolves to an array of objects,
  * each representing the total expenses for a month in the last six months.
  *
  */
-const fetchLastSixMonthsExpenses = async (): Promise<MonthlyExpenses[]> => {
+const fetchLastSixMonthsExpenses = async (): Promise<MonthlyObject[]> => {
+    // Disable caching 
+    noStore();
+
     // Calculate the date six months ago
     const sixMonthsAgoDate = new Date();
     sixMonthsAgoDate.setMonth(sixMonthsAgoDate.getMonth() - 6);
@@ -218,7 +220,7 @@ const fetchLastSixMonthsExpenses = async (): Promise<MonthlyExpenses[]> => {
     const currentDate = new Date();
 
     // Initialize an array to hold the last six months' data
-    const lastSixMonths: MonthlyExpenses[] = [];
+    const lastSixMonths: MonthlyObject[] = [];
 
     for (let i = 0; i < 6; i++) {
         // Create a date object for the current month minus i months
@@ -246,77 +248,6 @@ const fetchLastSixMonthsExpenses = async (): Promise<MonthlyExpenses[]> => {
     // Return the array of the last six months with their respective total amounts
     return lastSixMonths;
 };
-
-// const fetchLastSixMonthsExpenses = async (): Promise<MonthlyExpenses[]> => {
-//     // Calculate the date six months ago
-//     const sixMonthsAgoDate = new Date();
-//     sixMonthsAgoDate.setMonth(sixMonthsAgoDate.getMonth() - 6);
-
-//     // Fetch the expenses for the last six months
-//     const expenses = await prisma.expense.findMany({
-//         where: {
-//             date: {
-//                 gte: sixMonthsAgoDate,
-//             },
-//         },
-//     });
-
-//     // Key will be in the format "YYYY-M" (e.g., "2021-8")
-//     // Value will be an object with the month label and total amount
-//     const expensesMap: { [key: string]: MonthlyExpenses } = {};
-
-//     // Get the current date
-//     const currentDate = new Date();
-
-//     // Loop through the last six months starting from the current month
-//     // The loop will initialize the expensesMap object with the month label and total amount of 0
-//     for (let i = 0; i < 6; i++) {
-//         // Create a date object for the first day of the month, i months ago
-//         const tempDate = new Date(
-//             currentDate.getFullYear(),
-//             currentDate.getMonth() - i,
-//             1
-//         );
-
-//         // Generate a key in the format "YYYY-M" for the current month
-//         // getMonth() returns 0-11, so add 1 to get 1-12
-//         const yearMonthKey = `${tempDate.getFullYear()}-${
-//             tempDate.getMonth() + 1
-//         }`;
-
-//         // Create an object with the month label and total amount of 0
-//         const expenseObject = {
-//             monthLabel: tempDate.toLocaleString("default", { month: "long" }),
-//             totalAmount: 0,
-//         };
-
-//         // Initialize the expensesMap object with the key and expense object
-//         expensesMap[yearMonthKey] = expenseObject;
-//     }
-
-//     // Loop through the expenses and add the total amount to the corresponding month
-//     expenses.forEach((expense) => {
-//         // Get the year from the date object of the expense
-//         const year = expense.date.getFullYear();
-//         // Get the month from the date object of the expense
-//         const month = expense.date.getMonth() + 1;
-
-//         // Create a key for the expensesMap object
-//         const key = `${year}-${month}`;
-
-//         // If the key exists, add the amount to the totalAmount
-//         expensesMap[key].totalAmount += expense.amount;
-//     });
-
-//     // Convert grouped expenses to an array and sort by date (most recent last)
-//     const result = Object.entries(expensesMap)
-//         // Sort by key (year-month strings) in ascending order
-//         .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
-//         // Discard the key and return the value { monthLabe, totalAmount }
-//         .map(([_, value]) => value);
-
-//     return result;
-// };
 
 const fetchExpensePages = async (
     query: string,

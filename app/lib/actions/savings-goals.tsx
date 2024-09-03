@@ -2,16 +2,33 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import prisma from "@/app/lib/prisma";
-import { SavingsGoalFormErrorState, SavingsGoalSchema } from "../zod-schemas";
+import {
+    CreateSavingsGoalFormSchema,
+    IdSchema,
+    SavingsGoalFormError,
+    SavingsGoalFormSchema,
+} from "../zod-schemas";
 
 export async function deleteSavingsGoal(id: string) {
-    // Delete the saving goal
+    // Validate the id
+    const parsedId = IdSchema.safeParse(id);
+
+    // If ID validation fails, throw an error
+    if (!parsedId.success) {
+        console.error("Invalid ID format:", parsedId.error);
+        throw new Error("Invalid ID format");
+    }
+
+    // Extract the validated ID
+    const validatedId = parsedId.data;
+
     try {
         await prisma.savingsGoal.delete({
             where: {
-                id: id,
+                id: validatedId,
             },
         });
+
         // Revalidate the path
         revalidatePath("/dashboard/savings-goals");
     } catch (error) {
@@ -21,11 +38,11 @@ export async function deleteSavingsGoal(id: string) {
 }
 
 export async function createSavingsGoal(
-    prevState: SavingsGoalFormErrorState,
+    prevState: SavingsGoalFormError,
     formData: FormData
 ) {
     // Validate form fields using Zod
-    const validatedFields = SavingsGoalSchema.safeParse({
+    const validatedFields = CreateSavingsGoalFormSchema.safeParse({
         name: formData.get("name"),
         amount: formData.get("amount"),
         categoryId: formData.get("categoryId"),
@@ -58,19 +75,22 @@ export async function createSavingsGoal(
             message: "Database Error: Failed to Create Savings Goal.",
         };
     }
+    
     // Revalidate the cache
     revalidatePath("/dashboard/savings-goals");
+
     // Redirect the user
     redirect("/dashboard/savings-goals");
 }
 
 export async function updateSavingsGoals(
-    id: string,
-    prevState: SavingsGoalFormErrorState,
+    GoalId: string,
+    prevState: SavingsGoalFormError,
     formData: FormData
 ) {
     // Validate form fields using Zod
-    const validatedFields = SavingsGoalSchema.safeParse({
+    const validatedFields = SavingsGoalFormSchema.safeParse({
+        id: GoalId,
         name: formData.get("name"),
         amount: formData.get("amount"),
         categoryId: formData.get("categoryId"),
@@ -85,7 +105,7 @@ export async function updateSavingsGoals(
     }
 
     // Extract validated fields
-    const { name, amount, categoryId } = validatedFields.data;
+    const { id, name, amount, categoryId } = validatedFields.data;
 
     // Update the savings goal
     try {
@@ -107,6 +127,7 @@ export async function updateSavingsGoals(
     }
     // Revalidate the cache
     revalidatePath("/dashboard/savings-goals");
+
     // Redirect the user
     redirect("/dashboard/savings-goals");
 }

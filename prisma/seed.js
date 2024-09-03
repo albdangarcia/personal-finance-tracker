@@ -27,25 +27,72 @@ async function seedUsers() {
     }
 }
 
-async function seedRegularIncomes() {
-    console.log("Seeding regular incomes...");
+async function Incomes() {
+    console.log("Seeding incomes...");
     try {
-        await prisma.regularIncome.createMany({
+        await prisma.income.createMany({
             data: [
                 {
                     amount: 5000,
-                    source: "Job",
+                    categoryId: "clzn1yym2000g08l61zfidl1g",
                     frequency: "MONTHLY",
-                    startDate: new Date("2024-01-01"),
+                    startDate: new Date("2024-08-01"),
+                    yearMonth: "2024-08",
+                    incomeType: "REGULAR",
+                    userId: user1.id,
+                },
+                {
+                    amount: 400,
+                    categoryId: "clzn1yym2000g08l61zfidl1g",
+                    frequency: "MONTHLY",
+                    startDate: new Date("2024-08-01"),
+                    yearMonth: "2024-08",
+                    incomeType: "REGULAR",
+                    userId: user1.id,
+                },
+                {
+                    amount: 200,
+                    categoryId: "cm0edf2o2000008jz6nsj6nwe",
+                    startDate: new Date("2024-08-15"),
+                    yearMonth: "2024-08",
+                    incomeType: "IRREGULAR",
+                    userId: user1.id,
+                },
+                {
+                    amount: 3400,
+                    categoryId: "cm0edf2o2000008jz6nsj6nwe",
+                    startDate: new Date("2024-08-15"),
+                    yearMonth: "2024-08",
+                    incomeType: "IRREGULAR",
                     userId: user1.id,
                 },
             ],
         });
     } catch (error) {
-        console.error("Error seeding regular incomes:", error);
+        console.error("Error seeding incomes:", error);
         throw error;
     }
 }
+
+// async function seedIrregularIncomes() {
+//     console.log("Seeding irregular incomes...");
+//     try {
+//         await prisma.irregularIncome.createMany({
+//             data: [
+//                 {
+//                     amount: 200,
+//                     categoryId: "cm0edf2o2000008jz6nsj6nwe",
+//                     date: new Date("2024-08-15"),
+//                     yearMonth: "2024-08",
+//                     userId: user1.id,
+//                 },
+//             ],
+//         });
+//     } catch (error) {
+//         console.error("Error seeding irregular incomes:", error);
+//         throw error;
+//     }
+// }
 
 async function seedExpense() {
     console.log("Seeding expenses...");
@@ -352,30 +399,19 @@ async function seedCategories() {
                 {
                     id: "cm0bu5boh000008lb2ol28llt",
                     name: "Credit Card"
-                }
-            ],
-        });
-    } catch (error) {
-        console.error("Error seeding categories:", error);
-        throw error;
-    }
-}
-
-async function seedIrregularIncomes() {
-    console.log("Seeding irregular incomes...");
-    try {
-        await prisma.irregularIncome.createMany({
-            data: [
+                },
                 {
-                    amount: 200,
-                    source: "Freelance",
-                    date: new Date("2024-02-15"),
-                    userId: user1.id,
+                    id: "cm0ede91d000108ky0khb8k9k",
+                    name: "Job"
+                },
+                {
+                    id: "cm0edf2o2000008jz6nsj6nwe",
+                    name: "Freelance"
                 },
             ],
         });
     } catch (error) {
-        console.error("Error seeding irregular incomes:", error);
+        console.error("Error seeding categories:", error);
         throw error;
     }
 }
@@ -675,10 +711,8 @@ async function main() {
     await prisma.contribution.deleteMany();
     await prisma.savingsGoal.deleteMany();
     await prisma.expense.deleteMany();
-    // await prisma.variableExpense.deleteMany();
-    // await prisma.fixedExpense.deleteMany();
-    await prisma.irregularIncome.deleteMany();
-    await prisma.regularIncome.deleteMany();
+    // await prisma.irregularIncome.deleteMany();
+    await prisma.Income.deleteMany();
     await prisma.user.deleteMany();
     await prisma.category.deleteMany();
 
@@ -686,11 +720,9 @@ async function main() {
     console.log("Start seeding ...");
     await seedCategories();
     await seedUsers();
-    await seedRegularIncomes();
-    await seedIrregularIncomes();
+    await Incomes();
+    // await seedIrregularIncomes();
     await seedExpense();
-    // await seedFixedExpenses();
-    // await seedVariableExpenses();
     await seedSavingsGoals();
     await seedSavingContributions();
     await seedDebts();

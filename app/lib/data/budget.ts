@@ -1,9 +1,9 @@
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
 import {
-    BudgetByIdType,
+    BudgetById,
     FilteredBudgets,
-    MonthlyBudgets,
+    MonthlyObject,
 } from "../interfaces";
 import getCurrentYearMonth from "../utils/currentMonthYear";
 import { YearMonthSchema } from "../zod-schemas";
@@ -105,9 +105,9 @@ const fetchFilteredBudgets = async (
  * Fetches a budget by its ID from the database.
  *
  * @param {string} id - The ID of the budget to fetch.
- * @returns {Promise<BudgetByIdType | null>} The budget object if found, otherwise null.
+ * @returns {Promise<BudgetById | null>} The budget object if found, otherwise null.
  */
-const fetchBudgetById = async (id: string): Promise<BudgetByIdType | null> => {
+const fetchBudgetById = async (id: string): Promise<BudgetById | null> => {
     // Disable caching for this function
     noStore();
 
@@ -139,11 +139,11 @@ const fetchBudgetById = async (id: string): Promise<BudgetByIdType | null> => {
 /**
  * Fetches the budget data for the last six months and aggregates it by month.
  *
- * @returns {Promise<MonthlyBudgets[]>} A promise that resolves to an array of objects,
+ * @returns {Promise<MonthlyObject[]>} A promise that resolves to an array of objects,
  * each containing the month name and the total amount for that month.
  *
  */
-const fetchLastSixMonthsBudgets = async (): Promise<MonthlyBudgets[]> => {
+const fetchLastSixMonthsBudgets = async (): Promise<MonthlyObject[]> => {
     // Function to format the date to YYYY-MM
     const formatYearMonth = (date: Date) => date.toISOString().slice(0, 7);
 
@@ -204,7 +204,7 @@ const fetchLastSixMonthsBudgets = async (): Promise<MonthlyBudgets[]> => {
 
         // Add the month and total amount to the array from the left starting from the current month
         lastSixMonths.unshift({
-            month: monthLabel,
+            monthLabel: monthLabel,
             totalAmount: totalAmount,
         });
     }

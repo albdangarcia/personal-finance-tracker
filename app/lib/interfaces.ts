@@ -1,45 +1,38 @@
-export interface CategoryProps {
-    id: string;
-    name: string;
+import {
+    Budget,
+    Category,
+    Contribution,
+    Debt,
+    DebtPayment,
+    Expense,
+    Income,
+    SavingsGoal,
+} from "@prisma/client";
+
+export interface CategoryInfo extends Pick<Category, "id" | "name"> {}
+
+// budgets
+interface BudgetInfo extends Pick<Budget, "id" | "amount" | "yearMonth"> {}
+
+export interface BudgetById extends BudgetInfo {
+    category: CategoryInfo;
 }
 
-export interface BudgetByIdType {
-    id: string;
-    amount: number;
-    yearMonth: string;
-    category: {
-        id: string;
-        name: string;
-    };
-}
-
-export interface FilteredBudgets {
-    id: string;
-    amount: number;
-    yearMonth: string;
+export interface FilteredBudgets extends BudgetInfo {
     categoryName: string;
     totalExpenses: number;
 }
 
-export interface MonthlyBudgets {
-    month: string;
-    totalAmount: number;
-}
-
-export interface MonthlyExpenses {
+// Object for the charts showing last six months of data
+export interface MonthlyObject {
     monthLabel: string;
     totalAmount: number;
 }
 
-export interface ExpenseById {
-    id: string;
-    name: string;
-    amount: number;
-    date: Date;
-    category: {
-        id: string;
-        name: string;
-    };
+// expenses
+export interface ExpenseById
+    extends Pick<Expense, "id" | "name" | "amount" | "date"> {
+    category: CategoryInfo;
 }
 
 export interface ExpensesByCategories {
@@ -48,106 +41,64 @@ export interface ExpensesByCategories {
     totalAmount: number;
 }
 
-export interface FilteredExpenses {
-    id: string;
-    name: string;
-    amount: number;
-    date: Date;
+// savings goals and contributions
+interface ContributionInfo
+    extends Pick<Contribution, "id" | "amount" | "date"> {}
+
+interface SavingsGoalInfo extends Pick<SavingsGoal, "id" | "name" | "amount"> {}
+
+export interface ContributionById extends ContributionInfo {
+    savingsGoal: Pick<SavingsGoalInfo, "id" | "name">;
+}
+
+export interface SavingsGoalById
+    extends SavingsGoalInfo,
+        Pick<SavingsGoal, "categoryId"> {}
+
+export interface GoalWithContributions extends SavingsGoalInfo {
     category: {
-        id: string;
         name: string;
     };
+    contributions: ContributionInfo[];
 }
 
-export interface GoalWithContributions {
-    id: string;
-    name: string;
-    amount: number;
-    category: {
-        name: string;
-    };
-    contributions: {
-        id: string;
-        amount: number;
-        date: Date;
-    }[];
-}
-
-export interface ContributionInfo {
-    id: string;
-    amount: number;
-    date: Date;
-    savingsGoal: {
-        id: string;
-        name: string;
-    };
-}
-
-export interface CategoriesWithGoals {
-    id: string;
-    name: string;
-    savingsGoals: {
+export interface CategoriesWithGoals extends CategoryInfo {
+    savingsGoals: (SavingsGoalInfo & {
+        contributions: Pick<ContributionInfo, "amount">[];
         totalContributions: number;
-        id: string;
-        name: string;
-        amount: number;
-        contributions: {
-            amount: number;
-        }[];
-    }[];
+    })[];
 }
 
-export interface SavingsGoal {
-    id: string;
-    name: string;
-    amount: number;
-    categoryId: string;
+// debts
+interface DebtInfo extends Pick<Debt, "id" | "name" | "amount" | "interest"> {}
+
+interface PaymentInfo extends Pick<DebtPayment, "id" | "amount" | "date"> {}
+
+export interface DebtById extends DebtInfo, Pick<Debt, "categoryId"> {}
+
+export interface PaymentById extends PaymentInfo {
+    debt: Pick<DebtInfo, "id" | "name">;
 }
 
-export interface DebtWithCategories {
-    id: string;
-    name: string;
-    debts: {
+export interface CategoriesWithDebts extends CategoryInfo {
+    debts: (DebtInfo & {
+        payments: Pick<PaymentInfo, "amount">[];
         totalPayments: number;
-        id: string;
-        name: string;
-        amount: number;
-        interest: number;
-        payments: {
-            amount: number;
-        }[];
-    }[];
+    })[];
 }
 
-export interface Debt {
-    id: string;
-    name: string;
-    amount: number;
-    interest: number;
-    categoryId: string;
+export interface DebtWithPayments extends DebtInfo {
+    payments: PaymentInfo[];
+    category: Pick<Category, "name">;
 }
 
-export interface DebtWithPayments {
-    id: string;
-    name: string;
-    amount: number;
-    interest: number;
-    payments: {
-        id: string;
-        amount: number;
-        date: Date;
-    }[];
-    category: {
-        name: string;
-    };
+// incomes
+export interface IncomeById
+    extends Omit<Income, "createdAt" | "updatedAt" | "userId" | "categoryId"> {
+    category: CategoryInfo;
 }
 
-export interface PaymentInfo {
-    id: string;
-    amount: number;
-    date: Date;
-    debt: {
-        id: string;
-        name: string;
-    };
+export interface GroupIncomes {
+    regularIncomes: IncomeById[];
+    irregularIncomes: IncomeById[];
 }

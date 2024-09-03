@@ -1,6 +1,6 @@
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
-import { Debt, DebtWithCategories } from "../interfaces";
+import { DebtById, CategoriesWithDebts } from "../interfaces";
 
 // Limit the number of debts per page
 const DEBTS_PER_PAGE = 10;
@@ -8,7 +8,7 @@ const DEBTS_PER_PAGE = 10;
 const fetchDebts = async (
     query: string,
     currentPage: number
-): Promise<DebtWithCategories[]> => {
+): Promise<CategoriesWithDebts[]> => {
     // Disable caching for this function
     noStore();
 
@@ -72,6 +72,9 @@ const fetchDebts = async (
 };
 
 const fetchDebtsPages = async (query: string): Promise<number> => {
+    // Disable caching for this function
+    noStore();
+    
     try {
         const totalDebts = await prisma.debt.count({
             where: {
@@ -92,7 +95,7 @@ const fetchDebtsPages = async (query: string): Promise<number> => {
     }
 };
 
-const fetchDebtById = async (id: string): Promise<Debt | null> => {
+const fetchDebtById = async (id: string): Promise<DebtById | null> => {
     // Disable caching for this function
     noStore();
 

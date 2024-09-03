@@ -1,7 +1,7 @@
 "use client";
 import { useFormState } from "react-dom";
 import { createContribution } from "@/app/lib/actions/contribution";
-import { ContributionFormErrorState } from "@/app/lib/zod-schemas";
+import { ContributionFormError } from "@/app/lib/zod-schemas";
 import FormButtons from "../form-buttons";
 
 const CreateContributionForm = ({ goalId }: { goalId: string }) => {
@@ -9,7 +9,7 @@ const CreateContributionForm = ({ goalId }: { goalId: string }) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<ContributionFormErrorState, FormData>(
+    const [state, dispatch] = useFormState<ContributionFormError, FormData>(
         createContributionWithId,
         initialState
     );

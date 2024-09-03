@@ -1,13 +1,13 @@
 "use client";
 import { useFormState } from "react-dom";
-import { CategoryProps, Debt } from "@/app/lib/interfaces";
+import { CategoryInfo, DebtById } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
-import { DebtFormErrorState } from "@/app/lib/zod-schemas";
+import { DebtFormError } from "@/app/lib/zod-schemas";
 import { updateDebt } from "@/app/lib/actions/debt";
 
 interface Props {
-    categories: CategoryProps[];
-    debt: Debt;
+    categories: CategoryInfo[];
+    debt: DebtById;
 }
 
 const EditDebtForm = ({ categories, debt }: Props) => {
@@ -15,7 +15,7 @@ const EditDebtForm = ({ categories, debt }: Props) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<DebtFormErrorState, FormData>(
+    const [state, dispatch] = useFormState<DebtFormError, FormData>(
         updateDebtWithId,
         initialState
     );

@@ -1,12 +1,12 @@
 "use client";
 import { useFormState } from "react-dom";
 import FormButtons from "../form-buttons";
-import { PaymentInfo } from "@/app/lib/interfaces";
-import { PaymentFormErrorState } from "@/app/lib/zod-schemas";
+import { PaymentById } from "@/app/lib/interfaces";
+import { PaymentFormError } from "@/app/lib/zod-schemas";
 import { updatePayment } from "@/app/lib/actions/debt-payment";
 
 interface Props {
-    payment: PaymentInfo;
+    payment: PaymentById;
 }
 
 const EditPaymentForm = ({ payment }: Props) => {
@@ -14,7 +14,7 @@ const EditPaymentForm = ({ payment }: Props) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<PaymentFormErrorState, FormData>(
+    const [state, dispatch] = useFormState<PaymentFormError, FormData>(
         updatePaymentWithId,
         initialState
     );

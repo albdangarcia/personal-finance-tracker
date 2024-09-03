@@ -23,21 +23,22 @@ model Account {
 }
 
 model User {
-    id               String            @id @default(cuid())
-    name             String?
-    password         String?
-    email            String            @unique
-    emailVerified    DateTime?
-    image            String?
-    regularIncomes   RegularIncome[]
-    irregularIncomes IrregularIncome[]
-    expenses         Expense[]
-    savingsGoals     SavingsGoal[]
-    debts            Debt[]
-    budgets          Budget[]
-    accounts         Account[]
-    createdAt        DateTime          @default(now())
-    updatedAt        DateTime          @updatedAt
+    id            String        @id @default(cuid())
+    name          String?
+    password      String?
+    email         String        @unique
+    emailVerified DateTime?
+    image         String?
+    // regularIncomes   Income[]
+    // irregularIncomes IrregularIncome[]
+    incomes       Income[]
+    expenses      Expense[]
+    savingsGoals  SavingsGoal[]
+    debts         Debt[]
+    budgets       Budget[]
+    accounts      Account[]
+    createdAt     DateTime      @default(now())
+    updatedAt     DateTime      @updatedAt
 }
 
 enum Frequency {
@@ -46,41 +47,68 @@ enum Frequency {
     MONTHLY
 }
 
-model RegularIncome {
-    id        String    @id @default(cuid())
-    amount    Float
-    source    String
-    frequency Frequency // ["weekly", "biweekly", "monthly"]
-    startDate DateTime
-    endDate   DateTime?
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    userId    String
-    User      User      @relation(fields: [userId], references: [id])
+enum IncomeType {
+    REGULAR
+    IRREGULAR
 }
 
-model IrregularIncome {
-    id        String   @id @default(cuid())
-    amount    Float
-    source    String
-    date      DateTime
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    userId    String
-    User      User     @relation(fields: [userId], references: [id])
+model Income {
+    id         String     @id @default(cuid())
+    amount     Float
+    categoryId String
+    category   Category   @relation(fields: [categoryId], references: [id])
+    frequency  Frequency? // ["weekly", "biweekly", "monthly"]
+    startDate  DateTime
+    endDate    DateTime?
+    yearMonth  String // Format: "YYYY-MM"
+    incomeType IncomeType
+    createdAt  DateTime   @default(now())
+    updatedAt  DateTime   @updatedAt
+    userId     String
+    User       User       @relation(fields: [userId], references: [id])
+
+    @@map("Incomes")
 }
+
+// model RegularIncome {
+//     id         String    @id @default(cuid())
+//     amount     Float
+//     categoryId String
+//     category   Category  @relation(fields: [categoryId], references: [id])
+//     frequency  Frequency // ["weekly", "biweekly", "monthly"]
+//     startDate  DateTime
+//     endDate    DateTime?
+//     yearMonth  String    // Format: "YYYY-MM"
+//     createdAt  DateTime  @default(now())
+//     updatedAt  DateTime  @updatedAt
+//     userId     String
+//     User       User      @relation(fields: [userId], references: [id])
+// }
+
+// model IrregularIncome {
+//     id         String   @id @default(cuid())
+//     amount     Float
+//     categoryId String
+//     category   Category @relation(fields: [categoryId], references: [id])
+//     date       DateTime
+//     yearMonth  String    // Format: "YYYY-MM"
+//     createdAt  DateTime @default(now())
+//     updatedAt  DateTime @updatedAt
+//     userId     String
+//     User       User     @relation(fields: [userId], references: [id])
+// }
 
 model SavingsGoal {
     id            String         @id @default(cuid())
     name          String
     amount        Float
+    contributions Contribution[]
     categoryId    String
     category      Category       @relation(fields: [categoryId], references: [id])
-    contributions Contribution[]
-    createdAt     DateTime       @default(now())
-    updatedAt     DateTime       @updatedAt
     userId        String
     User          User           @relation(fields: [userId], references: [id])
+    createdAt     DateTime       @default(now())
+    updatedAt     DateTime       @updatedAt
 }
 
 model Contribution {
@@ -94,19 +122,17 @@ model Contribution {
 }
 
 model Debt {
-    id        String        @id @default(cuid())
-    name      String
-    amount    Float
-    interest  Float
-    payments  DebtPayment[] // One-to-many relationship with Payment
+    id         String        @id @default(cuid())
+    name       String
+    amount     Float
+    interest   Float
+    payments   DebtPayment[] // One-to-many relationship with Payment
     categoryId String
-    category  Category      @relation(fields: [categoryId], references: [id])
-    // dueDate   DateTime
-    // paid      Boolean  @default(false)
-    createdAt DateTime      @default(now())
-    updatedAt DateTime      @updatedAt
-    userId    String
-    User      User          @relation(fields: [userId], references: [id])
+    category   Category      @relation(fields: [categoryId], references: [id])
+    createdAt  DateTime      @default(now())
+    updatedAt  DateTime      @updatedAt
+    userId     String
+    User       User          @relation(fields: [userId], references: [id])
 }
 
 model DebtPayment {
@@ -154,6 +180,7 @@ model Category {
     expenses     Expense[] // One-to-many relationship with Expense
     savingsGoals SavingsGoal[] // One-to-many relationship with SavingsGoal
     debts        Debt[] // One-to-many relationship with Debt
+    Incomes      Income[] // One-to-many relationship with RegularIncome
     createdAt    DateTime      @default(now())
     updatedAt    DateTime      @updatedAt
 }

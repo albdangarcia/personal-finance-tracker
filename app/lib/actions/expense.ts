@@ -2,13 +2,25 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import prisma from "@/app/lib/prisma";
-import { ExpenseFormErrorState, ExpenseSchema } from "../zod-schemas";
+import { CreateExpenseFormSchema, ExpenseFormError, ExpenseFormSchema, IdSchema } from "../zod-schemas";
 
 export async function deleteExpense(expenseId: string) {
+    // Validate the id
+    const parsedId = IdSchema.safeParse(expenseId);
+    
+    // If ID validation fails, throw an error
+    if (!parsedId.success) {
+        console.error("Invalid ID format:", parsedId.error);
+        throw new Error("Invalid ID format");
+    }
+
+    // Extract the validated ID
+    const validatedId = parsedId.data;
+
     try {
         await prisma.expense.delete({
             where: {
-                id: expenseId,
+                id: validatedId,
             },
         });
     } catch (error) {
@@ -24,11 +36,11 @@ export async function deleteExpense(expenseId: string) {
 }
 
 export async function createExpense(
-    prevState: ExpenseFormErrorState,
+    prevState: ExpenseFormError,
     formData: FormData
 ) {
     // Validate form fields using Zod
-    const validatedFields = ExpenseSchema.safeParse({
+    const validatedFields = CreateExpenseFormSchema.safeParse({
         name: formData.get("name"),
         amount: formData.get("amount"),
         categoryId: formData.get("categoryId"),
@@ -78,12 +90,13 @@ export async function createExpense(
 }
 
 export async function updateExpense(
-    id: string,
-    prevState: ExpenseFormErrorState,
+    updateId: string,
+    prevState: ExpenseFormError,
     formData: FormData
 ) {
     // Validate form fields using Zod
-    const validatedFields = ExpenseSchema.safeParse({
+    const validatedFields = ExpenseFormSchema.safeParse({
+        id: updateId,
         name: formData.get("name"),
         amount: formData.get("amount"),
         categoryId: formData.get("categoryId"),
@@ -99,7 +112,7 @@ export async function updateExpense(
     }
 
     // Extract validated fields
-    const { name, amount, categoryId, date } = validatedFields.data;
+    const { id, name, amount, categoryId, date } = validatedFields.data;
 
     // Update the expense
     try {

@@ -1,19 +1,19 @@
 "use client";
 import { useFormState } from "react-dom";
 import { createSavingsGoal } from "@/app/lib/actions/savings-goals";
-import { SavingsGoalFormErrorState } from "@/app/lib/zod-schemas";
-import { CategoryProps } from "@/app/lib/interfaces";
+import { SavingsGoalFormError } from "@/app/lib/zod-schemas";
+import { CategoryInfo } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 
 interface Props {
-    categories: CategoryProps[];
+    categories: CategoryInfo[];
 }
 
 const CreateSavingsGoalForm = ({ categories }: Props) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<SavingsGoalFormErrorState, FormData>(
+    const [state, dispatch] = useFormState<SavingsGoalFormError, FormData>(
         createSavingsGoal,
         initialState
     );

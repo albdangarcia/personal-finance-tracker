@@ -2,30 +2,60 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import prisma from "@/app/lib/prisma";
-import { ContributionFormErrorState, ContributionSchema } from "../zod-schemas";
+import {
+    ContributionFormError,
+    ContributionFormSchema,
+    CreateContributionFormSchema,
+    IdSchema,
+} from "../zod-schemas";
 
 export async function deleteContribution(id: string, savingsGoalId: string) {
+    // Validate the ID using Zod
+    const parsedId = IdSchema.safeParse(id);
+
+    // If ID validation fails, throw an error
+    if (!parsedId.success) {
+        console.error("Invalid ID format:", parsedId.error);
+        throw new Error("Invalid ID format");
+    }
+
+    // Extract the ID from the validated data
+    const contributionId = parsedId.data;
+
     try {
         await prisma.contribution.delete({
             where: {
-                id: id,
+                id: contributionId,
             },
         });
     } catch (error) {
         console.error("Failed to delete Contribution:", error);
         throw new Error("Failed to delete Contribution");
     }
+
     // Revalidate the cache
     revalidatePath(`/dashboard/savings-goals/${savingsGoalId}/contributions`);
 }
 
 export async function createContribution(
     savingsGoalId: string,
-    prevState: ContributionFormErrorState,
+    prevState: ContributionFormError,
     formData: FormData
 ) {
+    // Validate the id
+    const parsedId = IdSchema.safeParse(savingsGoalId);
+
+    // If ID validation fails, throw an error
+    if (!parsedId.success) {
+        console.error("Invalid ID format:", parsedId.error);
+        throw new Error("Invalid ID format");
+    }
+
+    // Extract the ID from the parsed data
+    const validatedGoalId = parsedId.data;
+
     // Validate form fields using Zod
-    const validatedFields = ContributionSchema.safeParse({
+    const validatedFields = CreateContributionFormSchema.safeParse({
         amount: formData.get("amount"),
         date: formData.get("date"),
     });
@@ -47,7 +77,7 @@ export async function createContribution(
             data: {
                 amount: Number(amount),
                 date: new Date(date.toString()),
-                savingsGoalId: savingsGoalId,
+                savingsGoalId: validatedGoalId,
             },
         });
     } catch (error) {
@@ -58,20 +88,21 @@ export async function createContribution(
     }
 
     // Revalidate the cache
-    revalidatePath(`/dashboard/savings-goals/${savingsGoalId}/contributions`);
+    revalidatePath(`/dashboard/savings-goals/${validatedGoalId}/contributions`);
 
     // Redirect the user
-    redirect(`/dashboard/savings-goals/${savingsGoalId}/contributions`);
+    redirect(`/dashboard/savings-goals/${validatedGoalId}/contributions`);
 }
 
 export async function updateContribution(
-    id: string,
+    contributionId: string,
     goalId: string,
-    prevState: ContributionFormErrorState,
+    prevState: ContributionFormError,
     formData: FormData
 ) {
     // Validate form fields using Zod
-    const validatedFields = ContributionSchema.safeParse({
+    const validatedFields = ContributionFormSchema.safeParse({
+        id: contributionId,
         amount: formData.get("amount"),
         date: formData.get("date"),
     });
@@ -85,7 +116,7 @@ export async function updateContribution(
     }
 
     // Extract validated fields
-    const { amount, date } = validatedFields.data;
+    const { id, amount, date } = validatedFields.data;
 
     // Update the contribution
     try {

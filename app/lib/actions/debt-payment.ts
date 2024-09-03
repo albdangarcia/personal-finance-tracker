@@ -2,13 +2,30 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import prisma from "@/app/lib/prisma";
-import { PaymentFormErrorState, PaymentSchema } from "../zod-schemas";
+import {
+    CreatePaymentFormSchema,
+    IdSchema,
+    PaymentFormError,
+    PaymentFormSchema,
+} from "../zod-schemas";
 
 export async function deletePayment(id: string, debtId: string) {
+    // Validate the id
+    const parsedPaymentId = IdSchema.safeParse(id);
+
+    // If ID validation fails, throw an error
+    if (!parsedPaymentId.success) {
+        console.error("Invalid ID format:", parsedPaymentId.error);
+        throw new Error("Invalid ID format");
+    }
+
+    // Extract the ID from the validated data
+    const validatedPaymentId = parsedPaymentId.data;
+
     try {
         await prisma.debtPayment.delete({
             where: {
-                id: id,
+                id: validatedPaymentId,
             },
         });
     } catch (error) {
@@ -21,11 +38,19 @@ export async function deletePayment(id: string, debtId: string) {
 
 export async function createPayment(
     debtId: string,
-    prevState: PaymentFormErrorState,
+    prevState: PaymentFormError,
     formData: FormData
 ) {
+    const parsedDebtId = IdSchema.safeParse(debtId);
+
+    // If ID validation fails, throw an error
+    if (!parsedDebtId.success) {
+        console.error("Invalid ID format:", parsedDebtId.error);
+        throw new Error("Invalid ID format");
+    }
+
     // Validate form fields using Zod
-    const validatedFields = PaymentSchema.safeParse({
+    const validatedFields = CreatePaymentFormSchema.safeParse({
         amount: formData.get("amount"),
         date: formData.get("date"),
     });
@@ -40,6 +65,7 @@ export async function createPayment(
 
     // Extract validated fields
     const { amount, date } = validatedFields.data;
+    const validatedDebtId = parsedDebtId.data;
 
     // Create the payment
     try {
@@ -47,7 +73,7 @@ export async function createPayment(
             data: {
                 amount: Number(amount),
                 date: new Date(date.toString()),
-                debtId: debtId,
+                debtId: validatedDebtId,
             },
         });
     } catch (error) {
@@ -58,20 +84,21 @@ export async function createPayment(
     }
 
     // Revalidate the cache
-    revalidatePath(`/dashboard/debts/${debtId}/payments`);
-   
+    revalidatePath(`/dashboard/debts/${validatedDebtId}/payments`);
+
     // Redirect to the payments page
-    redirect(`/dashboard/debts/${debtId}/payments`);
+    redirect(`/dashboard/debts/${validatedDebtId}/payments`);
 }
 
 export async function updatePayment(
-    id: string,
+    paymentId: string,
     debtId: string,
-    prevState: PaymentFormErrorState,
+    prevState: PaymentFormError,
     formData: FormData
 ) {
     // Validate form fields using Zod
-    const validatedFields = PaymentSchema.safeParse({
+    const validatedFields = PaymentFormSchema.safeParse({
+        id: paymentId,
         amount: formData.get("amount"),
         date: formData.get("date"),
     });
@@ -85,7 +112,7 @@ export async function updatePayment(
     }
 
     // Extract validated fields
-    const { amount, date } = validatedFields.data;
+    const { id, amount, date } = validatedFields.data;
 
     // Update the payment
     try {

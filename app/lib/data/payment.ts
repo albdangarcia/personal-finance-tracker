@@ -1,6 +1,6 @@
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
-import { DebtWithPayments, PaymentInfo } from "../interfaces";
+import { DebtWithPayments, PaymentById } from "../interfaces";
 
 const fetchPaymentsByDebtId = async (id: string): Promise<DebtWithPayments | null> => {
     // Disable caching for this function
@@ -41,7 +41,7 @@ const fetchPaymentsByDebtId = async (id: string): Promise<DebtWithPayments | nul
     }
 }
 
-const fetchPaymentById = async (id: string): Promise<PaymentInfo | null> => {
+const fetchPaymentById = async (id: string): Promise<PaymentById | null> => {
     // Disable caching for this function
     noStore();
 

@@ -13,11 +13,11 @@ import DialogComponent from "../delete-dialog";
 import Pagination from "../pagination";
 import SearchBar from "../search-bar";
 import YearMonthInput from "../year-month-input";
-import { FilteredExpenses } from "@/app/lib/interfaces";
+import { ExpenseById } from "@/app/lib/interfaces";
 
 interface Props {
     totalPages: number;
-    expenses: FilteredExpenses[];
+    expenses: ExpenseById[];
 };
 
 const ExpensesTable = ({ expenses, totalPages }: Props) => {

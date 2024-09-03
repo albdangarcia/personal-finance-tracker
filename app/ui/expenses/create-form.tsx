@@ -1,15 +1,15 @@
 "use client";
 import { useFormState } from "react-dom";
 import { createExpense } from "@/app/lib/actions/expense";
-import { ExpenseFormErrorState } from "@/app/lib/zod-schemas";
-import { CategoryProps } from "@/app/lib/interfaces";
+import { ExpenseFormError } from "@/app/lib/zod-schemas";
+import { CategoryInfo } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 
-const CreateExpenseForm = ({ categories }: { categories: CategoryProps[] }) => {
+const CreateExpenseForm = ({ categories }: { categories: CategoryInfo[] }) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<ExpenseFormErrorState, FormData>(
+    const [state, dispatch] = useFormState<ExpenseFormError, FormData>(
         createExpense,
         initialState
     );

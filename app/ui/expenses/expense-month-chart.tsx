@@ -9,7 +9,7 @@ import {
     PointElement,
     LineElement,
 } from "chart.js";
-import { MonthlyExpenses } from "@/app/lib/interfaces";
+import { MonthlyObject } from "@/app/lib/interfaces";
 Chart.register(
     ArcElement,
     Tooltip,
@@ -20,7 +20,7 @@ Chart.register(
 );
 
 interface Props {
-    expenseData: MonthlyExpenses[];
+    expenseData: MonthlyObject[];
 }
 
 const ExpenseMonthChart = ({ expenseData }: Props) => {

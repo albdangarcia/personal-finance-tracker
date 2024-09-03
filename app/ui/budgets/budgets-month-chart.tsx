@@ -10,7 +10,7 @@ import {
     LineElement,
     BarElement,
 } from "chart.js";
-import { MonthlyBudgets, MonthlyExpenses } from "@/app/lib/interfaces";
+import { MonthlyObject } from "@/app/lib/interfaces";
 Chart.register(
     ArcElement,
     Tooltip,
@@ -22,14 +22,14 @@ Chart.register(
 );
 
 interface Props {
-    monthlyBudgets: MonthlyBudgets[];
-    monthlyExpenses: MonthlyExpenses[];
+    monthlyBudgets: MonthlyObject[];
+    monthlyExpenses: MonthlyObject[];
 }
 
 const BudgetMonthChart = ({ monthlyBudgets, monthlyExpenses }: Props) => {
     // Chart data
     const data = {
-        labels: monthlyBudgets.map((budget) => budget.month),
+        labels: monthlyBudgets.map((budget) => budget.monthLabel),
         datasets: [
             {
                 label: "Budget",

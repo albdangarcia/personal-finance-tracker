@@ -1,16 +1,16 @@
 "use client";
 import { useFormState } from "react-dom";
 import { createBudget } from "@/app/lib/actions/budget";
-import { BudgetFormErrorState } from "@/app/lib/zod-schemas";
-import { CategoryProps } from "@/app/lib/interfaces";
+import { BudgetFormError } from "@/app/lib/zod-schemas";
+import { CategoryInfo } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 import getCurrentYearMonth from "@/app/lib/utils/currentMonthYear";
 
-const CreateBudgetForm = ({ categories }: { categories: CategoryProps[] }) => {
+const CreateBudgetForm = ({ categories }: { categories: CategoryInfo[] }) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<BudgetFormErrorState, FormData>(
+    const [state, dispatch] = useFormState<BudgetFormError, FormData>(
         createBudget,
         initialState
     );

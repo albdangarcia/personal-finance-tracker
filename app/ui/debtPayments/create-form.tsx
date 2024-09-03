@@ -2,14 +2,14 @@
 import { useFormState } from "react-dom";
 import FormButtons from "../form-buttons";
 import { createPayment } from "@/app/lib/actions/debt-payment";
-import { PaymentFormErrorState } from "@/app/lib/zod-schemas";
+import { PaymentFormError } from "@/app/lib/zod-schemas";
 
 const CreatePaymentForm = ({ debtId }: { debtId: string }) => {
     const createPaymentWithId = createPayment.bind(null, debtId);
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<PaymentFormErrorState, FormData>(
+    const [state, dispatch] = useFormState<PaymentFormError, FormData>(
         createPaymentWithId,
         initialState
     );
