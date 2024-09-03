@@ -1,19 +1,16 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+const now = new Date();
+const currentYear = now.getFullYear();
+const currentMonth = (num) => String(now.getMonth() + 1 + num).padStart(2, "0");
+
 const user1 = {
     id: "clziqqbgy000108l7dmts0vng",
     name: "John Doe",
     email: "john.doe@example.com",
     password: "password123",
 };
-
-// const user2 = {
-//   id: "clziqr73j000208l75sy3dldm",
-//   name: "Jane Smith",
-//   email: "jane.smith@example.com",
-//   password: "password123",
-// };
 
 async function seedUsers() {
     console.log("Seeding users...");
@@ -36,8 +33,8 @@ async function Incomes() {
                     amount: 5000,
                     categoryId: "clzn1yym2000g08l61zfidl1g",
                     frequency: "MONTHLY",
-                    startDate: new Date("2024-08-01"),
-                    yearMonth: "2024-08",
+                    startDate: new Date(`${currentYear}-${currentMonth(0)}-01`),
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
                     incomeType: "REGULAR",
                     userId: user1.id,
                 },
@@ -45,24 +42,24 @@ async function Incomes() {
                     amount: 400,
                     categoryId: "clzn1yym2000g08l61zfidl1g",
                     frequency: "MONTHLY",
-                    startDate: new Date("2024-08-01"),
-                    yearMonth: "2024-08",
+                    startDate: new Date(`${currentYear}-${currentMonth(0)}-01`),
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
                     incomeType: "REGULAR",
                     userId: user1.id,
                 },
                 {
                     amount: 200,
                     categoryId: "cm0edf2o2000008jz6nsj6nwe",
-                    startDate: new Date("2024-08-15"),
-                    yearMonth: "2024-08",
+                    startDate: new Date(`${currentYear}-${currentMonth(0)}-15`),
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
                     incomeType: "IRREGULAR",
                     userId: user1.id,
                 },
                 {
                     amount: 3400,
                     categoryId: "cm0edf2o2000008jz6nsj6nwe",
-                    startDate: new Date("2024-08-15"),
-                    yearMonth: "2024-08",
+                    startDate: new Date(`${currentYear}-${currentMonth(0)}-15`),
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
                     incomeType: "IRREGULAR",
                     userId: user1.id,
                 },
@@ -74,26 +71,6 @@ async function Incomes() {
     }
 }
 
-// async function seedIrregularIncomes() {
-//     console.log("Seeding irregular incomes...");
-//     try {
-//         await prisma.irregularIncome.createMany({
-//             data: [
-//                 {
-//                     amount: 200,
-//                     categoryId: "cm0edf2o2000008jz6nsj6nwe",
-//                     date: new Date("2024-08-15"),
-//                     yearMonth: "2024-08",
-//                     userId: user1.id,
-//                 },
-//             ],
-//         });
-//     } catch (error) {
-//         console.error("Error seeding irregular incomes:", error);
-//         throw error;
-//     }
-// }
-
 async function seedExpense() {
     console.log("Seeding expenses...");
     try {
@@ -104,184 +81,184 @@ async function seedExpense() {
                     name: "Restaurant at McDonald's",
                     amount: 180,
                     userId: user1.id,
-                    yearMonth: "2024-08",
-                    date: new Date("2024-08-15"),
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     categoryId: "clzn1sjfo000108l6hk8t48z4",
                     name: "Groceries at Walmart",
                     amount: 30,
                     userId: user1.id,
-                    yearMonth: "2024-08",
-                    date: new Date("2024-08-15"),
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     categoryId: "clzn1t6g6000208l68sy4a87y",
                     name: "Shopping at Amazon",
                     amount: 50,
                     userId: user1.id,
-                    yearMonth: "2024-08",
-                    date: new Date("2024-08-15"),
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     categoryId: "clzn1uya9000308l63mz9cnqd",
                     name: "Entertainment at Netflix",
                     amount: 20,
                     userId: user1.id,
-                    yearMonth: "2024-08",
-                    date: new Date("2024-08-15"),
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     categoryId: "clzn1v4hf000508l673fm0oku",
                     name: "Transportation at Uber",
                     amount: 40,
                     userId: user1.id,
-                    yearMonth: "2024-08",
-                    date: new Date("2024-08-15"),
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     categoryId: "clzn1v9qs000608l6b6h23jt8",
                     name: "Health & Fitness at Gym",
                     amount: 10,
                     userId: user1.id,
-                    yearMonth: "2024-08",
-                    date: new Date("2024-08-15"),
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     categoryId: "clzn1ve6r000708l69p99czkv",
                     name: "Utilities at PG&E",
                     amount: 40,
                     userId: user1.id,
-                    yearMonth: "2024-08",
-                    date: new Date("2024-08-15"),
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     categoryId: "clzn1vjnb000808l6d351ajrw",
                     name: "Travel at Expedia",
                     amount: 20,
                     userId: user1.id,
-                    yearMonth: "2024-08",
-                    date: new Date("2024-08-15"),
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     categoryId: "clzn1vqi8000908l64ure8t1k",
                     name: "Education at Udemy",
                     amount: 10,
                     userId: user1.id,
-                    yearMonth: "2024-08",
-                    date: new Date("2024-08-15"),
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     categoryId: "clzn1vv97000a08l6863rh49m",
                     name: "Insurance at Geico",
                     amount: 30,
                     userId: user1.id,
-                    yearMonth: "2024-08",
-                    date: new Date("2024-08-15"),
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     categoryId: "clzn1wtpi000b08l69dclc6oq",
                     name: "Phone at AT&T",
                     amount: 40,
                     userId: user1.id,
-                    yearMonth: "2024-08",
-                    date: new Date("2024-08-15"),
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     categoryId: "clzn1wzml000c08l6ewdth0zk",
                     name: "Internet at Comcast",
                     amount: 20,
                     userId: user1.id,
-                    yearMonth: "2024-08",
-                    date: new Date("2024-08-15"),
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     categoryId: "clzn1ykfe000d08l66g2sh8iw",
                     name: "Pets at Petco",
                     amount: 10,
                     userId: user1.id,
-                    yearMonth: "2024-07",
-                    date: new Date("2024-07-15"),
+                    yearMonth: `${currentYear}-${currentMonth(-1)}`,
+                    date: new Date(`${currentYear}-${currentMonth(-1)}-15`),
                 },
                 {
                     categoryId: "clzn1yobw000e08l694zh9tg3",
                     name: "Gifts at Amazon",
                     amount: 30,
                     userId: user1.id,
-                    yearMonth: "2024-07",
-                    date: new Date("2024-07-15"),
+                    yearMonth: `${currentYear}-${currentMonth(-1)}`,
+                    date: new Date(`${currentYear}-${currentMonth(-1)}-15`),
                 },
                 {
                     categoryId: "clzn1yspd000f08l67wjh5d0m",
                     name: "Kids at Toys R Us",
                     amount: 40,
                     userId: user1.id,
-                    yearMonth: "2024-07",
-                    date: new Date("2024-07-15"),
+                    yearMonth: `${currentYear}-${currentMonth(-1)}`,
+                    date: new Date(`${currentYear}-${currentMonth(-1)}-15`),
                 },
                 {
                     categoryId: "clzn1yym2000g08l61zfidl1g",
                     name: "Investments at Robinhood",
                     amount: 20,
                     userId: user1.id,
-                    yearMonth: "2024-06",
-                    date: new Date("2024-06-15"),
+                    yearMonth: `${currentYear}-${currentMonth(-2)}`,
+                    date: new Date(`${currentYear}-${currentMonth(-2)}-15`),
                 },
                 {
                     categoryId: "clzn1z2bu000h08l69nb4dvva",
                     name: "Charity at Red Cross",
                     amount: 10,
                     userId: user1.id,
-                    yearMonth: "2024-06",
-                    date: new Date("2024-06-15"),
+                    yearMonth: `${currentYear}-${currentMonth(-2)}`,
+                    date: new Date(`${currentYear}-${currentMonth(-2)}-15`),
                 },
                 {
                     categoryId: "clzn1z6qa000i08l6fklc577c",
                     name: "Savings at Bank of America",
                     amount: 30,
                     userId: user1.id,
-                    yearMonth: "2024-06",
-                    date: new Date("2024-06-15"),
+                    yearMonth: `${currentYear}-${currentMonth(-2)}`,
+                    date: new Date(`${currentYear}-${currentMonth(-2)}-15`),
                 },
                 {
                     categoryId: "clzn1zbe1000j08l6gjabe0v6",
                     name: "Miscellaneous at Amazon",
                     amount: 20,
                     userId: user1.id,
-                    yearMonth: "2024-05",
-                    date: new Date("2024-05-15"),
+                    yearMonth: `${currentYear}-${currentMonth(-3)}`,
+                    date: new Date(`${currentYear}-${currentMonth(-3)}-15`),
                 },
                 {
                     categoryId: "clzn1zess000k08l6hx0zggcb",
                     name: "Clothing at Macy's",
                     amount: 10,
                     userId: user1.id,
-                    yearMonth: "2024-05",
-                    date: new Date("2024-05-15"),
+                    yearMonth: `${currentYear}-${currentMonth(-3)}`,
+                    date: new Date(`${currentYear}-${currentMonth(-3)}-15`),
                 },
                 {
                     categoryId: "clzn217qn000o08l6fg2i2fyq",
                     name: "Home Services at Home Depot",
                     amount: 70,
                     userId: user1.id,
-                    yearMonth: "2024-04",
-                    date: new Date("2024-04-15"),
+                    yearMonth: `${currentYear}-${currentMonth(-4)}`,
+                    date: new Date(`${currentYear}-${currentMonth(-4)}-15`),
                 },
                 {
                     categoryId: "clzn21b66000p08l6g6rn5zip",
                     name: "Auto & Transport at Shell",
                     amount: 100,
                     userId: user1.id,
-                    yearMonth: "2024-04",
-                    date: new Date("2024-04-15"),
+                    yearMonth: `${currentYear}-${currentMonth(-4)}`,
+                    date: new Date(`${currentYear}-${currentMonth(-4)}-15`),
                 },
                 {
                     categoryId: "clzn21eq3000q08l6f974e4q9",
                     name: "Gas & Fuel at Chevron",
                     amount: 10,
                     userId: user1.id,
-                    yearMonth: "2024-04",
-                    date: new Date("2024-04-15"),
+                    yearMonth: `${currentYear}-${currentMonth(-4)}`,
+                    date: new Date(`${currentYear}-${currentMonth(-4)}-15`),
                 },
             ],
         });
@@ -424,32 +401,32 @@ async function seedSavingContributions() {
                 {
                     savingsGoalId: "clzu61h7d000108l251hzaezo",
                     amount: 100,
-                    date: new Date("2024-01-15"),
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     savingsGoalId: "clzu61h7d000108l251hzaezo",
                     amount: 1000,
-                    date: new Date("2024-02-15"),
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     savingsGoalId: "clzu61h7d000108l251hzaezo",
                     amount: 1000,
-                    date: new Date("2024-03-15"),
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     savingsGoalId: "clzu61tyn000208l2gz9v3sg0",
                     amount: 2300,
-                    date: new Date("2024-01-15"),
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     savingsGoalId: "clzu61tyn000208l2gz9v3sg0",
                     amount: 1000,
-                    date: new Date("2024-02-15"),
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
                 {
                     savingsGoalId: "clzu61tyn000208l2gz9v3sg0",
                     amount: 1000,
-                    date: new Date("2024-03-15"),
+                    date: new Date(`${currentYear}-${currentMonth(0)}-15`),
                 },
             ],
         });
@@ -535,12 +512,12 @@ async function seedDebtPayments() {
             data: [
                 {
                     amount: 200,
-                    date: new Date("2024-08-01"),
+                    date: new Date(`${currentYear}-${currentMonth(0)}-1`),
                     debtId: "cm0bugqzr000308lb3zmg2vo3",
                 },
                 {
                     amount: 100,
-                    date: new Date("2024-08-01"),
+                    date: new Date(`${currentYear}-${currentMonth(0)}-1`),
                     debtId: "cm0bu9nl5000108lba11t74s2",
                 },
             ],
@@ -559,139 +536,139 @@ async function seedBudgets() {
                 {
                     categoryId: "clzn1qih0000008l62z1r5cus",
                     amount: 100,
-                    yearMonth: "2024-08",
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1sjfo000108l6hk8t48z4",
                     amount: 100,
-                    yearMonth: "2024-08",
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1t6g6000208l68sy4a87y",
                     amount: 100,
-                    yearMonth: "2024-08",
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1uya9000308l63mz9cnqd",
                     amount: 100,
-                    yearMonth: "2024-08",
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1v4hf000508l673fm0oku",
                     amount: 100,
-                    yearMonth: "2024-08",
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1v9qs000608l6b6h23jt8",
                     amount: 100,
-                    yearMonth: "2024-08",
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1ve6r000708l69p99czkv",
                     amount: 100,
-                    yearMonth: "2024-08",
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1vjnb000808l6d351ajrw",
                     amount: 100,
-                    yearMonth: "2024-08",
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1vqi8000908l64ure8t1k",
                     amount: 100,
-                    yearMonth: "2024-08",
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1vv97000a08l6863rh49m",
                     amount: 100,
-                    yearMonth: "2024-08",
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1wtpi000b08l69dclc6oq",
                     amount: 100,
-                    yearMonth: "2024-08",
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1wzml000c08l6ewdth0zk",
                     amount: 100,
-                    yearMonth: "2024-08",
+                    yearMonth: `${currentYear}-${currentMonth(0)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1ykfe000d08l66g2sh8iw",
                     amount: 100,
-                    yearMonth: "2024-07",
+                    yearMonth: `${currentYear}-${currentMonth(-1)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1yobw000e08l694zh9tg3",
                     amount: 100,
-                    yearMonth: "2024-07",
+                    yearMonth: `${currentYear}-${currentMonth(-1)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1yspd000f08l67wjh5d0m",
                     amount: 100,
-                    yearMonth: "2024-07",
+                    yearMonth: `${currentYear}-${currentMonth(-1)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1yym2000g08l61zfidl1g",
                     amount: 100,
-                    yearMonth: "2024-06",
+                    yearMonth: `${currentYear}-${currentMonth(-2)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1z2bu000h08l69nb4dvva",
                     amount: 100,
-                    yearMonth: "2024-06",
+                    yearMonth: `${currentYear}-${currentMonth(-2)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1z6qa000i08l6fklc577c",
                     amount: 100,
-                    yearMonth: "2024-06",
+                    yearMonth: `${currentYear}-${currentMonth(-2)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1zbe1000j08l6gjabe0v6",
                     amount: 100,
-                    yearMonth: "2024-05",
+                    yearMonth: `${currentYear}-${currentMonth(-3)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn1zess000k08l6hx0zggcb",
                     amount: 100,
-                    yearMonth: "2024-05",
+                    yearMonth: `${currentYear}-${currentMonth(-3)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn217qn000o08l6fg2i2fyq",
                     amount: 700,
-                    yearMonth: "2024-04",
+                    yearMonth: `${currentYear}-${currentMonth(-4)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn21b66000p08l6g6rn5zip",
                     amount: 1000,
-                    yearMonth: "2024-04",
+                    yearMonth: `${currentYear}-${currentMonth(-4)}`,
                     userId: user1.id,
                 },
                 {
                     categoryId: "clzn21eq3000q08l6f974e4q9",
                     amount: 100,
-                    yearMonth: "2024-04",
+                    yearMonth: `${currentYear}-${currentMonth(-4)}`,
                     userId: user1.id,
                 },
             ],
@@ -711,8 +688,7 @@ async function main() {
     await prisma.contribution.deleteMany();
     await prisma.savingsGoal.deleteMany();
     await prisma.expense.deleteMany();
-    // await prisma.irregularIncome.deleteMany();
-    await prisma.Income.deleteMany();
+    await prisma.income.deleteMany();
     await prisma.user.deleteMany();
     await prisma.category.deleteMany();
 
@@ -721,7 +697,6 @@ async function main() {
     await seedCategories();
     await seedUsers();
     await Incomes();
-    // await seedIrregularIncomes();
     await seedExpense();
     await seedSavingsGoals();
     await seedSavingContributions();
