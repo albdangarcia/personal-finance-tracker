@@ -56,7 +56,7 @@ const Page = async ({ searchParams }: PageProps) => {
             <MainWrapper>
                 <SectionWrapper>
                     <SectionHeader
-                        title="Doughnut Chart"
+                        title="Categories"
                         subtitle="Budgets by category for the selected month."
                     />
                     <BudgetChart budgetData={budgetData} />

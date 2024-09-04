@@ -484,7 +484,7 @@ async function seedDebts() {
                 {
                     id: "cm0bu9nl5000108lba11t74s2",
                     name: "Student Loan",
-                    amount: 10000,
+                    amount: 2000,
                     categoryId: "clzn1vqi8000908l64ure8t1k",
                     interest: 5.0,
                     userId: user1.id,
@@ -492,9 +492,17 @@ async function seedDebts() {
                 {
                     id: "cm0bugqzr000308lb3zmg2vo3",
                     name: "Bank Credit Card",
-                    amount: 5000,
+                    amount: 3000,
                     categoryId: "cm0bu5boh000008lb2ol28llt",
                     interest: 2.0,
+                    userId: user1.id,
+                },
+                {
+                    id: "cm0mwf1up000108l8f8xnaydg",
+                    name: "New phone",
+                    amount: 1500,
+                    categoryId: "clzn1wtpi000b08l69dclc6oq",
+                    interest: 1.0,
                     userId: user1.id,
                 }
             ],

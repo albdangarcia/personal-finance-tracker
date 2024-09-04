@@ -119,14 +119,12 @@ const DebtsTable = ({ categoriesWithDebts, totalPages }: Props) => {
                                 </p>
                                 {/* View payments */}
                                 <div>
-                                    {debt.payments.length > 0 && (
-                                        <Link
-                                            href={`/dashboard/debts/${debt.id}/payments`}
-                                            className="text-indigo-600 font-medium"
-                                        >
-                                            View Details
-                                        </Link>
-                                    )}
+                                    <Link
+                                        href={`/dashboard/debts/${debt.id}/payments`}
+                                        className="text-indigo-600 font-medium"
+                                    >
+                                        View Details
+                                    </Link>
                                 </div>
                                 <EditDeleteButtons
                                     editLink={`/dashboard/debts/${debt.id}`}

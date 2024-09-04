@@ -5,21 +5,22 @@ import { Chart, ArcElement, Tooltip } from "chart.js";
 import { DataByCategories } from "@/app/lib/interfaces";
 Chart.register(ArcElement, Tooltip);
 
+
 interface Props {
-    expenseData: DataByCategories[];
+    incomeData: DataByCategories[];
 }
 
-const ExpenseCategoryChart = ({ expenseData }: Props) => {
+const IncomeCategoryChart = ({ incomeData }: Props) => {
     // Generate random colors for the chart slices
-    const backgroundColors = expenseData.map(() => getRandomColor());
-
+    const backgroundColors = incomeData.map(() => getRandomColor());
+    
     // Chart data
     const data = {
-        labels: expenseData.map((expense) => expense.categoryName),
+        labels: incomeData.map((income) => income.categoryName),
         datasets: [
             {
-                label: "Expense",
-                data: expenseData.map((expense) => expense.totalAmount),
+                label: "income",
+                data: incomeData.map((income) => income.totalAmount),
                 backgroundColor: backgroundColors,
                 hoverOffset: 4,
             },
@@ -33,4 +34,4 @@ const ExpenseCategoryChart = ({ expenseData }: Props) => {
         </div>
     );
 };
-export default ExpenseCategoryChart;
+export default IncomeCategoryChart;

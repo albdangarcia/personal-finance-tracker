@@ -37,8 +37,8 @@ const Page = async ({ searchParams }: Props) => {
                 <div className="col-span-2">
                     <SectionWrapper>
                         <SectionHeader
-                            title="Polar Area Chart"
-                            subtitle="Debts by category."
+                            title="Categories"
+                            subtitle="Amount of debt by category."
                         />
                         <DebtCategoryChart debtData={debts} />
                     </SectionWrapper>

@@ -55,7 +55,7 @@ const Page = async ({ searchParams }: PageProps) => {
             <MainWrapper>
                 <SectionWrapper>
                     <SectionHeader
-                        title="Pie Chart"
+                        title="Categories"
                         subtitle="Expenses by category for the selected month."
                     />
                     <ExpenseCategoryChart expenseData={expensesByCategory} />

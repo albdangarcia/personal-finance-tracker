@@ -35,12 +35,6 @@ export interface ExpenseById
     category: CategoryInfo;
 }
 
-export interface ExpensesByCategories {
-    categoryId: string;
-    categoryName: string;
-    totalAmount: number;
-}
-
 // savings goals and contributions
 interface ContributionInfo
     extends Pick<Contribution, "id" | "amount" | "date"> {}
@@ -101,4 +95,10 @@ export interface IncomeById
 export interface GroupIncomes {
     regularIncomes: IncomeById[];
     irregularIncomes: IncomeById[];
+}
+
+export interface DataByCategories {
+    categoryId: string;
+    categoryName: string;
+    totalAmount: number;
 }

@@ -105,7 +105,8 @@ const CategoriesTable = ({ categoriesWithGoals, totalPages }: Props) => {
                                 <p className="text-gray-500">
                                     {Math.min(
                                         Math.round(
-                                            (goal.totalContributions / goal.amount) *
+                                            (goal.totalContributions /
+                                                goal.amount) *
                                                 100
                                         ),
                                         100
@@ -113,14 +114,12 @@ const CategoriesTable = ({ categoriesWithGoals, totalPages }: Props) => {
                                     %
                                 </p>
                                 <div>
-                                    {goal.contributions.length > 0 && (
-                                        <Link
-                                            href={`/dashboard/savings-goals/${goal.id}/contributions`}
-                                            className="text-indigo-600 font-medium"
-                                        >
-                                            View Details
-                                        </Link>
-                                    )}
+                                    <Link
+                                        href={`/dashboard/savings-goals/${goal.id}/contributions`}
+                                        className="text-indigo-600 font-medium"
+                                    >
+                                        View Details
+                                    </Link>
                                 </div>
                                 <EditDeleteButtons
                                     editLink={`/dashboard/savings-goals/${goal.id}`}

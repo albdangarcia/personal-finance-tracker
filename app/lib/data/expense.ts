@@ -1,8 +1,8 @@
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
 import {
+    DataByCategories,
     ExpenseById,
-    ExpensesByCategories,
     MonthlyObject,
 } from "../interfaces";
 import getCurrentYearMonth from "../utils/currentMonthYear";
@@ -51,7 +51,7 @@ const fetchExpenseById = async (id: string): Promise<ExpenseById | null> => {
 const fetchExpensesByCategory = async (
     year: string,
     month: string
-): Promise<ExpensesByCategories[]> => {
+): Promise<DataByCategories[]> => {
     // Disable caching
     noStore();
 
@@ -80,10 +80,10 @@ const fetchExpensesByCategory = async (
             },
         });
 
-        // Reduce the expenses array to a grouped array of expenses by category
-        const expensesByCategory = expenses.reduce<ExpensesByCategories[]>(
+        // Group by category and calculate the total amount for each category
+        const groupByCategory = expenses.reduce<DataByCategories[]>(
             (accumulator, expense) => {
-                // Extract categoryId and categoryName from the current expense
+                // Extract categoryId and categoryName
                 const categoryId = expense.categoryId;
                 const categoryName = expense.category.name;
 
@@ -93,7 +93,7 @@ const fetchExpensesByCategory = async (
                 );
 
                 if (existingCategory) {
-                    // If the category exists, add the current expense amount to the total
+                    // If the category exists, add the amount to the total
                     existingCategory.totalAmount += expense.amount;
                 } else {
                     // If the category does not exist, create a new category entry
@@ -110,7 +110,7 @@ const fetchExpensesByCategory = async (
             [] // Initial value of the accumulator is an empty array
         );
 
-        return expensesByCategory;
+        return groupByCategory;
     } catch (error) {
         console.error("Failed to fetch expenses by category:", error);
         throw new Error("Failed to fetch expenses by category.");

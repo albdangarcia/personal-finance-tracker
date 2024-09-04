@@ -25,13 +25,11 @@ function groupDebtsByCategory(debtsWithCategories: CategoriesWithDebts[]) {
     }));
 }
 
-
 interface Props {
     debtData: CategoriesWithDebts[];
 }
 
 const DebtCategoryChart = ({ debtData }: Props) => {
-
     const chartData = groupDebtsByCategory(debtData)
     
     // Generate random colors for the chart slices
@@ -39,12 +37,11 @@ const DebtCategoryChart = ({ debtData }: Props) => {
     
     // Chart data
     const data = {
-        // labels: debtData.map((debt) => debt.categoryName),
         labels: chartData.map((debt) => debt.categoryName),
         datasets: [
             {
-                label: "Expense",
-                data: chartData.map((expense) => expense.totalAmount),
+                label: "Debt",
+                data: chartData.map((debt) => debt.totalAmount),
                 backgroundColor: backgroundColors,
                 hoverOffset: 4,
             },

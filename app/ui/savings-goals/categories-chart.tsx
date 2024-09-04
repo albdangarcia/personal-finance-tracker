@@ -6,20 +6,20 @@ import { DataByCategories } from "@/app/lib/interfaces";
 Chart.register(ArcElement, Tooltip);
 
 interface Props {
-    expenseData: DataByCategories[];
+    savingGoalsData: DataByCategories[];
 }
 
-const ExpenseCategoryChart = ({ expenseData }: Props) => {
+const CategoryChart = ({ savingGoalsData }: Props) => {
     // Generate random colors for the chart slices
-    const backgroundColors = expenseData.map(() => getRandomColor());
+    const backgroundColors = savingGoalsData.map(() => getRandomColor());
 
     // Chart data
     const data = {
-        labels: expenseData.map((expense) => expense.categoryName),
+        labels: savingGoalsData.map((goal) => goal.categoryName),
         datasets: [
             {
-                label: "Expense",
-                data: expenseData.map((expense) => expense.totalAmount),
+                label: "Savings Goals",
+                data: savingGoalsData.map((goal) => goal.totalAmount),
                 backgroundColor: backgroundColors,
                 hoverOffset: 4,
             },
@@ -27,10 +27,11 @@ const ExpenseCategoryChart = ({ expenseData }: Props) => {
     };
     return (
         <div className="flex">
-            <div className="w-32 h-32 mx-auto">
+            <div className="w-80 h-80 mx-auto">
                 <Pie data={data} />
             </div>
         </div>
     );
 };
-export default ExpenseCategoryChart;
+
+export default CategoryChart;

@@ -1,16 +1,10 @@
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
-import { GroupIncomes, IncomeById } from "../interfaces";
+import { DataByCategories, GroupIncomes, IncomeById } from "../interfaces";
 
-// Define the number of incomes per page
-const INCOMES_PER_PAGE = 10;
-
-const fetchFilteredIncomes = async (query: string, currentPage: number): Promise<GroupIncomes> => {
+const fetchFilteredIncomes = async (query: string): Promise<GroupIncomes> => {
     // Disabled the cache
     noStore();
-
-    // Calculate the offset
-    const offset = (currentPage - 1) * INCOMES_PER_PAGE;
 
     try {
         const categoriesWithincomes = await prisma.income.findMany({
@@ -37,8 +31,6 @@ const fetchFilteredIncomes = async (query: string, currentPage: number): Promise
                     },
                 },
             },
-            skip: offset,
-            take: INCOMES_PER_PAGE,
         });
 
         // Separate regular and irregular incomes
@@ -88,4 +80,59 @@ const fetchIncomeById = async (id: string): Promise<IncomeById | null> => {
     }
 }
 
-export { fetchFilteredIncomes, fetchIncomeById };
+const fetchIncomeByCategory = async () => {
+    // Disable caching
+    noStore();
+
+    try {
+        // Fetch incomes grouped by categoryId
+        const incomes = await prisma.income.findMany({
+            select: {
+                categoryId: true,
+                amount: true,
+                category: {
+                    select: {
+                        name: true,
+                    },
+                },
+            },
+        });
+
+        // Group by category and calculate the total amount for each category
+        const groupByCategory = incomes.reduce<DataByCategories[]>(
+            (accumulator, income) => {
+                // Extract categoryId and categoryName
+                const categoryId = income.categoryId;
+                const categoryName = income.category.name;
+
+                // Find if the category already exists in the accumulator
+                const existingCategory = accumulator.find(
+                    (item) => item.categoryId === categoryId
+                );
+
+                if (existingCategory) {
+                    // If the category exists, add the amount to the total
+                    existingCategory.totalAmount += income.amount;
+                } else {
+                    // If the category does not exist, create a new category entry
+                    accumulator.push({
+                        categoryId: categoryId,
+                        categoryName: categoryName,
+                        totalAmount: income.amount,
+                    });
+                }
+
+                // Return the updated accumulator for the next iteration
+                return accumulator;
+            },
+            [] // Initial value of the accumulator is an empty array
+        );
+
+        return groupByCategory;
+    } catch (error) {
+        console.error("Failed to fetch incomes by category:", error);
+        throw new Error("Failed to fetch incomes by category.");
+    }
+};
+
+export { fetchFilteredIncomes, fetchIncomeById, fetchIncomeByCategory };
