@@ -36,14 +36,15 @@ const createIncome = async (
     const { incomeType, frequency, amount, categoryId, startDate, endDate } =
         validatedFields.data;
 
+    // Check if the income is regular and if so, extract the frequency and end date fields
+    // Otherwise, set them to null
     const isRegularIncome = incomeType === IncomeType.REGULAR;
     const frequencyOptional = isRegularIncome ? frequency : null;
     const endDateOptional = isRegularIncome ? endDate : null;
 
     // Extract year and month from the date
-    // const year = startDate.getFullYear();
-    // const month = String(startDate.getMonth() + 1).padStart(2, "0"); // Ensure month is two digits
-    // const yearMonth = `${year}-${month}`;
+    const year = startDate.getFullYear();
+    const month = String(startDate.getMonth() + 1).padStart(2, "0"); // Ensure month is two digits
 
     try {
         // Create the income
@@ -55,7 +56,7 @@ const createIncome = async (
                 amount: amount,
                 categoryId: categoryId,
                 frequency: frequencyOptional,
-                yearMonth: "2024-08",
+                yearMonth: `${year}-${month}`,
                 userId: "clziqqbgy000108l7dmts0vng",
             },
         });
@@ -134,6 +135,12 @@ const updateIncome = async (
         endDate,
     } = validatedFields.data;
 
+    // Extract year and month from the date
+    const year = startDate.getFullYear();
+    const month = String(startDate.getMonth() + 1).padStart(2, "0"); // Ensure month is two digits
+
+    // Check if the income is regular and if so, extract the frequency and end date fields
+    // Otherwise, set them to null
     const isRegularIncome = incomeType === IncomeType.REGULAR;
     const frequencyOptional = isRegularIncome ? frequency : null;
     const endDateOptional = isRegularIncome ? endDate : null;
@@ -148,6 +155,7 @@ const updateIncome = async (
                 frequency: frequencyOptional,
                 endDate: endDateOptional,
                 amount: amount,
+                yearMonth: `${year}-${month}`,
                 categoryId: categoryId,
             },
         });

@@ -4,7 +4,7 @@ import { createBudget } from "@/app/lib/actions/budget";
 import { BudgetFormError } from "@/app/lib/zod-schemas";
 import { CategoryInfo } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
-import getCurrentYearMonth from "@/app/lib/utils/currentMonthYear";
+import getCurrentYearMonth from "@/app/lib/utils/currentYearMonth";
 
 const CreateBudgetForm = ({ categories }: { categories: CategoryInfo[] }) => {
     // Error state for the form

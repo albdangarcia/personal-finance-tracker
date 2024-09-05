@@ -102,3 +102,7 @@ export interface DataByCategories {
     categoryName: string;
     totalAmount: number;
 }
+
+export interface CardAmounts {
+    [key: string]: number;
+}

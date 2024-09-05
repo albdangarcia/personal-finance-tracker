@@ -6,7 +6,7 @@ import Image from "next/image";
 const Home = () => {
     return (
         <div>
-            <div className="bg-white overflow-hidden isolate relative">
+            <div className="bg-white overflow-hidden isolate relative antialiased">
                 <div className="lg:py-40 lg:px-8 lg:flex sm:pb-32 pt-10 pb-6 px-6 max-w-7xl mx-auto">
                     <div className="relative mt-20 lg:pt-8 lg:flex-shrink-0 lg:max-w-xl lg:mx-0 max-w-2xl mx-auto">
                         {/* Gradients */}
@@ -19,7 +19,7 @@ const Home = () => {
                         >
                             Simplify Your Finances, Amplify Your Life
                         </h1>
-                        <p className="text-slate-600 text-lg/8 mt-6">
+                        <p className="text-slate-500 text-lg/8 mt-6">
                             Track your spending, set budgets, and manage your
                             money with ease. Get started today!
                         </p>
@@ -49,7 +49,7 @@ const Home = () => {
                                     src={screenShotImage}
                                     alt="screenshot"
                                     priority
-                                    className="shadow-lg rounded-md w-[76rem] max-w-full h-auto ring-gray-200 ring-1"
+                                    className="shadow-lg rounded-md w-[65rem] max-w-full h-auto ring-gray-200 ring-1"
                                 />
                             </div>
                         </div>

@@ -1,11 +1,12 @@
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
 import {
+    CardAmounts,
     DataByCategories,
     ExpenseById,
     MonthlyObject,
 } from "../interfaces";
-import getCurrentYearMonth from "../utils/currentMonthYear";
+import getCurrentYearMonth from "../utils/currentYearMonth";
 import { YearMonthSchema } from "../zod-schemas";
 
 // Limit the number of expenses per page
@@ -294,10 +295,51 @@ const fetchExpensePages = async (
     }
 };
 
+const fetchExpenseTotalAmount = async (): Promise<CardAmounts> => {
+    // Disable caching
+    noStore();
+
+    // Get the current date
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+
+    try {
+        // Fetch the total amount of expenses
+        const totalAmount = await prisma.expense.aggregate({
+            where: {
+                yearMonth: `${year}-${month}`,
+            },
+            _sum: {
+                amount: true,
+            },
+        });
+
+        // Fetch the total amount of expenses for the previous month
+        const previousTotalAmount = await prisma.expense.aggregate({
+            where: {
+                yearMonth: `${year}-${String(now.getMonth()).padStart(2, "0")}`,
+            },
+            _sum: {
+                amount: true,
+            },
+        });
+
+        return {
+            expenseAmount: totalAmount._sum.amount ?? 0,
+            previousExpenseAmount: previousTotalAmount._sum.amount ?? 0,
+        };
+    } catch (error) {
+        console.error("Failed to fetch total expense amount:", error);
+        throw new Error("Failed to fetch total expense amount.");
+    }
+}
+
 export {
     fetchExpenseById,
     fetchExpensesByCategory,
     fetchExpensePages,
     fetchFilteredExpenses,
     fetchLastSixMonthsExpenses,
+    fetchExpenseTotalAmount,
 };

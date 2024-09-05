@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import getCurrentYearMonth from "../lib/utils/currentMonthYear";
+import getCurrentYearMonth from "../lib/utils/currentYearMonth";
 import { YearMonthSchema } from "../lib/zod-schemas";
 
 const YearMonthInput = () => {

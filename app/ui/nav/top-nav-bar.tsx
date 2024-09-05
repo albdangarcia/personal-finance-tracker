@@ -1,9 +1,9 @@
 "use client";
 import {
     Bars3Icon,
-    BriefcaseIcon,
     XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { BriefcaseIcon } from "@heroicons/react/24/solid";
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { useState } from "react";
 import clsx from "clsx";
@@ -23,7 +23,7 @@ const TopNavBar = () => {
                 Dashboard
             </div>
             {/* app logo */}
-            <div className="flex gap-x-1 items-center text-indigo-500">
+            <div className="flex gap-x-1 items-center text-blue-700">
                 <BriefcaseIcon className="w-5 h-5" />
                 <span className="font-medium text-sm">Budget App</span>
             </div>

@@ -1,11 +1,7 @@
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
-import {
-    BudgetById,
-    FilteredBudgets,
-    MonthlyObject,
-} from "../interfaces";
-import getCurrentYearMonth from "../utils/currentMonthYear";
+import { BudgetById, CardAmounts, FilteredBudgets, MonthlyObject } from "../interfaces";
+import getCurrentYearMonth from "../utils/currentYearMonth";
 import { YearMonthSchema } from "../zod-schemas";
 
 /**
@@ -212,4 +208,46 @@ const fetchLastSixMonthsBudgets = async (): Promise<MonthlyObject[]> => {
     return lastSixMonths;
 };
 
-export { fetchBudgetById, fetchFilteredBudgets, fetchLastSixMonthsBudgets };
+/**
+ * Fetches the total budget amounts for the current and previous month.
+ *
+ * @returns {Promise<CardAmounts>} A promise that resolves to an object containing the current and previous total amounts.
+ */
+const fetchBudgetTotalAmount = async (): Promise<CardAmounts> => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = String(now.getMonth() + 1).padStart(2, "0");
+    const previousMonth = String(now.getMonth()).padStart(2, "0");
+
+    // Get the total amount for the current month
+    const totalAmount = await prisma.budget.aggregate({
+        _sum: {
+            amount: true,
+        },
+        where: {
+            yearMonth: `${currentYear}-${currentMonth}`,
+        },
+    });
+
+    // Get the total amount for the previous month
+    const previousTotalAmount = await prisma.budget.aggregate({
+        _sum: {
+            amount: true,
+        },
+        where: {
+            yearMonth: `${currentYear}-${previousMonth}`,
+        },
+    });
+
+    return {
+        budgetAmount: totalAmount._sum.amount || 0,
+        previousBudgetAmount: previousTotalAmount._sum.amount || 0,
+    };
+};
+
+export {
+    fetchBudgetById,
+    fetchFilteredBudgets,
+    fetchLastSixMonthsBudgets,
+    fetchBudgetTotalAmount,
+};

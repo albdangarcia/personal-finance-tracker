@@ -48,7 +48,6 @@ const Page = async ({ searchParams }: PageProps) => {
     // Data for the expenses by month chart
     const expensesByMonth = await fetchLastSixMonthsExpenses();
 
-
     return (
         <div>
             <Breadcrumbs breadcrumbs={breadcrumbs} />

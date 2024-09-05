@@ -1,6 +1,11 @@
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
-import { DataByCategories, GroupIncomes, IncomeById } from "../interfaces";
+import {
+    CardAmounts,
+    DataByCategories,
+    GroupIncomes,
+    IncomeById,
+} from "../interfaces";
 
 const fetchFilteredIncomes = async (query: string): Promise<GroupIncomes> => {
     // Disabled the cache
@@ -43,7 +48,6 @@ const fetchFilteredIncomes = async (query: string): Promise<GroupIncomes> => {
 
         // Return the incomes
         return { regularIncomes, irregularIncomes };
-
     } catch (error) {
         throw new Error("Failed to fetch incomes.");
     }
@@ -78,7 +82,7 @@ const fetchIncomeById = async (id: string): Promise<IncomeById | null> => {
     } catch (error) {
         throw new Error("Failed to fetch income by id.");
     }
-}
+};
 
 const fetchIncomeByCategory = async () => {
     // Disable caching
@@ -135,4 +139,49 @@ const fetchIncomeByCategory = async () => {
     }
 };
 
-export { fetchFilteredIncomes, fetchIncomeById, fetchIncomeByCategory };
+const fetchIncomeTotalAmount = async (): Promise<CardAmounts> => {
+    // Disable caching
+    noStore();
+
+    // Get the current year and month
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+
+    try {
+        // Fetch the total amount of incomes
+        const totalAmount = await prisma.income.aggregate({
+            where: {
+                yearMonth: `${year}-${month}`,
+            },
+            _sum: {
+                amount: true,
+            },
+        });
+
+        // Fetch the total amount of incomes for the previous month
+        const previousTotalAmount = await prisma.income.aggregate({
+            where: {
+                yearMonth: `${year}-${String(now.getMonth()).padStart(2, "0")}`,
+            },
+            _sum: {
+                amount: true,
+            },
+        });
+
+        return {
+            incomeAmount: totalAmount._sum.amount ?? 0,
+            previousIncomeAmount: previousTotalAmount._sum.amount ?? 0,
+        };
+    } catch (error) {
+        console.error("Failed to fetch total income amount:", error);
+        throw new Error("Failed to fetch total income amount.");
+    }
+};
+
+export {
+    fetchFilteredIncomes,
+    fetchIncomeById,
+    fetchIncomeByCategory,
+    fetchIncomeTotalAmount,
+};

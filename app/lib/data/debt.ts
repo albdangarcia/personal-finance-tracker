@@ -1,6 +1,6 @@
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
-import { DebtById, CategoriesWithDebts } from "../interfaces";
+import { DebtById, CategoriesWithDebts, CardAmounts } from "../interfaces";
 
 // Limit the number of debts per page
 const DEBTS_PER_PAGE = 10;
@@ -74,7 +74,7 @@ const fetchDebts = async (
 const fetchDebtsPages = async (query: string): Promise<number> => {
     // Disable caching for this function
     noStore();
-    
+
     try {
         const totalDebts = await prisma.debt.count({
             where: {
@@ -120,4 +120,50 @@ const fetchDebtById = async (id: string): Promise<DebtById | null> => {
     }
 };
 
-export { fetchDebts, fetchDebtsPages, fetchDebtById };
+const fetchDebtTotalAmount = async (): Promise<CardAmounts> => {
+    // Disable caching for this function
+    noStore();
+
+    // Get the current date
+    const now = new Date();
+    const startOfCurrentYear = new Date(now.getFullYear(), 0, 1);
+    const startOfPreviousYear = new Date(now.getFullYear() - 1, 0, 1);
+    const endOfPreviousYear = new Date(now.getFullYear(), 0, 1);
+
+    try {
+        // Fetch the total debt amount
+        const debtAmount = await prisma.debt.aggregate({
+            where: {
+                createdAt: {
+                    gte: startOfCurrentYear,
+                },
+            },
+            _sum: {
+                amount: true,
+            },
+        });
+
+        // Fetch the previous total debt amount
+        const previousDebtAmount = await prisma.debt.aggregate({
+            where: {
+                createdAt: {
+                    gte: startOfPreviousYear,
+                    lt: endOfPreviousYear,
+                },
+            },
+            _sum: {
+                amount: true,
+            },
+        });
+
+        return {
+            debtAmount: debtAmount._sum.amount ?? 0,
+            previousDebtAmount: previousDebtAmount._sum.amount ?? 0,
+        };
+    } catch (error) {
+        console.error("Failed to fetch debt total amount:", error);
+        throw new Error("Failed to fetch debt total amount");
+    }
+};
+
+export { fetchDebts, fetchDebtsPages, fetchDebtById, fetchDebtTotalAmount };

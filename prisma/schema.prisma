@@ -29,8 +29,6 @@ model User {
     email         String        @unique
     emailVerified DateTime?
     image         String?
-    // regularIncomes   Income[]
-    // irregularIncomes IrregularIncome[]
     incomes       Income[]
     expenses      Expense[]
     savingsGoals  SavingsGoal[]
@@ -69,34 +67,6 @@ model Income {
 
     @@map("Incomes")
 }
-
-// model RegularIncome {
-//     id         String    @id @default(cuid())
-//     amount     Float
-//     categoryId String
-//     category   Category  @relation(fields: [categoryId], references: [id])
-//     frequency  Frequency // ["weekly", "biweekly", "monthly"]
-//     startDate  DateTime
-//     endDate    DateTime?
-//     yearMonth  String    // Format: "YYYY-MM"
-//     createdAt  DateTime  @default(now())
-//     updatedAt  DateTime  @updatedAt
-//     userId     String
-//     User       User      @relation(fields: [userId], references: [id])
-// }
-
-// model IrregularIncome {
-//     id         String   @id @default(cuid())
-//     amount     Float
-//     categoryId String
-//     category   Category @relation(fields: [categoryId], references: [id])
-//     date       DateTime
-//     yearMonth  String    // Format: "YYYY-MM"
-//     createdAt  DateTime @default(now())
-//     updatedAt  DateTime @updatedAt
-//     userId     String
-//     User       User     @relation(fields: [userId], references: [id])
-// }
 
 model SavingsGoal {
     id            String         @id @default(cuid())
