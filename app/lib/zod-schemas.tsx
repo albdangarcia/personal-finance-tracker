@@ -1,10 +1,12 @@
-import { z } from "zod";
+import { string, z } from "zod";
 import { Frequency, IncomeType } from "@prisma/client";
 
 // Schema for budget form
 export const BudgetFormSchema = z.object({
     id: z.string().regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
-    categoryId: z.string().regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
+    categoryId: z
+        .string()
+        .regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
     yearMonth: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, {
         message: "Please enter a valid yearMonth in the format YYYY-MM.",
     }),
@@ -17,14 +19,14 @@ export const BudgetFormSchema = z.object({
 export const CreateBudgetFormSchema = BudgetFormSchema.omit({ id: true });
 
 // Error interface for budget form
-export type BudgetFormError = {
+export interface BudgetFormError {
     errors?: {
         categoryId?: string[];
         amount?: string[];
         yearMonth?: string[];
     };
     message?: string | null;
-};
+}
 
 // schema for expense form
 export const ExpenseFormSchema = z.object({
@@ -33,7 +35,9 @@ export const ExpenseFormSchema = z.object({
     amount: z.coerce
         .number()
         .gt(0, { message: "Please enter an amount greater than $0." }),
-    categoryId: z.string().regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
+    categoryId: z
+        .string()
+        .regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
     date: z.coerce.date(),
 });
 
@@ -41,7 +45,7 @@ export const ExpenseFormSchema = z.object({
 export const CreateExpenseFormSchema = ExpenseFormSchema.omit({ id: true });
 
 // error state for expense form
-export type ExpenseFormError = {
+export interface ExpenseFormError {
     errors?: {
         name?: string[];
         amount?: string[];
@@ -49,7 +53,7 @@ export type ExpenseFormError = {
         date?: string[];
     };
     message?: string | null;
-};
+}
 
 // schema for savings form
 export const SavingsGoalFormSchema = z.object({
@@ -58,21 +62,25 @@ export const SavingsGoalFormSchema = z.object({
     amount: z.coerce
         .number()
         .gt(0, { message: "Please enter an amount greater than $0." }),
-    categoryId: z.string().regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
+    categoryId: z
+        .string()
+        .regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
 });
 
 // schema for creating a new savings goal, omitting the ID field
-export const CreateSavingsGoalFormSchema = SavingsGoalFormSchema.omit({ id: true });
+export const CreateSavingsGoalFormSchema = SavingsGoalFormSchema.omit({
+    id: true,
+});
 
 // error state for savings form
-export type SavingsGoalFormError = {
+export interface SavingsGoalFormError {
     errors?: {
         name?: string[];
         amount?: string[];
         categoryId?: string[];
     };
     message?: string | null;
-};
+}
 
 // Schema for contribution form
 export const ContributionFormSchema = z.object({
@@ -84,16 +92,18 @@ export const ContributionFormSchema = z.object({
 });
 
 // Schema for creating a new contribution, omitting the ID field
-export const CreateContributionFormSchema = ContributionFormSchema.omit({ id: true });
+export const CreateContributionFormSchema = ContributionFormSchema.omit({
+    id: true,
+});
 
 // error interface for contribution form
-export type ContributionFormError = {
+export interface ContributionFormError {
     errors?: {
         amount?: string[];
         date?: string[];
     };
     message?: string | null;
-};
+}
 
 // schema for yearMonth
 export const YearMonthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, {
@@ -104,7 +114,9 @@ export const YearMonthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, {
 export const DebtFormSchema = z.object({
     id: z.string().regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
     name: z.string().min(1),
-    categoryId: z.string().regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
+    categoryId: z
+        .string()
+        .regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
     amount: z.coerce
         .number()
         .gt(0, { message: "Please enter an amount greater than $0." }),
@@ -117,7 +129,7 @@ export const DebtFormSchema = z.object({
 export const CreateDebtFormSchema = DebtFormSchema.omit({ id: true });
 
 // Error interface for the debt form
-export type DebtFormError = {
+export interface DebtFormError {
     errors?: {
         name?: string[];
         categoryId?: string[];
@@ -125,8 +137,7 @@ export type DebtFormError = {
         interest?: string[];
     };
     message?: string | null;
-};
-
+}
 
 // Schema for the payment form
 export const PaymentFormSchema = z.object({
@@ -141,13 +152,13 @@ export const PaymentFormSchema = z.object({
 export const CreatePaymentFormSchema = PaymentFormSchema.omit({ id: true });
 
 // Error interface for the payment form
-export type PaymentFormError = {
+export interface PaymentFormError {
     errors?: {
         amount?: string[];
         date?: string[];
     };
     message?: string | null;
-};
+}
 
 // Schema for the income form
 export const IncomeFormSchema = z.object({
@@ -155,7 +166,9 @@ export const IncomeFormSchema = z.object({
     amount: z.coerce
         .number()
         .gt(0, { message: "Please enter an amount greater than $0." }),
-    categoryId: z.string().regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
+    categoryId: z
+        .string()
+        .regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
     frequency: z.nativeEnum(Frequency).optional(),
     startDate: z.coerce.date(),
     endDate: z.coerce.date().optional(),
@@ -163,7 +176,7 @@ export const IncomeFormSchema = z.object({
 });
 
 // Error interface for the income form
-export type IncomeFormErrors = {
+export interface IncomeFormErrors {
     errors?: {
         amount?: string[];
         categoryId?: string[];
@@ -180,3 +193,23 @@ export const CreateIncomeFormSchema = IncomeFormSchema.omit({ id: true });
 
 // Schema for ids
 export const IdSchema = z.string().regex(/^c[^\s-]{8,}$/i);
+
+// Login form errors
+export interface LoginFormErrors {
+    errors?: {
+        email?: string[];
+        password?: string[];
+    };
+    message?: string | null;
+}
+
+// Schema for the login form
+export const SignInSchema = z.object({
+    email: string({ required_error: "Email is required" })
+        .min(1, "Email is required")
+        .email("Invalid email"),
+    password: string({ required_error: "Password is required" })
+        .min(1, "Password is required")
+        .min(8, "Password must be more than 8 characters")
+        .max(32, "Password must be less than 32 characters"),
+});

@@ -32,12 +32,18 @@ const Home = () => {
                             >
                                 Get started
                             </a>
-                            <button
+                            <a
+                                href="/login"
+                                className="shadow text-white font-semibold text-sm py-2.5 px-3.5 bg-gray-800 rounded-md ring-1 ring-gray-200"
+                            >
+                                Login
+                            </a>
+                            {/* <button
                                 onClick={() => signIn()}
                                 className="shadow text-white font-semibold text-sm py-2.5 px-3.5 bg-gray-800 rounded-md ring-1 ring-gray-200"
                             >
                                 Login
-                            </button>
+                            </button> */}
                         </div>
                     </div>
                     <div className="max-w-2xl flex mt-16 mx-auto sm:mt-24 lg:flex lg:max-w-none lg:mt-0 lg:ml-10">

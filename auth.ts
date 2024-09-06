@@ -6,6 +6,7 @@ import Credentials from "next-auth/providers/credentials";
 import { User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { authProviderConfigList } from "./auth.config";
+import { SignInSchema } from "./app/lib/zod-schemas";
 
 // Get user from db
 async function getUser(email: string): Promise<User | null> {
@@ -38,9 +39,7 @@ const credentialsProviderConfig = Credentials({
     // The authorize callback validates credentials
     authorize: async (credentials) => {
         // Validate the credentials for the user
-        const parsedCredentials = z
-            .object({ email: z.string().email(), password: z.string().min(6) })
-            .safeParse(credentials);
+        const parsedCredentials = SignInSchema.safeParse(credentials);
 
         // If the credentials are valid, return the user object
         if (parsedCredentials.success) {
