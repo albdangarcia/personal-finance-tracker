@@ -16,6 +16,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { signOut } from "next-auth/react";
 
 const quickActionItems = [
     { href: "/dashboard/incomes/create", label: "Add Income" },
@@ -92,7 +93,10 @@ const NavLinks = () => {
                     </div>
                     <ul className="-mx-2">
                         {quickActionItems.map((item) => (
-                            <li key={item.label} className="group text-slate-700 rounded-md hover:text-black">
+                            <li
+                                key={item.label}
+                                className="group text-slate-700 rounded-md hover:text-black"
+                            >
                                 <Link
                                     href={item.href}
                                     className="flex items-center gap-2 text-xs/6 font-medium px-2 py-0.5 rounded-md"
@@ -114,22 +118,30 @@ const NavLinks = () => {
                         {helpItems.map((item) => {
                             const IconName = item.icon;
                             return (
-                            <li key={item.label} className="group text-slate-700 rounded-md hover:text-black">
-                                <Link
-                                    href={item.href}
-                                    className="flex items-center gap-2 text-xs/6 font-medium px-2 py-0.5 rounded-md"
+                                <li
+                                    key={item.label}
+                                    className="group text-slate-700 rounded-md hover:text-black"
                                 >
-                                    <IconName className="w-4 h-4 text-gray-400/85 group-hover:text-slate-600" />
-                                    {item.label}
-                                </Link>
-                            </li>
-                        )})}
+                                    <Link
+                                        href={item.href}
+                                        className="flex items-center gap-2 text-xs/6 font-medium px-2 py-0.5 rounded-md"
+                                    >
+                                        <IconName className="w-4 h-4 text-gray-400/85 group-hover:text-slate-600" />
+                                        {item.label}
+                                    </Link>
+                                </li>
+                            );
+                        })}
                     </ul>
                 </li>
 
                 {/* Log out */}
                 <li className="-mx-6 mt-auto hover:bg-slate-100">
-                    <button className="flex gap-x-3 items-center font-semibold py-4 px-6 text-sm/6 w-full">
+                    <button
+                        // On click sign out and redirect to home page
+                        onClick={() => signOut({ callbackUrl: "/" })}
+                        className="flex gap-x-3 items-center font-semibold py-4 px-6 text-sm/6 w-full"
+                    >
                         <ArrowLeftStartOnRectangleIcon className="w-5 h-5" />
                         Log out
                     </button>

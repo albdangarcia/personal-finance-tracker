@@ -1,10 +1,22 @@
 import { ReactNode } from "react";
 import LeftSidebar from "../ui/nav/left-sidebar";
 import TopNavBar from "../ui/nav/top-nav-bar";
+import { auth } from "@/auth";
 
-type Props = { children: ReactNode };
+interface ChildrenProps {
+    children: ReactNode;
+}
 
-const DashboardLayout = ({ children }: Props) => {
+// Access Denied component
+const AcessDenied = () => {
+    return (
+        <div className="h-screen flex items-center justify-center">
+            <div>Access Denied</div>
+        </div>
+    );
+};
+
+const DashboardLayout = ({ children }: ChildrenProps) => {
     return (
         <div className="min-h-screen">
             {/* left side bar */}
@@ -23,4 +35,14 @@ const DashboardLayout = ({ children }: Props) => {
     );
 };
 
-export default DashboardLayout;
+const Page = async ({ children }: ChildrenProps) => {
+    const session = await auth();
+
+    if (!session) {
+        return <AcessDenied />;
+    } else {
+        return <DashboardLayout>{children}</DashboardLayout>;
+    }
+};
+
+export default Page;

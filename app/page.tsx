@@ -1,7 +1,9 @@
+"use client"
 import { Montserrat } from "next/font/google";
 const montserrat = Montserrat({ subsets: ["latin"] });
 import screenShotImage from "../public/screenshotsmall.png";
 import Image from "next/image";
+import { signIn } from "next-auth/react";
 
 const Home = () => {
     return (
@@ -25,17 +27,17 @@ const Home = () => {
                         </p>
                         <div className="flex gap-x-6 items-center mt-12">
                             <a
-                                href="#"
+                                href="/dashboard"
                                 className="shadow text-white font-semibold text-sm py-2.5 px-3.5 bg-indigo-600 rounded-md"
                             >
                                 Get started
                             </a>
-                            <a
-                                href="/dashboard"
+                            <button
+                                onClick={() => signIn()}
                                 className="shadow text-white font-semibold text-sm py-2.5 px-3.5 bg-gray-800 rounded-md ring-1 ring-gray-200"
                             >
                                 Login
-                            </a>
+                            </button>
                         </div>
                     </div>
                     <div className="max-w-2xl flex mt-16 mx-auto sm:mt-24 lg:flex lg:max-w-none lg:mt-0 lg:ml-10">
