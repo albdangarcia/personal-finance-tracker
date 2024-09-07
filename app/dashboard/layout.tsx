@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import LeftSidebar from "../ui/nav/left-sidebar";
-import TopNavBar from "../ui/nav/top-nav-bar";
+import TopNavBar from "../ui/nav/floating-nav";
 import { auth } from "@/auth";
 
 interface ChildrenProps {
@@ -10,22 +10,31 @@ interface ChildrenProps {
 // Access Denied component
 const AcessDenied = () => {
     return (
-        <div className="h-screen flex items-center justify-center">
-            <div>Access Denied</div>
+        <div className="antialiased h-screen tracking-wide flex items-center justify-center">
+            <h1 className="font-medium">403 - Forbidden</h1>
+            <div className="border-l py-5 mx-3 h-4 border-gray-300"></div>
+            <p>You do not have access to this page.</p>
         </div>
     );
 };
 
-const DashboardLayout = ({ children }: ChildrenProps) => {
+const DashboardLayout = async ({ children }: ChildrenProps) => {
+    // Get user session
+    const session = await auth();
+    
+    // Get user name and image
+    const userName = session?.user?.name ?? "None";
+    const userImage = session?.user?.image ?? null;
+
     return (
         <div className="min-h-screen">
             {/* left side bar */}
             <div className="hidden border-r z-50 flex-col bg-white w-72 lg:z-50 lg:inset-y-0 lg:fixed lg:flex">
-                <LeftSidebar />
+                <LeftSidebar userName={userName} userImage={userImage} />
             </div>
 
             {/* top nav bar */}
-            <TopNavBar />
+            <TopNavBar userName={userName} userImage={userImage} />
 
             {/* right content */}
             <main className="pb-10 pt-7 lg:pl-72">

@@ -140,7 +140,7 @@ const NavLinks = () => {
                     <button
                         // On click sign out and redirect to home page
                         onClick={() => signOut({ callbackUrl: "/" })}
-                        className="flex gap-x-3 items-center font-semibold py-4 px-6 text-sm/6 w-full"
+                        className="flex gap-x-3 items-center font-semibold py-4 px-6 text-sm/6 w-full cursor:pointer"
                     >
                         <ArrowLeftStartOnRectangleIcon className="w-5 h-5" />
                         Log out

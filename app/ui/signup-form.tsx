@@ -1,17 +1,17 @@
 "use client";
 import { useFormState } from "react-dom";
-import { LoginFormErrors } from "../lib/zod-schemas";
-import { authenticateLogin } from "../lib/actions/login";
+import { SignupFormErrors } from "../lib/zod-schemas";
+import { signupUser } from "../lib/actions/signup";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
-const LoginForm = () => {
+const SignupForm = () => {
     // Error initial state
     const errorsInitialState = { message: null, errors: {} };
-    const [state, dispatch] = useFormState<
-        LoginFormErrors,
-        FormData
-    >(authenticateLogin, errorsInitialState);
+    const [state, dispatch] = useFormState<SignupFormErrors, FormData>(
+        signupUser,
+        errorsInitialState
+    );
 
     // State for password visibility
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -20,9 +20,35 @@ const LoginForm = () => {
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
     };
-    
+
     return (
         <form action={dispatch} className="grid gap-y-5">
+            {/* Name input */}
+            <div>
+                <label htmlFor="name">Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your name"
+                    aria-describedby="name-error"
+                    required
+                />
+                {/* name input errors */}
+                <div id="name-error" aria-live="polite" aria-atomic="true">
+                    {state &&
+                        state.errors?.name &&
+                        state.errors.name.map((error: string) => (
+                            <p
+                                className="mt-2 text-sm text-red-600"
+                                key={error}
+                            >
+                                {error}
+                            </p>
+                        ))}
+                </div>
+            </div>
+
             {/* Email input */}
             <div>
                 <label htmlFor="email">Email</label>
@@ -112,4 +138,4 @@ const LoginForm = () => {
     );
 };
 
-export default LoginForm;
+export default SignupForm;

@@ -8,13 +8,13 @@ import { AuthError } from "next-auth";
  *
  * @param {LoginFormErrors | undefined} prevState - The previous state of login form errors.
  * @param {FormData} formData - The form data containing email and password fields.
- * @returns {Promise<{ errors?: Record<string, string[]>, message: string }>} - A promise that resolves to an object containing errors and a message if validation fails, or just a message if authentication fails.
+ * @returns {Promise<LoginFormErrors>} - A promise that resolves to an object containing errors and a message if validation fails, or just a message if authentication fails.
  * @throws {AuthError} - Throws an AuthError if an unexpected authentication error occurs.
  */
 const authenticateLogin = async (
-    prevState: LoginFormErrors | undefined,
+    prevState: LoginFormErrors,
     formData: FormData
-) => {
+): Promise<LoginFormErrors> => {
     // Validate form fields using Zod
     const validatedFields = SignInSchema.safeParse({
         email: formData.get("email"),
@@ -42,6 +42,10 @@ const authenticateLogin = async (
             redirectTo: "/dashboard",
             ...formDataValidated,
         });
+
+        // Return a success message if sign-in is successful
+        return { message: "Sign-in successful" };
+
     } catch (error) {
         if (error instanceof AuthError) {
             switch (error.type) {

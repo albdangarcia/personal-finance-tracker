@@ -9,7 +9,12 @@ import { useState } from "react";
 import clsx from "clsx";
 import LeftSidebar from "./left-sidebar";
 
-const TopNavBar = () => {
+interface Props {
+    userName: string;
+    userImage: string | null;
+}
+
+const TopNavBar = ({ userName, userImage }: Props) => {
     let [isOpen, setIsOpen] = useState(false);
     return (
         <div className="py-4 bg-white gap-x-6 items-center flex z-40 top-0 sticky px-3 sm:pl-6 shadow-sm lg:hidden">
@@ -55,7 +60,7 @@ const TopNavBar = () => {
                             </div>
 
                             {/* left navigation */}
-                            <LeftSidebar />
+                            <LeftSidebar userName={userName} userImage={userImage} />
                         </DialogPanel>
                     </div>
                 </Dialog>

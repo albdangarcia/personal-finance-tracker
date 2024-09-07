@@ -1,4 +1,4 @@
-import LoginForm from "@/app/ui/login-form";
+import SignupForm from "@/app/ui/signup-form";
 import Link from "next/link";
 
 const Page = () => {
@@ -7,17 +7,17 @@ const Page = () => {
             <div>
                 <div className="text-center">
                     <h1 className="text-3xl font-medium">
-                        Welcome Back to Budgeting.
+                        Create Your Budgeting Account
                     </h1>
                     <p className="text-gray-500 mt-3 mb-6 text-sm font-light">
-                        Please enter your email and password to continue.
+                        Sign up to start managing your finances.
                     </p>
                 </div>
-                <LoginForm />
+                <SignupForm />
                 <p className="text-sm my-6 text-center text-gray-500">
-                    Don&apos;t have an account?{" "}
-                    <Link href="/signup" className="text-gray-900 hover:underline">
-                        Sign up
+                    Already have an account?{" "}
+                    <Link href="/login" className="text-gray-900 hover:underline">
+                        Log in
                     </Link>
                 </p>
             </div>
