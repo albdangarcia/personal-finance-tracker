@@ -1,7 +1,7 @@
 "use client";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import getCurrentYearMonth from "../lib/utils/currentYearMonth";
-import { YearMonthSchema } from "../lib/zod-schemas";
+import { InputYearMonthSchema } from "../lib/zod-schemas";
 
 const YearMonthInput = () => {
     // Hook to get the current URL search parameters
@@ -15,7 +15,7 @@ const YearMonthInput = () => {
 
     const handleYearMonthChange = (value: string) => {
         // Validate the value against the schema
-        const validation = YearMonthSchema.safeParse(value);
+        const validation = InputYearMonthSchema.safeParse(value);
         if (!validation.success) {
             return;
         }

@@ -8,21 +8,47 @@ import {
     SavingsGoalFormError,
     SavingsGoalFormSchema,
 } from "../zod-schemas";
+import { getAuthenticatedUserId } from "../utils/authUtils";
 
-export async function deleteSavingsGoal(id: string) {
+const deleteSavingsGoal = async (id: string) => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Validate the id
     const parsedId = IdSchema.safeParse(id);
 
-    // If ID validation fails, throw an error
+    // If ID validation fails
     if (!parsedId.success) {
         console.error("Invalid ID format:", parsedId.error);
-        throw new Error("Invalid ID format");
+        return {
+            message: "Invalid ID format.",
+        };
     }
 
     // Extract the validated ID
     const validatedId = parsedId.data;
 
     try {
+        // Check if the savings goal exists and belongs to the authenticated user
+        const savingsGoal = await prisma.savingsGoal.findUnique({
+            where: {
+                id: validatedId,
+                userId: userId,
+            },
+        });
+
+        // If the savings goal does not exist or does not belong to the user, return an error
+        if (!savingsGoal) {
+            console.error(
+                "Savings Goal not found or user not authorized to delete it."
+            );
+            return {
+                message:
+                    "Savings Goal not found or user not authorized to delete it.",
+            };
+        }
+
+        // Delete the savings goal
         await prisma.savingsGoal.delete({
             where: {
                 id: validatedId,
@@ -33,14 +59,19 @@ export async function deleteSavingsGoal(id: string) {
         revalidatePath("/dashboard/savings-goals");
     } catch (error) {
         console.error("Failed to delete saving goal:", error);
-        throw new Error("Failed to delete saving goal.");
+        return {
+            message: "Database Error: Failed to Delete Savings Goal.",
+        };
     }
-}
+};
 
-export async function createSavingsGoal(
+const createSavingsGoal = async (
     prevState: SavingsGoalFormError,
     formData: FormData
-) {
+) => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Validate form fields using Zod
     const validatedFields = CreateSavingsGoalFormSchema.safeParse({
         name: formData.get("name"),
@@ -61,12 +92,30 @@ export async function createSavingsGoal(
 
     // Create the savings goal
     try {
+        // Check if the category exists
+        const categoryExists = await prisma.category.findUnique({
+            where: {
+                id: categoryId,
+            },
+        });
+
+        // If the category does not exist, return an error
+        if (!categoryExists) {
+            return {
+                errors: {
+                    categoryId: ["Select a valid category."],
+                },
+                message: "The selected category does not exist.",
+            };
+        }
+
+        // Create the savings goal
         await prisma.savingsGoal.create({
             data: {
                 name: name,
                 amount: amount,
                 categoryId: categoryId,
-                userId: "clziqqbgy000108l7dmts0vng",
+                userId: userId,
             },
         });
     } catch (error) {
@@ -75,19 +124,22 @@ export async function createSavingsGoal(
             message: "Database Error: Failed to Create Savings Goal.",
         };
     }
-    
+
     // Revalidate the cache
     revalidatePath("/dashboard/savings-goals");
 
     // Redirect the user
     redirect("/dashboard/savings-goals");
-}
+};
 
-export async function updateSavingsGoals(
+const updateSavingsGoals = async (
     GoalId: string,
     prevState: SavingsGoalFormError,
     formData: FormData
-) {
+) => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Validate form fields using Zod
     const validatedFields = SavingsGoalFormSchema.safeParse({
         id: GoalId,
@@ -109,6 +161,43 @@ export async function updateSavingsGoals(
 
     // Update the savings goal
     try {
+        // Check if the category exists
+        const categoryExists = await prisma.category.findUnique({
+            where: {
+                id: categoryId,
+            },
+        });
+
+        // If the category does not exist, return an error
+        if (!categoryExists) {
+            return {
+                errors: {
+                    categoryId: ["Select a valid category."],
+                },
+                message: "The selected category does not exist.",
+            };
+        }
+
+        // Check if the savings goal exists and belongs to the authenticated user
+        const savingsGoal = await prisma.savingsGoal.findUnique({
+            where: {
+                id: id,
+                userId: userId,
+            },
+        });
+
+        // If the savings goal does not exist or does not belong to the user, return an error
+        if (!savingsGoal) {
+            console.error(
+                "Savings Goal not found or user not authorized to update it."
+            );
+            return {
+                message:
+                    "Savings Goal not found or user not authorized to update it.",
+            };
+        }
+
+        // Update the savings goal
         await prisma.savingsGoal.update({
             where: {
                 id: id,
@@ -130,4 +219,6 @@ export async function updateSavingsGoals(
 
     // Redirect the user
     redirect("/dashboard/savings-goals");
-}
+};
+
+export { deleteSavingsGoal, createSavingsGoal, updateSavingsGoals };

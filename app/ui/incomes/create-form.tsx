@@ -7,6 +7,7 @@ import { createIncome } from "@/app/lib/actions/income";
 import { Frequency, IncomeType } from "@prisma/client";
 import { capitalizeFirstLetter } from "@/app/lib/utils/general";
 import { useState } from "react";
+import getCurrentDate from "@/app/lib/utils/getCurrentDate";
 
 const CreateIncomeForm = ({ categories }: { categories: CategoryInfo[] }) => {
     // Error state for the form
@@ -191,6 +192,7 @@ const CreateIncomeForm = ({ categories }: { categories: CategoryInfo[] }) => {
                         autoComplete="off"
                         required
                         aria-describedby="startDate-error"
+                        defaultValue={getCurrentDate()}
                     />
                     {/* startDate errors */}
                     <div id="startDate-error" aria-live="polite" aria-atomic="true">

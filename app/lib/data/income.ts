@@ -6,20 +6,40 @@ import {
     GroupIncomes,
     IncomeById,
 } from "../interfaces";
+import { getAuthenticatedUserId } from "../utils/authUtils";
+import { IdSchema, QuerySchema } from "../zod-schemas";
 
+/**
+ * Fetches filtered incomes for the authenticated user based on a query.
+ *
+ * @param {string} query - The search query to filter incomes by category name.
+ * @returns {Promise<GroupIncomes>} - A promise that resolves to an object containing regular and irregular incomes.
+ * @throws {Error} - Throws an error if the query parameter is invalid or if fetching incomes fails.
+ */
 const fetchFilteredIncomes = async (query: string): Promise<GroupIncomes> => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Disabled the cache
     noStore();
+
+    // Validate the query parameter using Zod
+    const validatedQuery = QuerySchema.safeParse(query);
+    if (!validatedQuery.success) {
+        console.error("Invalid query parameter:", validatedQuery.error);
+        throw new Error("Invalid query parameter.");
+    }
 
     try {
         const categoriesWithincomes = await prisma.income.findMany({
             where: {
                 category: {
                     name: {
-                        contains: query,
+                        contains: validatedQuery.data,
                         mode: "insensitive",
                     },
                 },
+                userId: userId, // Filter by authenticated user's ID
             },
             select: {
                 id: true,
@@ -53,14 +73,31 @@ const fetchFilteredIncomes = async (query: string): Promise<GroupIncomes> => {
     }
 };
 
+/**
+ * Fetches an income by its ID for the authenticated user.
+ *
+ * @param {string} id - The ID of the income to fetch.
+ * @returns {Promise<IncomeById | null>} - A promise that resolves to the income object or null if not found.
+ * @throws {Error} - Throws an error if the ID parameter is invalid or if fetching the income fails.
+ */
 const fetchIncomeById = async (id: string): Promise<IncomeById | null> => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
+    // Validate the id parameter using Zod
+    const validatedId = IdSchema.safeParse(id);
+    if (!validatedId.success) {
+        console.error("Invalid Income ID:", validatedId.error);
+        return null;
+    }
+
     // Disable the cache
     noStore();
 
     // Fetch the income by id
     try {
         const income = await prisma.income.findUnique({
-            where: { id },
+            where: { id: validatedId.data, userId: userId },
             select: {
                 id: true,
                 amount: true,
@@ -84,13 +121,25 @@ const fetchIncomeById = async (id: string): Promise<IncomeById | null> => {
     }
 };
 
+/**
+ * Fetches incomes grouped by category for the authenticated user.
+ *
+ * @returns {Promise<DataByCategories[]>} - A promise that resolves to an array of objects containing the total income amount for each category.
+ * @throws {Error} - Throws an error if fetching incomes by category fails.
+ */
 const fetchIncomeByCategory = async () => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Disable caching
     noStore();
 
     try {
         // Fetch incomes grouped by categoryId
         const incomes = await prisma.income.findMany({
+            where: {
+                userId: userId, // Filter by authenticated user's ID
+            },
             select: {
                 categoryId: true,
                 amount: true,
@@ -139,7 +188,16 @@ const fetchIncomeByCategory = async () => {
     }
 };
 
+/**
+ * Fetches the total income amount for the current month and the previous month for the authenticated user.
+ *
+ * @returns {Promise<CardAmounts>} - A promise that resolves to an object containing the total income amount for the current month and the previous month.
+ * @throws {Error} - Throws an error if fetching the total income amount fails.
+ */
 const fetchIncomeTotalAmount = async (): Promise<CardAmounts> => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Disable caching
     noStore();
 
@@ -153,6 +211,7 @@ const fetchIncomeTotalAmount = async (): Promise<CardAmounts> => {
         const totalAmount = await prisma.income.aggregate({
             where: {
                 yearMonth: `${year}-${month}`,
+                userId: userId, // Filter by authenticated user's ID
             },
             _sum: {
                 amount: true,
@@ -163,6 +222,7 @@ const fetchIncomeTotalAmount = async (): Promise<CardAmounts> => {
         const previousTotalAmount = await prisma.income.aggregate({
             where: {
                 yearMonth: `${year}-${String(now.getMonth()).padStart(2, "0")}`,
+                userId: userId, // Filter by authenticated user's ID
             },
             _sum: {
                 amount: true,

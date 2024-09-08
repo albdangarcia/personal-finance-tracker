@@ -105,11 +105,6 @@ export interface ContributionFormError {
     message?: string | null;
 }
 
-// schema for yearMonth
-export const YearMonthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, {
-    message: "Please enter a valid yearMonth in the format YYYY-MM.",
-});
-
 // Schema for debt form
 export const DebtFormSchema = z.object({
     id: z.string().regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
@@ -234,4 +229,24 @@ export const SignupSchema = z.object({
         .min(1, "Password is required")
         .min(8, "Password must be more than 8 characters")
         .max(32, "Password must be less than 32 characters"),
+});
+
+// Schema for the query parameter
+export const QuerySchema = z.string().max(100).optional();
+
+// Define a schema for year
+const yearSchema = z.string().regex(/^\d{4}$/, "Year must be a four-digit number");
+
+// Define a schema for month
+const monthSchema = z.string().regex(/^(0[1-9]|1[0-2])$/, "Month must be a two-digit number between 01 and 12");
+
+// Combine schemas into a single schema
+export const YearMonthSchema = z.object({
+    year: yearSchema,
+    month: monthSchema,
+});
+
+// schema for yearMonth
+export const InputYearMonthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, {
+    message: "Please enter a valid yearMonth in the format YYYY-MM.",
 });

@@ -94,7 +94,7 @@ const ContributionsTable = ({ savingsGoal }: Props) => {
                             <div className="text-gray-500">
                                 {contribution.date.toLocaleDateString()}
                             </div>
-                            <div className="font-medium">${contribution.amount}</div>
+                            <div className="font-medium">${contribution.amount.toLocaleString()}</div>
                             <EditDeleteButtons
                                 editLink={`/dashboard/savings-goals/${savingsGoal.id}/contributions/${contribution.id}`}
                                 propName={contribution.amount.toString()}

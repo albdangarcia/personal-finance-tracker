@@ -4,6 +4,7 @@ interface FormWrapperProps {
     description: string;
 };
 
+// Wrapper for creating forms such as budget, income, and expense forms
 const FormWrapper = ({ children, title, description }: FormWrapperProps) => {
     return (
         <div className="flex justify-center mt-7 antialiased">

@@ -3,6 +3,7 @@ import { useFormState } from "react-dom";
 import FormButtons from "../form-buttons";
 import { createPayment } from "@/app/lib/actions/debt-payment";
 import { PaymentFormError } from "@/app/lib/zod-schemas";
+import getCurrentDate from "@/app/lib/utils/getCurrentDate";
 
 const CreatePaymentForm = ({ debtId }: { debtId: string }) => {
     const createPaymentWithId = createPayment.bind(null, debtId);
@@ -64,6 +65,7 @@ const CreatePaymentForm = ({ debtId }: { debtId: string }) => {
                         autoComplete="off"
                         required
                         aria-describedby="date-error"
+                        defaultValue={getCurrentDate()}
                     />
                     {/* Date errors */}
                     <div id="date-error" aria-live="polite" aria-atomic="true">

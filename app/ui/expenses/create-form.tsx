@@ -4,6 +4,7 @@ import { createExpense } from "@/app/lib/actions/expense";
 import { ExpenseFormError } from "@/app/lib/zod-schemas";
 import { CategoryInfo } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
+import getCurrentDate from "@/app/lib/utils/getCurrentDate";
 
 const CreateExpenseForm = ({ categories }: { categories: CategoryInfo[] }) => {
     // Error state for the form
@@ -126,6 +127,7 @@ const CreateExpenseForm = ({ categories }: { categories: CategoryInfo[] }) => {
                         autoComplete="off"
                         required
                         aria-describedby="date-error"
+                        defaultValue={getCurrentDate()}
                     />
                     {/* Date errors */}
                     <div id="date-error" aria-live="polite" aria-atomic="true">

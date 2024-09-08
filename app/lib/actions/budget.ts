@@ -8,11 +8,12 @@ import {
     CreateBudgetFormSchema,
     IdSchema,
 } from "@/app/lib/zod-schemas";
+import { getAuthenticatedUserId } from "../utils/authUtils";
 
-export async function createBudget(
-    prevState: BudgetFormError,
-    formData: FormData
-) {
+const createBudget = async (prevState: BudgetFormError, formData: FormData) => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Validate form fields using Zod
     const validatedFields = CreateBudgetFormSchema.safeParse({
         categoryId: formData.get("categoryId"),
@@ -38,6 +39,7 @@ export async function createBudget(
         },
     });
 
+    // If the category does not exist, return an error
     if (!categoryExists) {
         return {
             errors: {
@@ -47,14 +49,19 @@ export async function createBudget(
         };
     }
 
-    // Check if there is another budget with the same category on same month/year
+    // Check if there is another budget with the same category on same month/year for the authenticated user
     const existingBudget = await prisma.budget.findFirst({
         where: {
             categoryId: categoryId,
             yearMonth: yearMonth,
+            userId: userId,
+        },
+        select: {
+            id: true,
         },
     });
 
+    // If a budget with the same category and month/year already exists for the user, return an error
     if (existingBudget) {
         return {
             errors: {
@@ -72,7 +79,7 @@ export async function createBudget(
                 categoryId: categoryId,
                 amount: amount,
                 yearMonth: yearMonth,
-                userId: "clziqqbgy000108l7dmts0vng",
+                userId: userId,
             },
         });
     } catch (error) {
@@ -85,13 +92,16 @@ export async function createBudget(
     revalidatePath("/dashboard/budgets");
     // Redirect the user
     redirect("/dashboard/budgets");
-}
+};
 
-export async function updateBudget(
+const updateBudget = async (
     budgetId: string,
     prevState: BudgetFormError,
     formData: FormData
-) {
+) => {
+    // Get the authenticated user's ID
+    const userId = await getAuthenticatedUserId();
+
     // Validate form fields using Zod
     const validatedFields = BudgetFormSchema.safeParse({
         id: budgetId,
@@ -118,6 +128,7 @@ export async function updateBudget(
         },
     });
 
+    // If the category does not exist, return an error
     if (!categoryExists) {
         return {
             errors: {
@@ -132,13 +143,18 @@ export async function updateBudget(
         where: {
             categoryId: categoryId,
             yearMonth: yearMonth,
+            userId: userId,
             // Excludes the budget with the specified id from the results.
             NOT: {
                 id: id,
             },
         },
+        select: {
+            id: true,
+        },
     });
 
+    // If a budget with the same category and month/year already exists, return an error
     if (existingBudget) {
         return {
             errors: {
@@ -154,6 +170,7 @@ export async function updateBudget(
         await prisma.budget.update({
             where: {
                 id: id,
+                userId: userId, // Ensure the budget belongs to the authenticated user
             },
             data: {
                 categoryId: categoryId,
@@ -173,22 +190,49 @@ export async function updateBudget(
 
     // Redirect the user
     redirect("/dashboard/budgets");
-}
+};
 
-export async function deleteBudget(id: string) {
+const deleteBudget = async (id: string) => {
+    // Get the authenticated user's ID
+    const userId = await getAuthenticatedUserId();
+
     // Validate the id
     const parsedId = IdSchema.safeParse(id);
-    
-    // If ID validation fails, throw an error
+
+    // If ID validation fails, return an error
     if (!parsedId.success) {
         console.error("Invalid ID format:", parsedId.error);
-        throw new Error("Invalid ID format");
+        return {
+            message: "Invalid ID format",
+        };
     }
 
     // Extract the ID from the parsed data
     const budgetId = parsedId.data;
 
     try {
+        // Check if the budget exists and belongs to the authenticated user
+        const budget = await prisma.budget.findUnique({
+            where: {
+                id: budgetId,
+                userId: userId,
+            },
+            select: {
+                id: true,
+            },
+        });
+
+        // If the budget does not exist or does not belong to the user, return an error
+        if (!budget) {
+            console.error(
+                "Budget not found or user not authorized to delete it."
+            );
+            return {
+                message: "Budget not found or user not authorized to delete it.",
+            };
+        }
+
+        // Delete the budget
         await prisma.budget.delete({
             where: {
                 id: budgetId,
@@ -204,4 +248,6 @@ export async function deleteBudget(id: string) {
     revalidatePath("/dashboard/budgets");
     // Redirect the user
     redirect("/dashboard/budgets");
-}
+};
+
+export { createBudget, updateBudget, deleteBudget };

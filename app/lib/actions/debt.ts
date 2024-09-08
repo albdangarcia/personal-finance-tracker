@@ -8,8 +8,12 @@ import {
     DebtFormSchema,
     IdSchema,
 } from "../zod-schemas";
+import { getAuthenticatedUserId } from "../utils/authUtils";
 
-export async function createDebt(prevState: DebtFormError, formData: FormData) {
+const createDebt = async (prevState: DebtFormError, formData: FormData) => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Validate form fields using Zod
     const validatedFields = CreateDebtFormSchema.safeParse({
         name: formData.get("name"),
@@ -31,13 +35,30 @@ export async function createDebt(prevState: DebtFormError, formData: FormData) {
 
     // Create the debt
     try {
+        // Check if the category exists
+        const categoryExists = await prisma.category.findUnique({
+            where: {
+                id: categoryId,
+            },
+        });
+
+        // If the category does not exist, return an error
+        if (!categoryExists) {
+            return {
+                errors: {
+                    categoryId: ["Select a valid category."],
+                },
+                message: "The selected category does not exist.",
+            };
+        }
+
         await prisma.debt.create({
             data: {
                 name: name,
                 amount: amount,
                 interest: interest,
                 categoryId: categoryId,
-                userId: "clziqqbgy000108l7dmts0vng",
+                userId: userId,
             },
         });
     } catch (error) {
@@ -52,13 +73,16 @@ export async function createDebt(prevState: DebtFormError, formData: FormData) {
 
     // Redirect to the debts page
     redirect("/dashboard/debts");
-}
+};
 
-export async function updateDebt(
+const updateDebt = async (
     debtId: string,
     prevState: DebtFormError,
     formData: FormData
-) {
+) => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Validate form fields using Zod
     const validatedFields = DebtFormSchema.safeParse({
         id: debtId,
@@ -79,8 +103,40 @@ export async function updateDebt(
     // Extract validated fields
     const { id, name, amount, interest, categoryId } = validatedFields.data;
 
-    // Update the debt
     try {
+        // Check if the category exists
+        const categoryExists = await prisma.category.findUnique({
+            where: {
+                id: categoryId,
+            },
+        });
+
+        // If the category does not exist, return an error
+        if (!categoryExists) {
+            return {
+                errors: {
+                    categoryId: ["Select a valid category."],
+                },
+                message: "The selected category does not exist.",
+            };
+        }
+
+        // Check if the debt exists and belongs to the authenticated user
+        const debt = await prisma.debt.findUnique({
+            where: {
+                id: id,
+                userId: userId,
+            },
+        });
+
+        // If the debt does not exist, return an error
+        if (!debt) {
+            return {
+                message: "The debt does not exist.",
+            };
+        }
+
+        // Update the debt
         await prisma.debt.update({
             where: {
                 id: id,
@@ -104,22 +160,46 @@ export async function updateDebt(
 
     // Redirect to the debts page
     redirect("/dashboard/debts");
-}
+};
 
-export async function deleteDebt(id: string) {
+const deleteDebt = async (id: string) => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Validate the id
     const parsedId = IdSchema.safeParse(id);
 
-    // If ID validation fails, throw an error
+    // If ID validation fails
     if (!parsedId.success) {
         console.error("Invalid ID format:", parsedId.error);
-        throw new Error("Invalid ID format");
+        return {
+            message: "Invalid ID format",
+        };
     }
 
     // Extract the validated ID
     const validatedId = parsedId.data;
 
     try {
+        // Check if the debt exists and belongs to the authenticated user
+        const debt = await prisma.debt.findUnique({
+            where: {
+                id: validatedId,
+                userId: userId,
+            },
+        });
+
+        // If the debt does not exist or does not belong to the user, return an error
+        if (!debt) {
+            console.error(
+                "Debt not found or user not authorized to delete it."
+            );
+            return {
+                message: "Debt not found or user not authorized to delete it.",
+            };
+        }
+
+        // Delete the debt
         await prisma.debt.delete({
             where: {
                 id: validatedId,
@@ -130,6 +210,10 @@ export async function deleteDebt(id: string) {
         revalidatePath("/dashboard/debts");
     } catch (error) {
         console.error("Failed to delete debt:", error);
-        throw new Error("Failed to delete debt");
+        return {
+            message: "Database Error: Failed to Delete Debt",
+        };
     }
-}
+};
+
+export { createDebt, updateDebt, deleteDebt };

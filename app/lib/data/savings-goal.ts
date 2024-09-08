@@ -5,21 +5,36 @@ import {
     DataByCategories,
     SavingsGoalById,
 } from "../interfaces";
+import { getAuthenticatedUserId } from "../utils/authUtils";
+import { IdSchema, QuerySchema } from "../zod-schemas";
+
+// Define the number of savings goals per page
+const SAVINGS_GOALS_PER_PAGE = 10;
 
 /**
- * Fetches filtered savings goals from the database based on a query string and the current page number.
+ * Fetches filtered savings goals for the authenticated user based on a query and paginates the results.
  *
- * @param {string} query - The query string to filter savings goals by name.
+ * @param {string} query - The search query to filter savings goals by name.
  * @param {number} currentPage - The current page number for pagination.
- * @returns {Promise<CategoriesWithGoals[]>} - A promise that resolves to an array of categories with their savings goals and total contributions.
- * @throws {Error} - Throws an error if the fetch operation fails.
+ * @returns {Promise<CategoriesWithGoals[]>} - A promise that resolves to an array of categories with savings goals.
+ * @throws {Error} - Throws an error if the query parameter is invalid or if fetching savings goals fails.
  */
 const fetchFilteredSavingGoals = async (
     query: string,
     currentPage: number
 ): Promise<CategoriesWithGoals[]> => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Disable caching for this function
     noStore();
+
+    // Validate the query parameter using Zod
+    const validatedQuery = QuerySchema.safeParse(query);
+    if (!validatedQuery.success) {
+        console.error("Invalid query parameter:", validatedQuery.error);
+        throw new Error("Invalid query parameter.");
+    }
 
     // Calculate the offset based on the current page
     const offset = (currentPage - 1) * SAVINGS_GOALS_PER_PAGE;
@@ -33,9 +48,10 @@ const fetchFilteredSavingGoals = async (
                 savingsGoals: {
                     some: {
                         name: {
-                            contains: query,
+                            contains: validatedQuery.data,
                             mode: "insensitive",
                         },
+                        userId: userId, // Filter by authenticated user's ID
                     },
                 },
             },
@@ -89,15 +105,24 @@ const fetchFilteredSavingGoals = async (
 };
 
 /**
- * Fetches a savings goal by its ID from the database.
- *
+ * Fetches a savings goal by its ID for the authenticated user.
  * @param {string} id - The ID of the savings goal to fetch.
- * @returns {Promise<SavingsGoalById | null>} - A promise that resolves to the savings goal object if found, otherwise null.
- * @throws {Error} - Throws an error if the fetch operation fails.
+ * @returns {Promise<SavingsGoalById | null>} - A promise that resolves to the savings goal object or null if not found.
+ * @throws {Error} - Throws an error if the ID parameter is invalid or if fetching the savings goal fails.
  */
 const fetchSavingsGoalById = async (
     id: string
 ): Promise<SavingsGoalById | null> => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
+    // Validate the ID parameter using Zod
+    const validatedId = IdSchema.safeParse(id);
+    if (!validatedId.success) {
+        console.error("Invalid ID parameter:", validatedId.error);
+        return null;
+    }
+
     // Disable caching for this function
     noStore();
 
@@ -105,7 +130,8 @@ const fetchSavingsGoalById = async (
     try {
         const savingsGoal = await prisma.savingsGoal.findUnique({
             where: {
-                id: id,
+                id: validatedId.data,
+                userId: userId, // Filter by authenticated user's ID
             },
             select: {
                 id: true,
@@ -121,17 +147,24 @@ const fetchSavingsGoalById = async (
     }
 };
 
-// Define the number of savings goals per page
-const SAVINGS_GOALS_PER_PAGE = 10;
-
 /**
- * Fetches the total number of pages for savings goals based on a query string.
+ * Fetches the total number of pages for the savings goals pagination.
  *
- * @param {string} query - The query string to filter savings goals by name.
+ * @param {string} query - The query string to filter the savings goals.
  * @returns {Promise<number>} - A promise that resolves to the total number of pages.
- * @throws {Error} - Throws an error if the fetch operation fails.
+ * @throws {Error} - Throws an error if fetching the total number of pages fails.
  */
 const fetchSavingsGoalsPages = async (query: string): Promise<number> => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
+    // Validate the query parameter using Zod
+    const validatedQuery = QuerySchema.safeParse(query);
+    if (!validatedQuery.success) {
+        console.error("Invalid query parameter:", validatedQuery.error);
+        throw new Error("Invalid query parameter.");
+    }
+
     // Disable caching for this function
     noStore();
 
@@ -139,9 +172,10 @@ const fetchSavingsGoalsPages = async (query: string): Promise<number> => {
         const totalSavingsGoals = await prisma.savingsGoal.count({
             where: {
                 name: {
-                    contains: query,
+                    contains: validatedQuery.data,
                     mode: "insensitive",
                 },
+                userId: userId, // Filter by authenticated user's ID
             },
         });
         // Calculate the total number of pages
@@ -156,12 +190,28 @@ const fetchSavingsGoalsPages = async (query: string): Promise<number> => {
     }
 };
 
+/**
+ * Fetches grouped savings goals for the authenticated user.
+ *
+ * @returns {Promise<DataByCategories[]>} - A promise that resolves to an array of categories with savings goals.
+ * @throws {Error} - Throws an error if fetching grouped savings goals fails.
+ */
 const fetchGroupedSavingsGoals = async (): Promise<DataByCategories[]> => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Disable caching for this function
     noStore();
 
     try {
         const categoriesWithGoals = await prisma.category.findMany({
+            where: {
+                savingsGoals: {
+                    some: {
+                        userId: userId, // Filter by authenticated user's ID
+                    },
+                },
+            },
             select: {
                 id: true,
                 name: true,

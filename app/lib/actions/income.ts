@@ -9,11 +9,15 @@ import {
     IncomeFormSchema,
 } from "../zod-schemas";
 import { IncomeType } from "@prisma/client";
+import { getAuthenticatedUserId } from "../utils/authUtils";
 
 const createIncome = async (
     prevState: IncomeFormErrors,
     formData: FormData
 ) => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Validate form fields using Zod
     const validatedFields = CreateIncomeFormSchema.safeParse({
         incomeType: formData.get("incomeType"),
@@ -47,6 +51,23 @@ const createIncome = async (
     const month = String(startDate.getMonth() + 1).padStart(2, "0"); // Ensure month is two digits
 
     try {
+        // Check if the category exists
+        const categoryExists = await prisma.category.findUnique({
+            where: {
+                id: categoryId,
+            },
+        });
+
+        // If the category does not exist, return an error
+        if (!categoryExists) {
+            return {
+                errors: {
+                    categoryId: ["Select a valid category."],
+                },
+                message: "The selected category does not exist.",
+            };
+        }
+
         // Create the income
         await prisma.income.create({
             data: {
@@ -57,7 +78,7 @@ const createIncome = async (
                 categoryId: categoryId,
                 frequency: frequencyOptional,
                 yearMonth: `${year}-${month}`,
-                userId: "clziqqbgy000108l7dmts0vng",
+                userId: userId,
             },
         });
     } catch (error) {
@@ -75,19 +96,44 @@ const createIncome = async (
 };
 
 const deleteIncome = async (id: string) => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Validate the ID using Zod
     const parsedId = IdSchema.safeParse(id);
 
-    // If ID validation fails, throw an error
+    // If ID validation fails
     if (!parsedId.success) {
         console.error("Invalid ID format:", parsedId.error);
-        throw new Error("Invalid ID format");
+        return {
+            message: "Invalid ID format.",
+        };
     }
 
     // Extract the ID from the parsed data
     const incomeId = parsedId.data;
 
     try {
+        // Check if the income exists and belongs to the authenticated user
+        const income = await prisma.income.findUnique({
+            where: {
+                id: incomeId,
+                userId: userId,
+            },
+        });
+
+        // If the income does not exist or does not belong to the user, return an error
+        if (!income) {
+            console.error(
+                "Income not found or user not authorized to delete it."
+            );
+            return {
+                message:
+                    "Income not found or user not authorized to delete it.",
+            };
+        }
+
+        // Delete the income
         await prisma.income.delete({
             where: { id: incomeId },
         });
@@ -96,7 +142,9 @@ const deleteIncome = async (id: string) => {
         revalidatePath("/dashboard/debts");
     } catch (error) {
         console.error("Failed to delete Income:", error);
-        throw new Error("Failed to delete Income");
+        return {
+            message: "Database Error: Failed to Delete Income.",
+        };
     }
 };
 
@@ -105,6 +153,9 @@ const updateIncome = async (
     prevState: IncomeFormErrors,
     formData: FormData
 ) => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Validate form fields using Zod
     const validatedFields = IncomeFormSchema.safeParse({
         id: incomeId,
@@ -146,6 +197,42 @@ const updateIncome = async (
     const endDateOptional = isRegularIncome ? endDate : null;
 
     try {
+        // Check if the category exists
+        const categoryExists = await prisma.category.findUnique({
+            where: {
+                id: categoryId,
+            },
+        });
+
+        // If the category does not exist, return an error
+        if (!categoryExists) {
+            return {
+                errors: {
+                    categoryId: ["Select a valid category."],
+                },
+                message: "The selected category does not exist.",
+            };
+        }
+
+        // Check if the income exists and belongs to the authenticated user
+        const income = await prisma.income.findUnique({
+            where: {
+                id: id,
+                userId: userId,
+            },
+        });
+
+        // If the income does not exist or does not belong to the user, return an error
+        if (!income) {
+            console.error(
+                "Income not found or user not authorized to update it."
+            );
+            return {
+                message:
+                    "Income not found or user not authorized to update it.",
+            };
+        }
+
         // Update the income
         await prisma.income.update({
             where: { id: id },

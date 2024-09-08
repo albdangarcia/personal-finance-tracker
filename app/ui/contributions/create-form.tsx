@@ -3,6 +3,7 @@ import { useFormState } from "react-dom";
 import { createContribution } from "@/app/lib/actions/contribution";
 import { ContributionFormError } from "@/app/lib/zod-schemas";
 import FormButtons from "../form-buttons";
+import getCurrentDate from "@/app/lib/utils/getCurrentDate";
 
 const CreateContributionForm = ({ goalId }: { goalId: string }) => {
     const createContributionWithId = createContribution.bind(null, goalId);
@@ -64,6 +65,7 @@ const CreateContributionForm = ({ goalId }: { goalId: string }) => {
                         autoComplete="off"
                         required
                         aria-describedby="date-error"
+                        defaultValue={getCurrentDate()}
                     />
                     {/* Date errors */}
                     <div id="date-error" aria-live="polite" aria-atomic="true">

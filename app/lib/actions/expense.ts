@@ -2,22 +2,53 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import prisma from "@/app/lib/prisma";
-import { CreateExpenseFormSchema, ExpenseFormError, ExpenseFormSchema, IdSchema } from "../zod-schemas";
+import {
+    CreateExpenseFormSchema,
+    ExpenseFormError,
+    ExpenseFormSchema,
+    IdSchema,
+} from "../zod-schemas";
+import { getAuthenticatedUserId } from "../utils/authUtils";
 
-export async function deleteExpense(expenseId: string) {
+const deleteExpense = async (expenseId: string) => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Validate the id
     const parsedId = IdSchema.safeParse(expenseId);
-    
-    // If ID validation fails, throw an error
+
+    // If ID validation fails
     if (!parsedId.success) {
         console.error("Invalid ID format:", parsedId.error);
-        throw new Error("Invalid ID format");
+        return {
+            message: "Invalid ID format",
+        };
     }
 
     // Extract the validated ID
     const validatedId = parsedId.data;
 
     try {
+        // Check if the expense exists and belongs to the authenticated user
+        const expense = await prisma.expense.findUnique({
+            where: {
+                id: validatedId,
+                userId: userId,
+            },
+        });
+
+        // If the expense does not exist or does not belong to the user, return an error
+        if (!expense) {
+            console.error(
+                "Expense not found or user not authorized to delete it."
+            );
+            return {
+                message:
+                    "Expense not found or user not authorized to delete it.",
+            };
+        }
+
+        // Delete the expense
         await prisma.expense.delete({
             where: {
                 id: validatedId,
@@ -25,7 +56,9 @@ export async function deleteExpense(expenseId: string) {
         });
     } catch (error) {
         console.error("Failed to delete expense:", error);
-        throw new Error("Failed to delete expense");
+        return {
+            message: "Database Error: Failed to Delete Expense",
+        };
     }
 
     // Revalidate the cache
@@ -33,12 +66,15 @@ export async function deleteExpense(expenseId: string) {
 
     // Redirect the user
     redirect("/dashboard/expenses");
-}
+};
 
-export async function createExpense(
+const createExpense = async (
     prevState: ExpenseFormError,
     formData: FormData
-) {
+) => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Validate form fields using Zod
     const validatedFields = CreateExpenseFormSchema.safeParse({
         name: formData.get("name"),
@@ -63,8 +99,24 @@ export async function createExpense(
     const month = String(date.getMonth() + 1).padStart(2, "0"); // Ensure month is two digits
     const yearMonth = `${year}-${month}`;
 
-    // Create the expense
     try {
+        // Check if the category exists
+        const categoryExists = await prisma.category.findUnique({
+            where: {
+                id: categoryId,
+            },
+        });
+
+        // If the category does not exist, return an error
+        if (!categoryExists) {
+            return {
+                errors: {
+                    categoryId: ["Select a valid category."],
+                },
+                message: "The selected category does not exist.",
+            };
+        }
+
         await prisma.expense.create({
             data: {
                 name: name,
@@ -72,7 +124,7 @@ export async function createExpense(
                 categoryId: categoryId,
                 date: date,
                 yearMonth: yearMonth,
-                userId: "clziqqbgy000108l7dmts0vng",
+                userId: userId,
             },
         });
     } catch (error) {
@@ -87,13 +139,16 @@ export async function createExpense(
 
     // Redirect the user
     redirect("/dashboard/expenses");
-}
+};
 
-export async function updateExpense(
+const updateExpense = async (
     updateId: string,
     prevState: ExpenseFormError,
     formData: FormData
-) {
+) => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Validate form fields using Zod
     const validatedFields = ExpenseFormSchema.safeParse({
         id: updateId,
@@ -116,6 +171,39 @@ export async function updateExpense(
 
     // Update the expense
     try {
+        // Check if the category exists
+        const categoryExists = await prisma.category.findUnique({
+            where: {
+                id: categoryId,
+            },
+        });
+
+        // If the category does not exist, return an error
+        if (!categoryExists) {
+            return {
+                errors: {
+                    categoryId: ["Select a valid category."],
+                },
+                message: "The selected category does not exist.",
+            };
+        }
+
+        // check if the expense exists and belongs to the authenticated user
+        const expense = await prisma.expense.findUnique({
+            where: {
+                id: id,
+                userId: userId,
+            },
+        });
+        
+        // If the expense does not exist or does not belong to the user, return an error
+        if (!expense) {
+            return {
+                message: "Expense not found or user not authorized to update it.",
+            };
+        }
+
+        // Update the expense
         await prisma.expense.update({
             where: {
                 id: id,
@@ -139,4 +227,6 @@ export async function updateExpense(
 
     // Redirect the user
     redirect("/dashboard/expenses");
-}
+};
+
+export { createExpense, updateExpense, deleteExpense };

@@ -8,51 +8,102 @@ import {
     CreateContributionFormSchema,
     IdSchema,
 } from "../zod-schemas";
+import { getAuthenticatedUserId } from "../utils/authUtils";
 
-export async function deleteContribution(id: string, savingsGoalId: string) {
-    // Validate the ID using Zod
+const deleteContribution = async (id: string, savingsGoalId: string) => {
+    // Get the authenticated user's ID
+    const userId = await getAuthenticatedUserId();
+
+    // Validate the contribution ID using Zod
     const parsedId = IdSchema.safeParse(id);
 
-    // If ID validation fails, throw an error
+    // If ID validation fails
     if (!parsedId.success) {
         console.error("Invalid ID format:", parsedId.error);
-        throw new Error("Invalid ID format");
+        return {
+            message: "Invalid ID format",
+        };
     }
 
     // Extract the ID from the validated data
     const contributionId = parsedId.data;
 
     try {
-        await prisma.contribution.delete({
-            where: {
-                id: contributionId,
+        // Fetch the Contribution along with the userId of its related SavingsGoal
+        const contribution = await prisma.contribution.findUnique({
+            where: { id: contributionId },
+            select: {
+                savingsGoal: {
+                    select: {
+                        userId: true,
+                    },
+                },
             },
+        });
+
+        // Check if the contribution exists
+        if (!contribution) {
+            return {
+                message: "Contribution not found",
+            };
+        }
+
+        // Check if the user owns the contribution
+        if (contribution.savingsGoal.userId !== userId) {
+            return {
+                message: "You do not have permission to delete this contribution",
+            };
+        }
+
+        // Proceed to delete the contribution
+        await prisma.contribution.delete({
+            where: { id: contributionId },
         });
     } catch (error) {
         console.error("Failed to delete Contribution:", error);
-        throw new Error("Failed to delete Contribution");
+        return {
+            message: "Database Error: Failed to Delete Contribution.",
+        };
     }
 
     // Revalidate the cache
     revalidatePath(`/dashboard/savings-goals/${savingsGoalId}/contributions`);
-}
+};
 
-export async function createContribution(
+const createContribution = async (
     savingsGoalId: string,
     prevState: ContributionFormError,
     formData: FormData
-) {
-    // Validate the id
+) => {
+    // Get the authenticated user's ID
+    const userId = await getAuthenticatedUserId();
+
+    // Validate the savingsGoalId id
     const parsedId = IdSchema.safeParse(savingsGoalId);
 
-    // If ID validation fails, throw an error
+    // If ID validation fails,
     if (!parsedId.success) {
         console.error("Invalid ID format:", parsedId.error);
-        throw new Error("Invalid ID format");
+        return {
+            message: "Invalid ID format",
+        };
     }
 
     // Extract the ID from the parsed data
     const validatedGoalId = parsedId.data;
+
+    // Verify that the savings goal belongs to the authenticated user
+    const savingsGoal = await prisma.savingsGoal.findUnique({
+        where: { id: validatedGoalId, userId: userId },
+        select: { id: true },
+    });
+
+    // If the savings goal does not exist
+    if (!savingsGoal) {
+        return {
+            message: "Unauthorized access to savings goal",
+        };
+    }
 
     // Validate form fields using Zod
     const validatedFields = CreateContributionFormSchema.safeParse({
@@ -92,14 +143,17 @@ export async function createContribution(
 
     // Redirect the user
     redirect(`/dashboard/savings-goals/${validatedGoalId}/contributions`);
-}
+};
 
-export async function updateContribution(
+const updateContribution = async (
     contributionId: string,
     goalId: string,
     prevState: ContributionFormError,
     formData: FormData
-) {
+) => {
+    // Get the authenticated user's ID
+    const userId = await getAuthenticatedUserId();
+
     // Validate form fields using Zod
     const validatedFields = ContributionFormSchema.safeParse({
         id: contributionId,
@@ -120,6 +174,33 @@ export async function updateContribution(
 
     // Update the contribution
     try {
+        // Fetch the Contribution along with the userId of its related SavingsGoal
+        const contribution = await prisma.contribution.findUnique({
+            where: { id: contributionId },
+            select: {
+                savingsGoal: {
+                    select: {
+                        userId: true,
+                    },
+                },
+            },
+        });
+
+        // Check if the contribution exists
+        if (!contribution) {
+            return {
+                message: "Contribution not found",
+            };
+        }
+
+        // Check if the user owns the contribution
+        if (contribution.savingsGoal.userId !== userId) {
+            return {
+                message: "You do not have permission to update this contribution",
+            };
+        }
+
+        // Proceed to update the contribution
         await prisma.contribution.update({
             where: {
                 id: id,
@@ -141,4 +222,6 @@ export async function updateContribution(
 
     // Redirect the user
     redirect(`/dashboard/savings-goals/${goalId}/contributions`);
-}
+};
+
+export { createContribution, deleteContribution, updateContribution };

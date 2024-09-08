@@ -1,11 +1,13 @@
-"use client"
 import { Montserrat } from "next/font/google";
 const montserrat = Montserrat({ subsets: ["latin"] });
 import screenShotImage from "../public/screenshotsmall.png";
 import Image from "next/image";
-import { signIn } from "next-auth/react";
+import { auth } from "@/auth";
+import Link from "next/link";
 
-const Home = () => {
+const Home = async () => {
+    const session = await auth();
+
     return (
         <div>
             <div className="bg-white overflow-hidden isolate relative antialiased">
@@ -26,24 +28,29 @@ const Home = () => {
                             money with ease. Get started today!
                         </p>
                         <div className="flex gap-x-6 items-center mt-12">
-                            <a
-                                href="/dashboard"
-                                className="shadow text-white font-semibold text-sm py-2.5 px-3.5 bg-indigo-600 rounded-md"
-                            >
-                                Get started
-                            </a>
-                            <a
-                                href="/login"
-                                className="shadow text-white font-semibold text-sm py-2.5 px-3.5 bg-gray-800 rounded-md ring-1 ring-gray-200"
-                            >
-                                Login
-                            </a>
-                            {/* <button
-                                onClick={() => signIn()}
-                                className="shadow text-white font-semibold text-sm py-2.5 px-3.5 bg-gray-800 rounded-md ring-1 ring-gray-200"
-                            >
-                                Login
-                            </button> */}
+                            {!session ? (
+                                <>
+                                    <Link
+                                        href="/signup"
+                                        className="shadow text-white font-semibold text-sm py-2.5 px-3.5 bg-indigo-600 rounded-md"
+                                    >
+                                        Get started
+                                    </Link>
+                                    <Link
+                                        href="/login"
+                                        className="shadow text-white font-semibold text-sm py-2.5 px-3.5 bg-gray-800 rounded-md ring-1 ring-gray-200"
+                                    >
+                                        Login
+                                    </Link>
+                                </>
+                            ) : (
+                                <Link
+                                    href="/dashboard"
+                                    className="shadow text-white font-semibold text-sm py-2.5 px-3.5 bg-indigo-600 rounded-md"
+                                >
+                                    Go to dashboard
+                                </Link>
+                            )}
                         </div>
                     </div>
                     <div className="max-w-2xl flex mt-16 mx-auto sm:mt-24 lg:flex lg:max-w-none lg:mt-0 lg:ml-10">
@@ -57,7 +64,7 @@ const Home = () => {
                                     src={screenShotImage}
                                     alt="screenshot"
                                     priority
-                                    className="shadow-lg rounded-md w-[65rem] max-w-full h-auto ring-gray-200 ring-1"
+                                    className="shadow-lg rounded-md w-[54rem] max-w-full h-auto ring-gray-200 ring-1"
                                 />
                             </div>
                         </div>

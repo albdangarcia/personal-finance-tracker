@@ -7,7 +7,12 @@ import {
     MonthlyObject,
 } from "../interfaces";
 import getCurrentYearMonth from "../utils/currentYearMonth";
-import { YearMonthSchema } from "../zod-schemas";
+import {
+    IdSchema,
+    QuerySchema,
+    YearMonthSchema,
+} from "../zod-schemas";
+import { getAuthenticatedUserId } from "../utils/authUtils";
 
 // Limit the number of expenses per page
 const EXPENSES_PER_PAGE = 10;
@@ -20,14 +25,25 @@ const EXPENSES_PER_PAGE = 10;
  * @throws {Error} - Throws an error if the fetch operation fails.
  */
 const fetchExpenseById = async (id: string): Promise<ExpenseById | null> => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Disable caching for this function
     noStore();
+
+    // Validate the expense ID using Zod
+    const validatedId = IdSchema.safeParse(id);
+    if (!validatedId.success) {
+        console.error("Invalid Expense ID:", validatedId.error);
+        return null;
+    }
 
     // Fetch the expense by its ID from the database using Prisma
     try {
         const expense = await prisma.expense.findUnique({
             where: {
-                id: id,
+                id: validatedId.data,
+                userId: userId, // Filter by authenticated user's ID
             },
             select: {
                 id: true,
@@ -49,26 +65,52 @@ const fetchExpenseById = async (id: string): Promise<ExpenseById | null> => {
     }
 };
 
+/**
+ * Fetches expenses grouped by category for a given year and month.
+ *
+ * @param {string} year - The year for which to fetch expenses.
+ * @param {string} month - The month for which to fetch expenses.
+ * @returns {Promise<DataByCategories[]>} - A promise that resolves to an array of expenses grouped by category.
+ * @throws {Error} - Throws an error if the year or month parameters are invalid or if fetching expenses fails.
+ */
 const fetchExpensesByCategory = async (
     year: string,
     month: string
 ): Promise<DataByCategories[]> => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Disable caching
     noStore();
 
-    let yearMonth: string;
     // If year or month is not provided, get the current year and month
     if (!year || !month) {
-        yearMonth = getCurrentYearMonth();
-    } else {
-        yearMonth = `${year}-${month}`;
+        const currentYearMonth = getCurrentYearMonth();
+        [year, month] = currentYearMonth.split("-");
     }
+
+    // Validate the year and month parameters
+    const validationResult = YearMonthSchema.safeParse({ year, month });
+    if (!validationResult.success) {
+        console.error(
+            "Invalid year or month parameter:",
+            validationResult.error
+        );
+        throw new Error("Invalid year or month parameter");
+    }
+
+    // Extract year and month from the validated data
+    const { year: validatedYear, month: validatedMonth } =
+        validationResult.data;
+
+    const yearMonth = `${validatedYear}-${validatedMonth}`;
 
     try {
         // Fetch expenses grouped by categoryId
         const expenses = await prisma.expense.findMany({
             where: {
                 yearMonth: yearMonth,
+                userId: userId, // Filter by authenticated user's ID
             },
             select: {
                 categoryId: true,
@@ -118,29 +160,57 @@ const fetchExpensesByCategory = async (
     }
 };
 
+/**
+ * Fetches filtered expenses for a given query, year, and month, with pagination support.
+ *
+ * @param {string} query - The search query to filter expenses by name.
+ * @param {number} currentPage - The current page number for pagination.
+ * @param {string} year - The year for which to fetch expenses.
+ * @param {string} month - The month for which to fetch expenses.
+ * @returns {Promise<ExpenseById[]>} - A promise that resolves to an array of filtered expenses.
+ * @throws {Error} - Throws an error if the year, month, or query parameters are invalid or if fetching expenses fails.
+ */
 const fetchFilteredExpenses = async (
     query: string,
     currentPage: number,
     year: string,
     month: string
 ): Promise<ExpenseById[]> => {
-    // Disable caching for this function
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
+    // Disable caching
     noStore();
 
-    let yearMonth: string;
     // If year or month is not provided, get the current year and month
     if (!year || !month) {
-        yearMonth = getCurrentYearMonth();
-    } else {
-        yearMonth = `${year}-${month}`;
+        const currentYearMonth = getCurrentYearMonth();
+        [year, month] = currentYearMonth.split("-");
     }
 
-    // zod year month schema
-    const validated = YearMonthSchema.safeParse(yearMonth);
-    if (!validated.success) {
+    // Validate the year and month parameters
+    const validationResult = YearMonthSchema.safeParse({ year, month });
+    if (!validationResult.success) {
+        console.error(
+            "Invalid year or month parameter:",
+            validationResult.error
+        );
+        throw new Error("Invalid year or month parameter");
+    }
+
+    // Extract year and month from the validated data
+    const { year: validatedYear, month: validatedMonth } =
+        validationResult.data;
+
+    // Use the validated year and month
+    const yearMonth = `${validatedYear}-${validatedMonth}`;
+
+    // Validate the query parameter using Zod
+    const validatedQuery = QuerySchema.safeParse(query);
+    if (!validatedQuery.success) {
+        console.error("Invalid query parameter:", validatedQuery.error);
         return [];
     }
-    const validatedYearMonth = validated.data;
 
     // Calculate the offset based on the current page
     const offset = (currentPage - 1) * EXPENSES_PER_PAGE;
@@ -151,11 +221,12 @@ const fetchFilteredExpenses = async (
     try {
         const expenses = await prisma.expense.findMany({
             where: {
-                yearMonth: validatedYearMonth,
+                yearMonth: yearMonth,
                 name: {
-                    contains: query,
+                    contains: validatedQuery.data,
                     mode: "insensitive",
                 },
+                userId: userId, // Filter by authenticated user's ID
             },
             select: {
                 id: true,
@@ -192,7 +263,10 @@ const fetchFilteredExpenses = async (
  *
  */
 const fetchLastSixMonthsExpenses = async (): Promise<MonthlyObject[]> => {
-    // Disable caching 
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
+    // Disable caching
     noStore();
 
     // Calculate the date six months ago
@@ -206,6 +280,7 @@ const fetchLastSixMonthsExpenses = async (): Promise<MonthlyObject[]> => {
             date: {
                 gte: sixMonthsAgoDate,
             },
+            userId: userId, // Filter by authenticated user's ID
         },
         _sum: {
             amount: true,
@@ -250,38 +325,59 @@ const fetchLastSixMonthsExpenses = async (): Promise<MonthlyObject[]> => {
     return lastSixMonths;
 };
 
+/**
+ * Fetches the total number of pages of expenses based on a query, year, and month.
+ *
+ * @param {string} query - The search query to filter expenses by name.
+ * @param {string} year - The year for which to fetch expenses.
+ * @param {string} month - The month for which to fetch expenses.
+ * @returns {Promise<number>} - A promise that resolves to the total number of pages of expenses.
+ * @throws {Error} - Throws an error if the year or month parameters are invalid or if fetching the expenses page count fails.
+ */
 const fetchExpensePages = async (
     query: string,
     year: string,
     month: string
 ): Promise<number> => {
-    // Disable caching for this function
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
+    // Disable caching
     noStore();
 
-    let yearMonth: string;
     // If year or month is not provided, get the current year and month
     if (!year || !month) {
-        yearMonth = getCurrentYearMonth();
-    } else {
-        yearMonth = `${year}-${month}`;
+        const currentYearMonth = getCurrentYearMonth();
+        [year, month] = currentYearMonth.split("-");
     }
 
-    // zod year month schema
-    const validated = YearMonthSchema.safeParse(yearMonth);
-    if (!validated.success) {
-        return 0;
+    // Validate the year and month parameters
+    const validationResult = YearMonthSchema.safeParse({ year, month });
+    if (!validationResult.success) {
+        console.error(
+            "Invalid year or month parameter:",
+            validationResult.error
+        );
+        throw new Error("Invalid year or month parameter");
     }
-    const validatedYearMonth = validated.data;
+
+    // Extract year and month from the validated data
+    const { year: validatedYear, month: validatedMonth } =
+        validationResult.data;
+
+    // Use the validated year and month
+    const yearMonth = `${validatedYear}-${validatedMonth}`;
 
     // Fetch the total number of expenses based on the query
     try {
         const expensesCount = await prisma.expense.count({
             where: {
-                yearMonth: validatedYearMonth,
+                yearMonth: yearMonth,
                 name: {
                     contains: query,
                     mode: "insensitive",
                 },
+                userId: userId, // Filter by authenticated user's ID
             },
         });
 
@@ -295,7 +391,16 @@ const fetchExpensePages = async (
     }
 };
 
+/**
+ * Fetches the total amount of expenses for the current and previous month for the authenticated user.
+ *
+ * @returns {Promise<CardAmounts>} - A promise that resolves to an object containing the total expense amount for the current and previous month.
+ * @throws {Error} - Throws an error if fetching the total expense amount fails.
+ */
 const fetchExpenseTotalAmount = async (): Promise<CardAmounts> => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Disable caching
     noStore();
 
@@ -309,6 +414,7 @@ const fetchExpenseTotalAmount = async (): Promise<CardAmounts> => {
         const totalAmount = await prisma.expense.aggregate({
             where: {
                 yearMonth: `${year}-${month}`,
+                userId: userId, // Filter by authenticated user's ID
             },
             _sum: {
                 amount: true,
@@ -319,6 +425,7 @@ const fetchExpenseTotalAmount = async (): Promise<CardAmounts> => {
         const previousTotalAmount = await prisma.expense.aggregate({
             where: {
                 yearMonth: `${year}-${String(now.getMonth()).padStart(2, "0")}`,
+                userId: userId, // Filter by authenticated user's ID
             },
             _sum: {
                 amount: true,
@@ -333,7 +440,7 @@ const fetchExpenseTotalAmount = async (): Promise<CardAmounts> => {
         console.error("Failed to fetch total expense amount:", error);
         throw new Error("Failed to fetch total expense amount.");
     }
-}
+};
 
 export {
     fetchExpenseById,

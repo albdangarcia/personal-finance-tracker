@@ -1,17 +1,38 @@
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
 import { DebtById, CategoriesWithDebts, CardAmounts } from "../interfaces";
+import { getAuthenticatedUserId } from "../utils/authUtils";
+import { IdSchema, QuerySchema } from "../zod-schemas";
 
 // Limit the number of debts per page
 const DEBTS_PER_PAGE = 10;
 
+/**
+ * Fetches debts for the authenticated user based on a query and paginates the results.
+ *
+ * @param {string} query - The search query to filter debts by name.
+ * @param {number} currentPage - The current page number for pagination.
+ * @returns {Promise<CategoriesWithDebts[]>} - A promise that resolves to an array of categories with debts.
+ * @throws {Error} - Throws an error if the query parameter is invalid or if fetching debts fails.
+ */
 const fetchDebts = async (
     query: string,
     currentPage: number
 ): Promise<CategoriesWithDebts[]> => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
+    // Validate the query parameter using Zod
+    const validatedQuery = QuerySchema.safeParse(query);
+    if (!validatedQuery.success) {
+        console.error("Invalid query parameter:", validatedQuery.error);
+        return [];
+    }
+
     // Disable caching for this function
     noStore();
 
+    // Calculate the offset based on the current page
     const offset = (currentPage - 1) * DEBTS_PER_PAGE;
 
     try {
@@ -20,9 +41,10 @@ const fetchDebts = async (
                 debts: {
                     some: {
                         name: {
-                            contains: query,
+                            contains: validatedQuery.data,
                             mode: "insensitive",
                         },
+                        userId: userId, // Filter by authenticated user's ID
                     },
                 },
             },
@@ -71,17 +93,35 @@ const fetchDebts = async (
     }
 };
 
+/**
+ * Fetches the total number of pages of debts based on a query for the authenticated user.
+ *
+ * @param {string} query - The search query to filter debts by name.
+ * @returns {Promise<number>} - A promise that resolves to the total number of pages of debts.
+ * @throws {Error} - Throws an error if the query parameter is invalid or if fetching the debts page count fails.
+ */
 const fetchDebtsPages = async (query: string): Promise<number> => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Disable caching for this function
     noStore();
+
+    // Validate the query parameter using Zod
+    const validatedQuery = QuerySchema.safeParse(query);
+    if (!validatedQuery.success) {
+        console.error("Invalid query parameter:", validatedQuery.error);
+        throw new Error("Invalid query parameter");
+    }
 
     try {
         const totalDebts = await prisma.debt.count({
             where: {
                 name: {
-                    contains: query,
+                    contains: validatedQuery.data,
                     mode: "insensitive",
                 },
+                userId: userId, // Filter by authenticated user's ID
             },
         });
 
@@ -95,14 +135,32 @@ const fetchDebtsPages = async (query: string): Promise<number> => {
     }
 };
 
+/**
+ * Fetches a debt by its ID for the authenticated user.
+ *
+ * @param {string} id - The ID of the debt to fetch.
+ * @returns {Promise<DebtById | null>} - A promise that resolves to the debt object if found, or null if not found.
+ * @throws {Error} - Throws an error if fetching the debt fails.
+ */
 const fetchDebtById = async (id: string): Promise<DebtById | null> => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
+    // Validate the debt ID using Zod
+    const validatedId = IdSchema.safeParse(id);
+    if (!validatedId.success) {
+        console.error("Invalid Debt ID:", validatedId.error);
+        return null;
+    }
+
     // Disable caching for this function
     noStore();
 
     try {
         const debt = await prisma.debt.findUnique({
             where: {
-                id: id,
+                id: validatedId.data,
+                userId: userId, // Filter by authenticated user's ID
             },
             select: {
                 id: true,
@@ -120,7 +178,16 @@ const fetchDebtById = async (id: string): Promise<DebtById | null> => {
     }
 };
 
+/**
+ * Fetches the total debt amount for the current year and the previous year for the authenticated user.
+ *
+ * @returns {Promise<CardAmounts>} - A promise that resolves to an object containing the total debt amount for the current year and the previous year.
+ * @throws {Error} - Throws an error if fetching the total debt amount fails.
+ */
 const fetchDebtTotalAmount = async (): Promise<CardAmounts> => {
+    // Get the authenticated user's ID
+    const userId: string = await getAuthenticatedUserId();
+
     // Disable caching for this function
     noStore();
 
@@ -137,6 +204,7 @@ const fetchDebtTotalAmount = async (): Promise<CardAmounts> => {
                 createdAt: {
                     gte: startOfCurrentYear,
                 },
+                userId: userId, // Filter by authenticated user's ID
             },
             _sum: {
                 amount: true,
@@ -150,6 +218,7 @@ const fetchDebtTotalAmount = async (): Promise<CardAmounts> => {
                     gte: startOfPreviousYear,
                     lt: endOfPreviousYear,
                 },
+                userId: userId, // Filter by authenticated user's ID
             },
             _sum: {
                 amount: true,

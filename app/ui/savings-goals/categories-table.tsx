@@ -98,9 +98,9 @@ const CategoriesTable = ({ categoriesWithGoals, totalPages }: Props) => {
                                         </span>
                                     )}
                                 </p>
-                                <p className="text-gray-500">${goal.amount}</p>
+                                <p className="text-gray-500">${goal.amount.toLocaleString()}</p>
                                 <p className="text-gray-500">
-                                    ${goal.totalContributions}
+                                    ${goal.totalContributions.toLocaleString()}
                                 </p>
                                 <p className="text-gray-500">
                                     {Math.min(

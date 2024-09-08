@@ -13,7 +13,7 @@ const Breadcrumbs = ({ breadcrumbs }: { breadcrumbs: BreadcrumbsType[] }) => {
         <nav aria-label="Breadcrumb" className="mb-6 block">
             <ol className="flex text-xs font-medium gap-x-1">
                 <li className="flex text-gray-400 gap-x-1 items-center">
-                    <Link href="/dashboard">
+                    <Link href="/">
                         <HomeIcon className="w-4 h-4" />
                     </Link>
                     <ChevronRightIcon className="w-4 h-4" />
