@@ -19,7 +19,8 @@ The Personal Finance Tracker is an open-source app designed to help users<br> ma
 ## Video
 See the video below for a demo of the app:
 
-<video width="450" controls src="public/assets/video/screen-recording.mp4" muted="false"></video>
+<video width="450" controls src="https://github.com/user-attachments/assets/583fc462-467e-4963-8d7f-53e4edeae3cd"></video>
+
 
 ## Tech Stack
 
