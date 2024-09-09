@@ -3,11 +3,17 @@
 </p>
 <h1 align="center">Personal Finance Tracker</h1>
 <p align="center">
-The Personal Finance Tracker is an open-source app designed to help users<br> manage their budgets, incomes, expenses, debts, and savings goals. It provides visual<br> representations, such as pie charts for budget categories and bar charts for comparing budgets<br> versus spending over the last six months. Users can easily search and filter data by month,<br> while the dashboard offers an overview of total budgets, incomes, expenses, and more.
+The Personal Finance Tracker is an open-source app <br> designed to help users manage their budgets, incomes, expenses, debts, and savings goals. It provides visual representations, such as pie charts for budget categories and bar charts for comparing budgets versus spending over the last six months. Users can easily search and filter data by month, while the dashboard offers an overview of total budgets, incomes, expenses, and more.
 <p align="center">
     <img src="https://badgen.net/badge/icon/typescript?icon=typescript&label" alt="typecript">
     <img src="https://badgen.net/badge/icon/docker?icon=docker&label" alt="docker">
     <img src="https://badgen.net/badge/icon/posgresql?icon=postgresql&label" alt="postgresql">
+</p>
+
+<p align="center">
+    <img src="public/assets/homepagescreenshot.png" alt="homepage" width="600">
+    <br>
+    <em>Figure 1: homepage</em>
 </p>
 
 ## Video
