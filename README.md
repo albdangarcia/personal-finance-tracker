@@ -10,16 +10,10 @@ The Personal Finance Tracker is an open-source app designed to help users<br> ma
     <img src="https://badgen.net/badge/icon/posgresql?icon=postgresql&label" alt="postgresql">
 </p>
 
-<p align="center">
-    <img src="public/assets/homepagescreenshot.png" alt="homepage" width="600">
-    <br>
-    <em>Figure 1: homepage</em>
-</p>
-
 ## Video
 See the video below for a demo of the app:
 
-<video width="450" controls src="https://github.com/user-attachments/assets/583fc462-467e-4963-8d7f-53e4edeae3cd"></video>
+<video controls src="https://github.com/user-attachments/assets/583fc462-467e-4963-8d7f-53e4edeae3cd"></video>
 
 
 ## Tech Stack
