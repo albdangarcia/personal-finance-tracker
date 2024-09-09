@@ -25,7 +25,7 @@ const DashboardLayout = async ({ children }: ChildrenProps) => {
     // Get user name and image
     const userName = session?.user?.name ?? "None";
     const userImage = session?.user?.image ?? null;
-
+    
     return (
         <div className="min-h-screen">
             {/* left side bar */}

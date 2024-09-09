@@ -1,6 +1,6 @@
 import { Montserrat } from "next/font/google";
 const montserrat = Montserrat({ subsets: ["latin"] });
-import screenShotImage from "../public/screenshotsmall.png";
+import screenShotImage from "../public/webapp.png";
 import Image from "next/image";
 import { auth } from "@/auth";
 import Link from "next/link";
@@ -64,6 +64,7 @@ const Home = async () => {
                                     src={screenShotImage}
                                     alt="screenshot"
                                     priority
+                                    placeholder="blur"
                                     className="shadow-lg rounded-md w-[54rem] max-w-full h-auto ring-gray-200 ring-1"
                                 />
                             </div>

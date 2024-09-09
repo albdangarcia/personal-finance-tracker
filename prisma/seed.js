@@ -13,12 +13,13 @@ const userId = {
 async function seedUsers() {
     console.log("Seeding users...");
     try {
-        const hashedPassword = await bcrypt.hash("password", 10);
+        const hashedPassword = await bcrypt.hash("AhRX8LioQKpMTg7", 10);
         await prisma.user.create({
             data: {
                 id: userId.id,
                 name: "John Doe",
-                email: "example@email.com",
+                email: "example@example.com",
+                image: "https://avatars.githubusercontent.com/u/106351230?v=4&size=64",
                 password: hashedPassword,
             },
         });

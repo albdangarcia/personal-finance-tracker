@@ -73,9 +73,10 @@ const NavLinks = () => {
                                     >
                                         <IconName
                                             className={clsx(
-                                                "w-6 h-6 text-gray-400/85 group-hover:text-blue-700",
-                                                pathname === item.href &&
-                                                    "text-blue-700"
+                                                "w-6 h-6 group-hover:text-blue-700",
+                                                pathname === item.href
+                                                    ? "text-blue-700"
+                                                    : "text-gray-400/85"
                                             )}
                                         />
                                         {item.label}

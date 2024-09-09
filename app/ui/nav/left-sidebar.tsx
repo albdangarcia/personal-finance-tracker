@@ -16,7 +16,7 @@ const LeftSidebar = ({ userName, userImage }: Props) => {
                         <img
                             src={userImage}
                             alt="user"
-                            className="w-9 h-9 rounded-full"
+                            className="w-9 h-9 rounded-full ring-2 ring-green-500"
                         />
                     ) : (
                         <UserCircleIcon className="w-7 h-7 text-indigo-400" />
