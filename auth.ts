@@ -6,6 +6,7 @@ import { User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { authProviderConfigList } from "./auth.config";
 import { SignInSchema } from "./app/lib/zod-schemas";
+import { Provider } from "next-auth/providers";
 
 // Get user from db
 async function getUser(email: string): Promise<User | null> {
@@ -62,6 +63,22 @@ const credentialsProviderConfig = Credentials({
     },
 });
 
+const providers: Provider[] = [
+    credentialsProviderConfig,
+    ...authProviderConfigList.providers,
+];
+
+export const providerMap = providers
+    .map((provider) => {
+        if (typeof provider === "function") {
+            const providerData = provider();
+            return { id: providerData.id, name: providerData.name };
+        } else {
+            return { id: provider.id, name: provider.name };
+        }
+    })
+    .filter((provider) => provider.id !== "credentials");
+
 // Auth configuation
 export const authConfig = {
     adapter: PrismaAdapter(prisma),
@@ -75,11 +92,32 @@ export const authConfig = {
             }
             return session;
         },
+        // Note: This needs more work possible solutions if the user is signing in with
+        //       a provider and email already exists.
+        // 1. Automatically link the accounts
+        // 2. Throw an error and let the user know that the email already exists
+        // 3. Only allow the admin to log in with credentials and the rest with providers
+        // async signIn({ user, account }) {
+        //     // if the user is signing in with a provider, check if the email already exists
+        //     if (account && user.email) {
+        //         if (account.provider !== "credentials") {
+        //             // Check if a user with this email already exists
+        //             const existingUser = await getUser(user.email);
+        //             if (existingUser) {
+        //                 throw new Error("Email already exists.");
+        //             }
+        //         }
+        //     }
+        //     return true; // Allow sign-in
+        // },
     },
     session: {
         strategy: "jwt",
     },
-    providers: [credentialsProviderConfig, ...authProviderConfigList.providers],
+    providers: providers,
+    pages: {
+        signIn: "/login",
+    },
 } satisfies NextAuthConfig;
 
 export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);

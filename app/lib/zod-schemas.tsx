@@ -250,3 +250,17 @@ export const YearMonthSchema = z.object({
 export const InputYearMonthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, {
     message: "Please enter a valid yearMonth in the format YYYY-MM.",
 });
+
+// schema for provider login
+export interface ProviderFormErrors {
+    errors?: {
+        providerId?: string[];
+    };
+    message?: string | null;
+}
+export const ProviderLoginSchema = z.object({
+    providerId: z
+        .string()
+        .min(1, "Provider ID is required")
+        .max(100, "Provider ID must be less than 100 characters"),
+});

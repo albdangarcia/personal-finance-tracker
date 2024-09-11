@@ -1,10 +1,13 @@
 import LoginForm from "@/app/ui/login-form";
 import Link from "next/link";
+import { providerMap } from "@/auth";
+import LoginProviderForm from "../ui/provider-form";
 
-const Page = () => {
+const Page = async () => {
     return (
         <div className="bg-slate-100/10 h-screen items-center flex justify-center">
             <div>
+                {/* Header */}
                 <div className="text-center">
                     <h1 className="text-3xl font-medium">
                         Welcome Back to Budgeting.
@@ -13,10 +16,20 @@ const Page = () => {
                         Please enter your email and password to continue.
                     </p>
                 </div>
+
+                {/* Credentials log in */}
                 <LoginForm />
+
+                {/* Providers list */}
+                <LoginProviderForm providers={providerMap} />
+
+                {/* Sign up link */}
                 <p className="text-sm my-6 text-center text-gray-500">
                     Don&apos;t have an account?{" "}
-                    <Link href="/signup" className="text-gray-900 hover:underline">
+                    <Link
+                        href="/signup"
+                        className="text-gray-900 hover:underline"
+                    >
                         Sign up
                     </Link>
                 </p>

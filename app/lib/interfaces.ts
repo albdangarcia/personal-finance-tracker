@@ -106,3 +106,8 @@ export interface DataByCategories {
 export interface CardAmounts {
     [key: string]: number;
 }
+
+export interface Provider {
+    id: string;
+    name: string;
+}
