@@ -137,8 +137,8 @@ To run the app locally, follow these steps:
 
 ## TODO
 
-- [ ] Import OAuth providers to the login page.
-- [ ] Show a text message when there is no data to display for the charts.
+- [x] Import OAuth providers to the login page.
+- [x] Show a text message when there is no data to display for the charts.
 - [ ] Add a settings page to manage user preferences.
 - [ ] Add more visualizations to the dashboard.
 - [ ] Implement unit tests with Jest/React Testing Library.

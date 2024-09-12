@@ -3,6 +3,8 @@ import getRandomColor from "@/app/lib/utils/getRandomColor";
 import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip } from "chart.js";
 import { IncomeById } from "@/app/lib/interfaces";
+import NoDataMessage from "../no-data";
+import clsx from "clsx";
 Chart.register(ArcElement, Tooltip);
 
 interface Props {
@@ -37,9 +39,20 @@ const IncomeChart = ({ regularIncomes, irregularIncomes }: Props) => {
         ],
     };
     return (
-        <div className="flex ">
-            <div className="w-32 h-32 mx-auto">
-                <Doughnut data={data} />
+        <div className="flex">
+            <div
+                className={clsx(
+                    "w-32 h-32 mx-auto",
+                    regularIncomes.length === 0 &&
+                        irregularIncomes.length === 0 &&
+                        "flex items-center justify-center"
+                )}
+            >
+                {regularIncomes.length > 0 || irregularIncomes.length > 0 ? (
+                    <Doughnut data={data} />
+                ) : (
+                    <NoDataMessage />
+                )}
             </div>
         </div>
     );

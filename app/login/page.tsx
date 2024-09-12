@@ -21,7 +21,9 @@ const Page = async () => {
                 <LoginForm />
 
                 {/* Providers list */}
-                <LoginProviderForm providers={providerMap} />
+                { providerMap && Object.keys(providerMap).length > 0 && (
+                    <LoginProviderForm providers={providerMap} />
+                )}
 
                 {/* Sign up link */}
                 <p className="text-sm my-6 text-center text-gray-500">

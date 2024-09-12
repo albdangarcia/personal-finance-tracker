@@ -21,7 +21,9 @@ const Page = () => {
                 <SignupForm />
 
                 {/* Providers list */}
-                <LoginProviderForm providers={providerMap} />
+                { providerMap && Object.keys(providerMap).length > 0 && (
+                    <LoginProviderForm providers={providerMap} />
+                )}
                     
                 {/* Sign in link */}
                 <p className="text-sm my-6 text-center text-gray-500">
