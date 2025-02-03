@@ -59,7 +59,7 @@ To run this project, you will need to add the following environment variables to
 To test the dashboard, use the following credentials:
 
 -   **Username:** `example@example.com`
--   **Password:** AhRX8LioQKpMTg7
+-   **Password:** `AhRX8LioQKpMTg7`
 
 ## Running the App
 
