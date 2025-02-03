@@ -20,13 +20,14 @@ const breadcrumbs = (id: string) => [
     },
 ];
 
-const Page = async ({ params }: { params: { id: string } }) => {
+const Page = async (props: { params: Promise<{ id: string }> }) => {
+    const params = await props.params;
     // get id from params
     const id = params.id;
-    
+
     // get all categories
     const categories = await fetchCategories();
-    
+
     // get income by id
     const income = await fetchIncomeById(id);
 

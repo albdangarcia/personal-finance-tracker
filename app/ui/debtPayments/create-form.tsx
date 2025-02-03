@@ -1,5 +1,5 @@
+import { useActionState } from "react";
 "use client";
-import { useFormState } from "react-dom";
 import FormButtons from "../form-buttons";
 import { createPayment } from "@/app/lib/actions/debt-payment";
 import { PaymentFormError } from "@/app/lib/zod-schemas";
@@ -10,7 +10,7 @@ const CreatePaymentForm = ({ debtId }: { debtId: string }) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<PaymentFormError, FormData>(
+    const [state, dispatch] = useActionState<PaymentFormError, FormData>(
         createPaymentWithId,
         initialState
     );

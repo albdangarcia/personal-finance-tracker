@@ -1,19 +1,18 @@
 "use client";
-import { useFormState } from "react-dom";
 import { CategoryInfo } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 import { IncomeFormErrors } from "@/app/lib/zod-schemas";
 import { createIncome } from "@/app/lib/actions/income";
 import { Frequency, IncomeType } from "@prisma/client";
 import { capitalizeFirstLetter } from "@/app/lib/utils/general";
-import { useState } from "react";
+import { useState, useActionState } from "react";
 import getCurrentDate from "@/app/lib/utils/getCurrentDate";
 
 const CreateIncomeForm = ({ categories }: { categories: CategoryInfo[] }) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<IncomeFormErrors, FormData>(
+    const [state, dispatch] = useActionState<IncomeFormErrors, FormData>(
         createIncome,
         initialState
     );

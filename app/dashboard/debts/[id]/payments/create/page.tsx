@@ -22,7 +22,8 @@ const breadcrumbs = (id: string) => [
     },
 ];
 
-const Page = ({ params }: { params: { id: string } }) => {
+const Page = async (props: { params: Promise<{ id: string }> }) => {
+    const params = await props.params;
     // Get the id from the params
     const id = params.id;
 

@@ -1,5 +1,5 @@
+import { useActionState } from "react";
 "use client";
-import { useFormState } from "react-dom";
 import { updateExpense } from "@/app/lib/actions/expense";
 import { ExpenseFormError } from "@/app/lib/zod-schemas";
 import { CategoryInfo, ExpenseById } from "@/app/lib/interfaces";
@@ -8,14 +8,14 @@ import FormButtons from "../form-buttons";
 interface EditFormProps {
     categories: CategoryInfo[];
     expense: ExpenseById;
-};
+}
 
 const EditExpenseForm = ({ categories, expense }: EditFormProps) => {
     const updateExpenseWithId = updateExpense.bind(null, expense.id);
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<ExpenseFormError, FormData>(
+    const [state, dispatch] = useActionState<ExpenseFormError, FormData>(
         updateExpenseWithId,
         initialState
     );

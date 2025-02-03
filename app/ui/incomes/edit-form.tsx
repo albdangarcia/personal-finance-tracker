@@ -1,11 +1,10 @@
 "use client";
-import { useFormState } from "react-dom";
 import { CategoryInfo, IncomeById } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 import { IncomeFormErrors } from "@/app/lib/zod-schemas";
 import { Frequency, IncomeType } from "@prisma/client";
 import { capitalizeFirstLetter } from "@/app/lib/utils/general";
-import { useState } from "react";
+import { useState, useActionState } from "react";
 import { updateIncome } from "@/app/lib/actions/income";
 
 
@@ -24,7 +23,7 @@ const EditIncomeForm = ({ categories, income }: Props) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<IncomeFormErrors, FormData>(
+    const [state, dispatch] = useActionState<IncomeFormErrors, FormData>(
         updateIncomeWithId,
         initialState
     );

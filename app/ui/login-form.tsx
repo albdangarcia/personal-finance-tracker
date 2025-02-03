@@ -1,14 +1,13 @@
 "use client";
-import { useFormState } from "react-dom";
 import { LoginFormErrors } from "../lib/zod-schemas";
 import { authenticateLogin } from "../lib/actions/login";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useState, useActionState } from "react";
 
 const LoginForm = () => {
     // Error initial state
     const errorsInitialState = { message: null, errors: {} };
-    const [state, dispatch] = useFormState<LoginFormErrors, FormData>(
+    const [state, dispatch] = useActionState<LoginFormErrors, FormData>(
         authenticateLogin,
         errorsInitialState
     );

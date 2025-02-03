@@ -1,8 +1,8 @@
+import { useActionState } from "react";
 "use client";
 import { CategoryInfo } from "@/app/lib/interfaces";
 import { updateBudget } from "@/app/lib/actions/budget";
 import { BudgetFormError } from "@/app/lib/zod-schemas";
-import { useFormState } from "react-dom";
 import FormButtons from "@/app/ui/form-buttons";
 import { BudgetById } from "@/app/lib/interfaces";
 
@@ -14,7 +14,7 @@ type editBudgetFormProps = {
 const EditBudgetForm = ({ budget, categories }: editBudgetFormProps) => {
     const updateBudgetWithId = updateBudget.bind(null, budget.id);
     const initialState = { message: null, errors: {} };
-    const [state, dispatch] = useFormState<BudgetFormError, FormData>(
+    const [state, dispatch] = useActionState<BudgetFormError, FormData>(
         updateBudgetWithId,
         initialState
     );

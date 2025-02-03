@@ -1,5 +1,5 @@
+import { useActionState } from "react";
 "use client";
-import { useFormState } from "react-dom";
 import { providerLogin } from "../lib/actions/login";
 import { ProviderFormErrors } from "../lib/zod-schemas";
 import { Provider } from "../lib/interfaces";
@@ -7,7 +7,7 @@ import { Provider } from "../lib/interfaces";
 const LoginProviderForm = ({ providers }: { providers: Provider[] }) => {
     // Error initial state
     const errorsInitialState = { message: null, errors: {} };
-    const [state, dispatch] = useFormState<
+    const [state, dispatch] = useActionState<
         ProviderFormErrors | undefined,
         FormData
     >(providerLogin, errorsInitialState);

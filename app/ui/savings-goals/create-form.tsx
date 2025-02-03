@@ -1,5 +1,5 @@
+import { useActionState } from "react";
 "use client";
-import { useFormState } from "react-dom";
 import { createSavingsGoal } from "@/app/lib/actions/savings-goals";
 import { SavingsGoalFormError } from "@/app/lib/zod-schemas";
 import { CategoryInfo } from "@/app/lib/interfaces";
@@ -13,7 +13,7 @@ const CreateSavingsGoalForm = ({ categories }: Props) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<SavingsGoalFormError, FormData>(
+    const [state, dispatch] = useActionState<SavingsGoalFormError, FormData>(
         createSavingsGoal,
         initialState
     );

@@ -16,15 +16,16 @@ const breadcrumbs = [
 ];
 
 interface Props {
-    searchParams?: {
+    searchParams?: Promise<{
         query?: string;
         page?: string;
-    }
+    }>
 };
 
-const Page = async ({ searchParams }: Props) => {
+const Page = async (props: Props) => {
+    const searchParams = await props.searchParams;
     const query = searchParams?.query || "";
-    
+
     const currentPage = Number(searchParams?.page) || 1;
     const totalPages = await fetchDebtsPages(query);
 

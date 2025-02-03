@@ -1,5 +1,5 @@
+import { useActionState } from "react";
 "use client";
-import { useFormState } from "react-dom";
 import { createBudget } from "@/app/lib/actions/budget";
 import { BudgetFormError } from "@/app/lib/zod-schemas";
 import { CategoryInfo } from "@/app/lib/interfaces";
@@ -10,7 +10,7 @@ const CreateBudgetForm = ({ categories }: { categories: CategoryInfo[] }) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<BudgetFormError, FormData>(
+    const [state, dispatch] = useActionState<BudgetFormError, FormData>(
         createBudget,
         initialState
     );

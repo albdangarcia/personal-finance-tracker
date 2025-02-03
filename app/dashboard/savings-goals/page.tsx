@@ -24,13 +24,14 @@ const breadcrumbs = [
 ];
 
 interface PageProps {
-    searchParams?: {
+    searchParams?: Promise<{
         query?: string;
         page?: string;
-    };
+    }>;
 }
 
-const Page = async ({ searchParams }: PageProps) => {
+const Page = async (props: PageProps) => {
+    const searchParams = await props.searchParams;
     const query = searchParams?.query || "";
     const currentPage = Number(searchParams?.page) || 1;
     const totalPages = await fetchSavingsGoalsPages(query);

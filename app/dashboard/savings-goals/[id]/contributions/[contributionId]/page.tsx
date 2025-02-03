@@ -24,10 +24,11 @@ const breadcrumbs = (id: string, goalId: string) => [
 ];
 
 interface Props {
-    params: { id: string; contributionId: string };
+    params: Promise<{ id: string; contributionId: string }>;
 }
 
-const Page = async ({ params }: Props) => {
+const Page = async (props: Props) => {
+    const params = await props.params;
     // get id from params
     const id = params.contributionId;
     const goalId = params.id;

@@ -1,5 +1,5 @@
+import { useActionState } from "react";
 "use client";
-import { useFormState } from "react-dom";
 import { CategoryInfo, DebtById } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 import { DebtFormError } from "@/app/lib/zod-schemas";
@@ -15,7 +15,7 @@ const EditDebtForm = ({ categories, debt }: Props) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<DebtFormError, FormData>(
+    const [state, dispatch] = useActionState<DebtFormError, FormData>(
         updateDebtWithId,
         initialState
     );

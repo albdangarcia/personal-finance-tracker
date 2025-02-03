@@ -10,9 +10,6 @@ import { getAuthenticatedUserId } from "../utils/authUtils";
  * @throws {Error} - Throws an error if the fetch operation fails.
  */
 const fetchCategories = async (): Promise<CategoryInfo[]> => {
-    // Get the authenticated user's ID
-    const userId: string = await getAuthenticatedUserId();
-
     // Disable caching for this function
     noStore();
 

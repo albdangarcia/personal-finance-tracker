@@ -21,16 +21,17 @@ const breadcrumbs = (id: string) => [
 ];
 
 // Page for editing a budget
-const Page = async ({ params }: { params: { id: string } }) => {
+const Page = async (props: { params: Promise<{ id: string }> }) => {
+    const params = await props.params;
     // get id from params
     const id = params.id;
 
     // get all available categories
     const categories = await fetchCategories();
-    
+
     // get budget by id
     const budget = await fetchBudgetById(id);
-    
+
     // if budget is not found, return nextjs default not found page
     if (!budget) {
         return notFound();

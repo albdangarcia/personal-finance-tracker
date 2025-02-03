@@ -1,5 +1,5 @@
+import { useActionState } from "react";
 "use client";
-import { useFormState } from "react-dom";
 import { updateSavingsGoals } from "@/app/lib/actions/savings-goals";
 import { SavingsGoalFormError } from "@/app/lib/zod-schemas";
 import { CategoryInfo, SavingsGoalById } from "@/app/lib/interfaces";
@@ -8,7 +8,7 @@ import FormButtons from "../form-buttons";
 interface Props {
     categories: CategoryInfo[];
     savingsGoal: SavingsGoalById;
-};
+}
 
 const EditSavingsGoalForm = ({ categories, savingsGoal }: Props) => {
     const updateSavingsGoalWithId = updateSavingsGoals.bind(
@@ -18,7 +18,7 @@ const EditSavingsGoalForm = ({ categories, savingsGoal }: Props) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<SavingsGoalFormError, FormData>(
+    const [state, dispatch] = useActionState<SavingsGoalFormError, FormData>(
         updateSavingsGoalWithId,
         initialState
     );

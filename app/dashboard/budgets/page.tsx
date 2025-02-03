@@ -24,15 +24,16 @@ const breadcrumbs = [
 ];
 
 interface PageProps {
-    searchParams?: {
+    searchParams?: Promise<{
         query?: string;
         page?: string;
         year?: string;
         month?: string;
-    };
+    }>;
 };
 
-const Page = async ({ searchParams }: PageProps) => {
+const Page = async (props: PageProps) => {
+    const searchParams = await props.searchParams;
     // Get the query from the search params
     const query = searchParams?.query || "";
 

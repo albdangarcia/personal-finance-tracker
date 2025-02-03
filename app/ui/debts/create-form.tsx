@@ -1,5 +1,5 @@
+import { useActionState } from "react";
 "use client";
-import { useFormState } from "react-dom";
 import { DebtFormError } from "@/app/lib/zod-schemas";
 import { CategoryInfo } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
@@ -13,7 +13,7 @@ const CreateDebtForm = ({ categories }: Props) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<DebtFormError, FormData>(
+    const [state, dispatch] = useActionState<DebtFormError, FormData>(
         createDebt,
         initialState
     );

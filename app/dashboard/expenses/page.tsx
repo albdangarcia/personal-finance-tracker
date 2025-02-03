@@ -21,15 +21,16 @@ const breadcrumbs = [
 ];
 
 interface PageProps {
-    searchParams?: {
+    searchParams?: Promise<{
         query?: string;
         page?: string;
         year?: string;
         month?: string;
-    }
+    }>
 };
 
-const Page = async ({ searchParams }: PageProps) => {
+const Page = async (props: PageProps) => {
+    const searchParams = await props.searchParams;
     // Get the query from the search params
     const query = searchParams?.query || "";
 
@@ -38,10 +39,10 @@ const Page = async ({ searchParams }: PageProps) => {
 
     const currentPage = Number(searchParams?.page) || 1;
     const totalPages = await fetchExpensePages(query, year, month);
-    
+
     // Data for the pie chart
     const expensesByCategory = await fetchExpensesByCategory(year, month);
-    
+
     // Fetch the expenses for the table
     const expenses = await fetchFilteredExpenses(query, currentPage, year, month);
 

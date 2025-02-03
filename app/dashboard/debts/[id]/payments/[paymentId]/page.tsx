@@ -24,10 +24,11 @@ const breadcrumbs = (id: string, budgetId: string) => [
 ];
 
 interface Props {
-    params: { id: string; paymentId: string };
+    params: Promise<{ id: string; paymentId: string }>;
 }
 
-const Page = async ({ params }: Props) => {
+const Page = async (props: Props) => {
+    const params = await props.params;
     // get id from params
     const id = params.paymentId;
     const debtId = params.id;

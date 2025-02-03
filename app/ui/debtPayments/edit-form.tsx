@@ -1,5 +1,5 @@
+import { useActionState } from "react";
 "use client";
-import { useFormState } from "react-dom";
 import FormButtons from "../form-buttons";
 import { PaymentById } from "@/app/lib/interfaces";
 import { PaymentFormError } from "@/app/lib/zod-schemas";
@@ -14,7 +14,7 @@ const EditPaymentForm = ({ payment }: Props) => {
     // Error state for the form
     const initialState = { message: null, errors: {} };
     // Form state
-    const [state, dispatch] = useFormState<PaymentFormError, FormData>(
+    const [state, dispatch] = useActionState<PaymentFormError, FormData>(
         updatePaymentWithId,
         initialState
     );
