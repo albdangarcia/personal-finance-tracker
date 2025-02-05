@@ -35,7 +35,7 @@ COPY . .
 RUN chown -R nextjs:nodejs /app
 
 # Install wait-for-it
-RUN apk add --no-cache bash
+RUN apk add --no-cache bash wget openssl
 RUN wget -O /usr/local/bin/wait-for-it https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
 RUN chmod +x /usr/local/bin/wait-for-it
 
