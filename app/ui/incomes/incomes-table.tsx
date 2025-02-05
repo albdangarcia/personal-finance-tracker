@@ -7,6 +7,7 @@ import { SectionHeader, SectionWrapper } from "../page-section-wrapper";
 import SearchBar from "../search-bar";
 import { GroupIncomes } from "@/app/lib/interfaces";
 import { deleteIncome } from "@/app/lib/actions/income";
+import { formatDate } from "@/app/lib/utils/general";
 
 const IncomesTable = ({
     regularIncomes,
@@ -86,12 +87,10 @@ const IncomesTable = ({
                                 )}
                             >
                                 <p className="text-gray-500">
-                                    {income.startDate?.toLocaleDateString()}
+                                    {formatDate(income.startDate)}
                                 </p>
                                 <p className="text-gray-500">
-                                    {income.endDate
-                                        ? income.endDate?.toLocaleDateString()
-                                        : "N/A"}
+                                    {formatDate(income.endDate)}
                                 </p>
                                 <p className="text-gray-900 font-medium">
                                     ${income.amount.toLocaleString()}
@@ -145,7 +144,7 @@ const IncomesTable = ({
                                 )}
                             >
                                 <p className="text-gray-500">
-                                    {income.startDate?.toLocaleDateString()}
+                                    {formatDate(income.startDate)}
                                 </p>
                                 <p className="text-gray-900 font-medium">
                                     ${income.amount.toLocaleString()}

@@ -11,6 +11,7 @@ import { useState } from "react";
 import DialogComponent from "../delete-dialog";
 import { DebtWithPayments } from "@/app/lib/interfaces";
 import { deletePayment } from "@/app/lib/actions/debt-payment";
+import { formatDate } from "@/app/lib/utils/general";
 
 interface Props {
     debt: DebtWithPayments;
@@ -94,7 +95,7 @@ const PaymentsTable = ({ debt }: Props) => {
                     {debt.payments.map((payment) => (
                         <TableRow columns="grid-cols-3" key={payment.id}>
                             <div className="text-gray-500">
-                                {payment.date.toLocaleDateString()}
+                                {formatDate(payment.date)}
                             </div>
                             <div className="font-medium">${payment.amount.toLocaleString()}</div>
                             <EditDeleteButtons

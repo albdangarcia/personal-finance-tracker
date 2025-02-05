@@ -11,6 +11,8 @@ import {
 import { useState } from "react";
 import DialogComponent from "../delete-dialog";
 import { GoalWithContributions } from "@/app/lib/interfaces";
+import { format } from "path";
+import { formatDate } from "@/app/lib/utils/general";
 
 interface Props {
     savingsGoal: GoalWithContributions;
@@ -92,7 +94,7 @@ const ContributionsTable = ({ savingsGoal }: Props) => {
                     {savingsGoal.contributions.map((contribution) => (
                         <TableRow columns="grid-cols-3" key={contribution.id}>
                             <div className="text-gray-500">
-                                {contribution.date.toLocaleDateString()}
+                                {formatDate(contribution.date)}
                             </div>
                             <div className="font-medium">${contribution.amount.toLocaleString()}</div>
                             <EditDeleteButtons

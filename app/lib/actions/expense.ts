@@ -63,9 +63,6 @@ const deleteExpense = async (expenseId: string) => {
 
     // Revalidate the cache
     revalidatePath("/dashboard/expenses");
-
-    // Redirect the user
-    redirect("/dashboard/expenses");
 };
 
 const createExpense = async (

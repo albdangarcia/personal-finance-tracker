@@ -246,8 +246,6 @@ const deleteBudget = async (id: string) => {
     }
     // Revalidate the cache
     revalidatePath("/dashboard/budgets");
-    // Redirect the user
-    redirect("/dashboard/budgets");
 };
 
 export { createBudget, updateBudget, deleteBudget };

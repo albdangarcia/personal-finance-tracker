@@ -14,6 +14,7 @@ import Pagination from "../pagination";
 import SearchBar from "../search-bar";
 import YearMonthInput from "../year-month-input";
 import { ExpenseById } from "@/app/lib/interfaces";
+import { formatDate } from "@/app/lib/utils/general";
 
 interface Props {
     totalPages: number;
@@ -93,12 +94,12 @@ const ExpensesTable = ({ expenses, totalPages }: Props) => {
                                 {expense.category.name}
                             </div>
                             <div className=" text-gray-500">
-                                {expense.date.toLocaleDateString()}
+                                {formatDate(expense.date)}
                             </div>
                             <EditDeleteButtons
                                 editLink={`/dashboard/expenses/${expense.id}`}
                                 propName={expense.name}
-                                propId={expenseId}
+                                propId={expense.id}
                                 open={open}
                             />
                         </TableRow>

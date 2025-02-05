@@ -205,7 +205,7 @@ const EditIncomeForm = ({ categories, income }: Props) => {
                         autoComplete="off"
                         required
                         aria-describedby="startDate-error"
-                        defaultValue={income.startDate?.toISOString().split("T")[0]}
+                        defaultValue={income.startDate.toISOString().split('T')[0]}
                     />
                     {/* startDate errors */}
                     <div id="startDate-error" aria-live="polite" aria-atomic="true">
@@ -232,7 +232,7 @@ const EditIncomeForm = ({ categories, income }: Props) => {
                         aria-describedby="endDate-error"
                         disabled={isRegularIncome ? false : true}
                         className="disabled:opacity-50 disabled:bg-gray-100"
-                        defaultValue={isRegularIncome ? (income.endDate ? income.endDate.toISOString().split("T")[0] : "") : ""}
+                        defaultValue={isRegularIncome ? (income.endDate ? income.startDate.toISOString().split('T')[0] : "") : ""}
                     />
                     {/* endDate errors */}
                     <div id="endDate-error" aria-live="polite" aria-atomic="true">
