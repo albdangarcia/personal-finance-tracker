@@ -33,15 +33,9 @@ const TotalAmountCard = ({ title, total, percentageChange, icon }: Props) => {
                                     ? "bg-red-200 text-red-700"
                                     : "bg-green-200 text-green-700"
                             )}
+                            data-testid="percentage-change"
                         >
-                            <span
-                                className={clsx(
-                                    percentageChange < 0 && "hidden"
-                                )}
-                            >
-                                +
-                            </span>
-                            {percentageChange}%
+                            {percentageChange > 0 ? "+" : ""}{percentageChange}%
                         </div>
                     </div>
                 </div>
