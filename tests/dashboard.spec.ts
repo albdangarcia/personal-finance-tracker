@@ -1,6 +1,4 @@
 import { test, expect } from "@playwright/test";
-import { PrismaClient } from "@prisma/client";
-// import prisma from "@/app/lib/prisma";
 
 test.describe("Dashboard Page", () => {
     test.beforeEach(async ({ page }) => {
