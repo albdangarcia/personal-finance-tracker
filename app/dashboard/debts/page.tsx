@@ -1,4 +1,5 @@
 import { fetchDebts, fetchDebtsPages } from "@/app/lib/data/debt";
+import { SearchParamsType } from "@/app/lib/interfaces";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import DebtCategoryChart from "@/app/ui/debts/debts-chart";
 import DebtsTable from "@/app/ui/debts/debts-table";
@@ -16,19 +17,16 @@ const breadcrumbs = [
 ];
 
 interface Props {
-    searchParams?: Promise<{
-        query?: string;
-        page?: string;
-    }>
-};
+    searchParams: Promise<SearchParamsType>
+}
 
-const Page = async (props: Props) => {
-    const searchParams = await props.searchParams;
-    const query = searchParams?.query || "";
+const Page = async ({ searchParams }: Props) => {
+    // Get the query and page from the URL
+    const { query = '', page = '1' } = await searchParams;
+    const currentPage = Number(page);
 
-    const currentPage = Number(searchParams?.page) || 1;
+    // Fetch toal pages and debts
     const totalPages = await fetchDebtsPages(query);
-
     const debts = await fetchDebts(query, currentPage);
 
     return (

@@ -8,6 +8,7 @@ import {
     SectionWrapper,
 } from "@/app/ui/page-section-wrapper";
 import ExpenseMonthChart from "@/app/ui/expenses/expense-month-chart";
+import { SearchParamsType } from "@/app/lib/interfaces";
 
 const breadcrumbs = [
     {
@@ -20,24 +21,13 @@ const breadcrumbs = [
     },
 ];
 
-interface PageProps {
-    searchParams?: Promise<{
-        query?: string;
-        page?: string;
-        year?: string;
-        month?: string;
-    }>
-};
-
-const Page = async (props: PageProps) => {
-    const searchParams = await props.searchParams;
-    // Get the query from the search params
-    const query = searchParams?.query || "";
-
-    const year = searchParams?.year || "";
-    const month = searchParams?.month || "";
-
-    const currentPage = Number(searchParams?.page) || 1;
+interface Props {
+    searchParams: Promise<SearchParamsType>
+}
+const Page = async ({ searchParams }: Props) => {
+    const { query = '', page = '1', year = '', month = '' } = await searchParams;
+    
+    const currentPage = Number(page);
     const totalPages = await fetchExpensePages(query, year, month);
 
     // Data for the pie chart

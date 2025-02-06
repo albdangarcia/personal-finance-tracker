@@ -1,5 +1,8 @@
 import BudgetChart from "@/app/ui/budgets/budget-chart";
-import { fetchFilteredBudgets, fetchLastSixMonthsBudgets } from "@/app/lib/data/budget";
+import {
+    fetchFilteredBudgets,
+    fetchLastSixMonthsBudgets,
+} from "@/app/lib/data/budget";
 import BudgetCards from "@/app/ui/budgets/budget-cards";
 import {
     MainWrapper,
@@ -11,6 +14,7 @@ import BudgetMonthChart from "@/app/ui/budgets/budgets-month-chart";
 import SearchBar from "@/app/ui/search-bar";
 import YearMonthInput from "@/app/ui/year-month-input";
 import { fetchLastSixMonthsExpenses } from "@/app/lib/data/expense";
+import { SearchParamsType } from "@/app/lib/interfaces";
 
 const breadcrumbs = [
     {
@@ -23,22 +27,13 @@ const breadcrumbs = [
     },
 ];
 
-interface PageProps {
-    searchParams?: Promise<{
-        query?: string;
-        page?: string;
-        year?: string;
-        month?: string;
-    }>;
-};
+interface Props {
+    searchParams: Promise<SearchParamsType>
+}
 
-const Page = async (props: PageProps) => {
-    const searchParams = await props.searchParams;
-    // Get the query from the search params
-    const query = searchParams?.query || "";
-
-    const month = searchParams?.month || "";
-    const year = searchParams?.year || "";
+const Page = async ({ searchParams }: Props) => {
+    // Get the query, month and year from the URL
+    const { query = '', month = '', year = '' } = await searchParams;
 
     // Data for the doughnut chart and budget cards
     const budgetData = await fetchFilteredBudgets(query, year, month);
@@ -67,7 +62,10 @@ const Page = async (props: PageProps) => {
                         title="Months"
                         subtitle="Budgets for the last six months."
                     />
-                    <BudgetMonthChart monthlyBudgets={lastSixMonthsBudgets} monthlyExpenses={expensesByMonth}/>
+                    <BudgetMonthChart
+                        monthlyBudgets={lastSixMonthsBudgets}
+                        monthlyExpenses={expensesByMonth}
+                    />
                 </SectionWrapper>
 
                 <div className="sm:col-span-2">

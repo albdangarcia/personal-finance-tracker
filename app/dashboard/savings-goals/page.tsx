@@ -3,6 +3,7 @@ import {
     fetchGroupedSavingsGoals,
     fetchSavingsGoalsPages,
 } from "@/app/lib/data/savings-goal";
+import { SearchParamsType } from "@/app/lib/interfaces";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import {
     MainWrapper,
@@ -23,17 +24,14 @@ const breadcrumbs = [
     },
 ];
 
-interface PageProps {
-    searchParams?: Promise<{
-        query?: string;
-        page?: string;
-    }>;
+interface Props {
+    searchParams: Promise<SearchParamsType>
 }
 
-const Page = async (props: PageProps) => {
-    const searchParams = await props.searchParams;
-    const query = searchParams?.query || "";
-    const currentPage = Number(searchParams?.page) || 1;
+const Page = async ({ searchParams }: Props) => {
+    const { query = '', page = '1' } = await searchParams;
+    const currentPage = Number(page);
+    
     const totalPages = await fetchSavingsGoalsPages(query);
 
     const categoriesWithGoals = await fetchFilteredSavingGoals(

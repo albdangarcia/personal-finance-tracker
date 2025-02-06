@@ -111,3 +111,7 @@ export interface Provider {
     id: string;
     name: string;
 }
+
+export interface SearchParamsType {
+    [key: string]: string | undefined;
+}

@@ -2,6 +2,7 @@ import {
     fetchFilteredIncomes,
     fetchIncomeByCategory,
 } from "@/app/lib/data/income";
+import { SearchParamsType } from "@/app/lib/interfaces";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import IncomeChart from "@/app/ui/incomes/doughnut-chart";
 import IncomesTable from "@/app/ui/incomes/incomes-table";
@@ -23,17 +24,13 @@ const breadcrumbs = [
     },
 ];
 
-interface PageProps {
-    searchParams?: Promise<{
-        query?: string;
-        page?: string;
-    }>;
+interface Props {
+    searchParams: Promise<SearchParamsType>
 }
 
-const Page = async (props: PageProps) => {
-    const searchParams = await props.searchParams;
-    // Set default values for query and page
-    const query = searchParams?.query || "";
+const Page = async ({ searchParams }: Props) => {
+    // Get the query from the URL
+    const { query = "", page = "" } = await searchParams;
 
     const { regularIncomes, irregularIncomes } = await fetchFilteredIncomes(
         query
