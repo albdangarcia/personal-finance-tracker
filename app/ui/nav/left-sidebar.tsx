@@ -8,8 +8,8 @@ interface Props {
 
 const LeftSidebar = ({ userName, userImage }: Props) => {
     return (
-        <div className="antialiased px-6 overflow-auto gap-y-5 flex-col flex-grow flex bg-[#fcfdff]">
-            <div className="mt-3 border-b items-center flex-shrink-0 h-16 flex gap-x-4">
+        <div className="antialiased px-6 overflow-auto gap-y-5 flex-col grow flex bg-[#fcfdff]">
+            <div className="mt-3 border-b items-center shrink-0 h-16 flex gap-x-4">
                 {/* user image */}
                 <div className="w-9 h-9 rounded-full bg-indigo-100 items-center flex justify-center">
                     {userImage ? (

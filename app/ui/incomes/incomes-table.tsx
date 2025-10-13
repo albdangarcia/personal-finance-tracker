@@ -114,7 +114,7 @@ const IncomesTable = ({
             </div>
 
             {/* Divider */}
-            <div className="h-[1px] border border-slate-300 border-dashed my-7" />
+            <div className="h-px border border-slate-300 border-dashed my-7" />
 
             {/* Irregular incomes */}
             <div>

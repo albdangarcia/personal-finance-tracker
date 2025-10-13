@@ -11,7 +11,7 @@ const MainWrapper = ({ children }: { children: ReactNode }) => {
 // Sub-component: Wrapper
 const SectionWrapper = ({ children }: { children: ReactNode }) => {
     return (
-        <div className="antialiased bg-white border border-gray-200 rounded-md shadow-sm py-10 px-8">
+        <div className="antialiased bg-white border border-gray-200 rounded-md shadow-xs py-10 px-8">
             {children}
         </div>
     );

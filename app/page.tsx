@@ -12,10 +12,10 @@ const Home = async () => {
         <div>
             <div className="bg-white overflow-hidden isolate relative antialiased">
                 <div className="lg:py-40 lg:px-8 lg:flex sm:pb-32 pt-10 pb-6 px-6 max-w-7xl mx-auto">
-                    <div className="relative mt-20 lg:pt-8 lg:flex-shrink-0 lg:max-w-xl lg:mx-0 max-w-2xl mx-auto">
+                    <div className="relative mt-20 lg:pt-8 lg:shrink-0 lg:max-w-xl lg:mx-0 max-w-2xl mx-auto">
                         {/* Gradients */}
-                        <div className="-z-10 left-10 -top-40 absolute rounded-full w-40 h-40 blur-3xl opacity-40 bg-gradient-to-r from-indigo-500 to-blue-500" />
-                        <div className="-z-10 left-80 top-96 absolute rounded-full w-48 h-48 blur-3xl opacity-40 bg-gradient-to-r from-indigo-500 to-pink-500" />
+                        <div className="-z-10 left-10 -top-40 absolute rounded-full w-40 h-40 blur-3xl opacity-40 bg-linear-to-r from-indigo-500 to-blue-500" />
+                        <div className="-z-10 left-80 top-96 absolute rounded-full w-48 h-48 blur-3xl opacity-40 bg-linear-to-r from-indigo-500 to-pink-500" />
 
                         {/* Homepage tagline */}
                         <h1
@@ -32,13 +32,13 @@ const Home = async () => {
                                 <>
                                     <Link
                                         href="/signup"
-                                        className="shadow text-white font-semibold text-sm py-2.5 px-3.5 bg-indigo-600 rounded-md"
+                                        className="shadow-sm text-white font-semibold text-sm py-2.5 px-3.5 bg-indigo-600 rounded-md"
                                     >
                                         Get started
                                     </Link>
                                     <Link
                                         href="/login"
-                                        className="shadow text-white font-semibold text-sm py-2.5 px-3.5 bg-gray-800 rounded-md ring-1 ring-gray-200"
+                                        className="shadow-sm text-white font-semibold text-sm py-2.5 px-3.5 bg-gray-800 rounded-md ring-1 ring-gray-200"
                                     >
                                         Login
                                     </Link>
@@ -46,7 +46,7 @@ const Home = async () => {
                             ) : (
                                 <Link
                                     href="/dashboard"
-                                    className="shadow text-white font-semibold text-sm py-2.5 px-3.5 bg-indigo-600 rounded-md"
+                                    className="shadow-sm text-white font-semibold text-sm py-2.5 px-3.5 bg-indigo-600 rounded-md"
                                 >
                                     Go to dashboard
                                 </Link>
@@ -57,15 +57,15 @@ const Home = async () => {
                         <div className="flex-none max-w-3xl sm:max-w-5xl lg:max-w-none">
                             <div className="relative bg-slate-300/15 rounded-xl -m-2 lg:rounded-2xl lg:-m-4">
                                 {/* Gradients behind the images */}
-                                <div className="-z-10 inset-0 absolute rounded-full w-24 h-24 blur-3xl opacity-90 bg-gradient-to-r from-indigo-500 to-pink-500" />
-                                <div className="-z-10 top-0 left-96 absolute rounded-full w-24 h-24 blur-xl opacity-90 bg-gradient-to-r from-indigo-500 to-pink-500" />
+                                <div className="-z-10 inset-0 absolute rounded-full w-24 h-24 blur-3xl opacity-90 bg-linear-to-r from-indigo-500 to-pink-500" />
+                                <div className="-z-10 top-0 left-96 absolute rounded-full w-24 h-24 blur-xl opacity-90 bg-linear-to-r from-indigo-500 to-pink-500" />
                                 {/* App screenshot */}
                                 <Image
                                     src={screenShotImage}
                                     alt="screenshot"
                                     priority
                                     placeholder="blur"
-                                    className="shadow-lg rounded-md w-[54rem] max-w-full h-auto ring-gray-200 ring-1"
+                                    className="shadow-lg rounded-md w-216 max-w-full h-auto ring-gray-200 ring-1"
                                 />
                             </div>
                         </div>

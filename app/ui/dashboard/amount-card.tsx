@@ -10,7 +10,7 @@ interface Props {
 const TotalAmountCard = ({ title, total, percentageChange, icon }: Props) => {
     const Icon = icon;
     return (
-        <div className="antialiased bg-white border border-gray-200 rounded-md shadow-sm p-8">
+        <div className="antialiased bg-white border border-gray-200 rounded-md shadow-xs p-8">
             <div>
                 <div className="mb-7">
                     <Icon className="w-7 h-7 text-gray-400" />
@@ -28,7 +28,7 @@ const TotalAmountCard = ({ title, total, percentageChange, icon }: Props) => {
                         </div>
                         <div
                             className={clsx(
-                                "bg-green-200 font-medium text-xs rounded py-0.5 px-1.5",
+                                "bg-green-200 font-medium text-xs rounded-sm py-0.5 px-1.5",
                                 percentageChange < 0
                                     ? "bg-red-200 text-red-700"
                                     : "bg-green-200 text-green-700"

@@ -51,7 +51,7 @@ const BudgetCards = ({ budgetData }: { budgetData: budgetData[] }) => {
                 return (
                     <div
                         key={budget.id}
-                        className="bg-white shadow-sm rounded p-5 border border-gray-200/80"
+                        className="bg-white shadow-xs rounded-sm p-5 border border-gray-200/80"
                     >
                         <div className="flex justify-between">
                             <h1 className="antialiased font-medium mb-3 text-gray-900">

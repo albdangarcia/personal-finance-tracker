@@ -28,12 +28,12 @@ const DialogComponent = ({
         <Dialog open={isOpen} onClose={close} className="relative z-50">
             <DialogBackdrop
                 transition
-                className="fixed inset-0 bg-black/30 duration-300 ease-out data-[closed]:opacity-0"
+                className="fixed inset-0 bg-black/30 duration-300 ease-out data-closed:opacity-0"
             />
             <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
                 <DialogPanel
                     transition
-                    className="rounded text-gray-800 max-w-lg space-y-4 bg-white p-9 duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
+                    className="rounded-sm text-gray-800 max-w-lg space-y-4 bg-white p-9 duration-300 ease-out data-closed:scale-95 data-closed:opacity-0"
                 >
                     <DialogTitle className="font-medium">
                         Delete {title}
@@ -51,13 +51,13 @@ const DialogComponent = ({
                     </Description>
                     <div className="mt-4 flex gap-x-2 border-t pt-4">
                         <Button
-                            className="inline-flex items-center gap-2 rounded-md bg-black py-1.5 px-3 text-sm/6 font-semibold text-white shadow-white/10 focus:outline-none data-[hover]:bg-gray-800 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
+                            className="inline-flex items-center gap-2 rounded-md bg-black py-1.5 px-3 text-sm/6 font-semibold text-white shadow-white/10 focus:outline-hidden data-hover:bg-gray-800 data-focus:outline-1 data-focus:outline-white data-open:bg-gray-700"
                             onClick={close}
                         >
                             Cancel
                         </Button>
                         <Button
-                            className="inline-flex items-center gap-2 rounded-md bg-red-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-red-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
+                            className="inline-flex items-center gap-2 rounded-md bg-red-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-hidden data-hover:bg-red-600 data-focus:outline-1 data-focus:outline-white data-open:bg-gray-700"
                             onClick={handleDelete}
                         >
                             Delete

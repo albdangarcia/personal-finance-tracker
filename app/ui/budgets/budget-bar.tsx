@@ -23,10 +23,10 @@ const BudgetBar = ({
             </div>
 
             {/* bar */}
-            <div className="bg-gray-100 h-1 w-full rounded-sm relative">
+            <div className="bg-gray-100 h-1 w-full rounded-xs relative">
                 <div
                     className={clsx(
-                        "h-full rounded-sm",
+                        "h-full rounded-xs",
                         isThereBudgetLeft ? "bg-[#73ca93]" : "bg-[#f56565]"
                     )}
                     style={{ width: `${expensePercentage}%` }}

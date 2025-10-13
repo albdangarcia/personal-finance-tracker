@@ -16,9 +16,9 @@ const LoginProviderForm = ({ providers }: { providers: Provider[] }) => {
         <>
             {/* divider */}
             <div className="flex items-center mt-3 mb-5">
-                <hr className="flex-grow border-t border-gray-300" />
+                <hr className="grow border-t border-gray-300" />
                 <span className="mx-2 text-gray-500">or</span>
-                <hr className="flex-grow border-t border-gray-300" />
+                <hr className="grow border-t border-gray-300" />
             </div>
             <div className="grid gap-y-3">
                 {Object.values(providers).map((provider) => (
@@ -30,7 +30,7 @@ const LoginProviderForm = ({ providers }: { providers: Provider[] }) => {
                         />
                         <button
                             type="submit"
-                            className="flex items-center justify-center px-5 py-2 w-full border border-gray-300 rounded hover:bg-gray-100"
+                            className="flex items-center justify-center px-5 py-2 w-full border border-gray-300 rounded-sm hover:bg-gray-100"
                         >
                             <img
                                 loading="lazy"

@@ -39,10 +39,11 @@ const SearchBar = ({ placeholder }: { placeholder: string }) => {
                 Search
             </label>
             <input
-                className="group block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-400/70"
+                className="group py-[9px] pl-10 text-sm placeholder:text-gray-400/70"
                 placeholder={placeholder}
                 id="search"
                 name="search"
+                type="text"
                 onChange={(e) => handleSearch(e.target.value)}
                 defaultValue={searchParams.get("query")?.toString()}
             />

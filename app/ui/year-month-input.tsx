@@ -47,7 +47,7 @@ const YearMonthInput = () => {
                 type="month"
                 required
                 onChange={(e) => handleYearMonthChange(e.target.value)}
-                className="block w-full rounded-md border border-gray-200 py-[9px] text-sm outline-2"
+                className="block w-full rounded-md border border-gray-200 py-[9px] text-sm"
             />
         </div>
     );
