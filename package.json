@@ -25,7 +25,7 @@
         "react-chartjs-2": "^5.2.0",
         "react-dom": "^19.2.0",
         "use-debounce": "^10.0.6",
-        "zod": "^3.23.8"
+        "zod": "^4.1.12"
     },
     "devDependencies": {
         "@playwright/test": "^1.50.1",

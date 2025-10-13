@@ -3,16 +3,22 @@ import { Frequency, IncomeType } from "@prisma/client";
 
 // Schema for budget form
 export const BudgetFormSchema = z.object({
-    id: z.string().regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
+    id: z.string().regex(/^c[^\s-]{8,}$/i, {
+        error: "Invalid CUID format."
+    }),
     categoryId: z
         .string()
-        .regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
+        .regex(/^c[^\s-]{8,}$/i, {
+            error: "Invalid CUID format."
+        }),
     yearMonth: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, {
-        message: "Please enter a valid yearMonth in the format YYYY-MM.",
+        error: "Please enter a valid yearMonth in the format YYYY-MM."
     }),
     amount: z.coerce
         .number()
-        .gt(0, { message: "Please enter an amount greater than $0." }),
+        .gt(0, {
+            error: "Please enter an amount greater than $0."
+        }),
 });
 
 // Schema for creating a new budget, omitting the ID field
@@ -30,14 +36,20 @@ export interface BudgetFormError {
 
 // schema for expense form
 export const ExpenseFormSchema = z.object({
-    id: z.string().regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
+    id: z.string().regex(/^c[^\s-]{8,}$/i, {
+        error: "Invalid CUID format."
+    }),
     name: z.string().min(1),
     amount: z.coerce
         .number()
-        .gt(0, { message: "Please enter an amount greater than $0." }),
+        .gt(0, {
+            error: "Please enter an amount greater than $0."
+        }),
     categoryId: z
         .string()
-        .regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
+        .regex(/^c[^\s-]{8,}$/i, {
+            error: "Invalid CUID format."
+        }),
     date: z.coerce.date(),
 });
 
@@ -57,14 +69,20 @@ export interface ExpenseFormError {
 
 // schema for savings form
 export const SavingsGoalFormSchema = z.object({
-    id: z.string().regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
+    id: z.string().regex(/^c[^\s-]{8,}$/i, {
+        error: "Invalid CUID format."
+    }),
     name: z.string().min(1),
     amount: z.coerce
         .number()
-        .gt(0, { message: "Please enter an amount greater than $0." }),
+        .gt(0, {
+            error: "Please enter an amount greater than $0."
+        }),
     categoryId: z
         .string()
-        .regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
+        .regex(/^c[^\s-]{8,}$/i, {
+            error: "Invalid CUID format."
+        }),
 });
 
 // schema for creating a new savings goal, omitting the ID field
@@ -84,10 +102,14 @@ export interface SavingsGoalFormError {
 
 // Schema for contribution form
 export const ContributionFormSchema = z.object({
-    id: z.string().regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
+    id: z.string().regex(/^c[^\s-]{8,}$/i, {
+        error: "Invalid CUID format."
+    }),
     amount: z.coerce
         .number()
-        .gt(0, { message: "Please enter an amount greater than $0." }),
+        .gt(0, {
+            error: "Please enter an amount greater than $0."
+        }),
     date: z.coerce.date(),
 });
 
@@ -107,17 +129,25 @@ export interface ContributionFormError {
 
 // Schema for debt form
 export const DebtFormSchema = z.object({
-    id: z.string().regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
+    id: z.string().regex(/^c[^\s-]{8,}$/i, {
+        error: "Invalid CUID format."
+    }),
     name: z.string().min(1),
     categoryId: z
         .string()
-        .regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
+        .regex(/^c[^\s-]{8,}$/i, {
+            error: "Invalid CUID format."
+        }),
     amount: z.coerce
         .number()
-        .gt(0, { message: "Please enter an amount greater than $0." }),
+        .gt(0, {
+            error: "Please enter an amount greater than $0."
+        }),
     interest: z.coerce
         .number()
-        .gte(0, { message: "Please enter an interest rate of 0 or greater." }),
+        .gte(0, {
+            error: "Please enter an interest rate of 0 or greater."
+        }),
 });
 
 // Schema for creating a new debt, omitting the ID field
@@ -136,10 +166,14 @@ export interface DebtFormError {
 
 // Schema for the payment form
 export const PaymentFormSchema = z.object({
-    id: z.string().regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
+    id: z.string().regex(/^c[^\s-]{8,}$/i, {
+        error: "Invalid CUID format."
+    }),
     amount: z.coerce
         .number()
-        .gt(0, { message: "Please enter an amount greater than $0." }),
+        .gt(0, {
+            error: "Please enter an amount greater than $0."
+        }),
     date: z.coerce.date(),
 });
 
@@ -157,17 +191,23 @@ export interface PaymentFormError {
 
 // Schema for the income form
 export const IncomeFormSchema = z.object({
-    id: z.string().regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
+    id: z.string().regex(/^c[^\s-]{8,}$/i, {
+        error: "Invalid CUID format."
+    }),
     amount: z.coerce
         .number()
-        .gt(0, { message: "Please enter an amount greater than $0." }),
+        .gt(0, {
+            error: "Please enter an amount greater than $0."
+        }),
     categoryId: z
         .string()
-        .regex(/^c[^\s-]{8,}$/i, { message: "Invalid CUID format." }),
-    frequency: z.nativeEnum(Frequency).optional(),
+        .regex(/^c[^\s-]{8,}$/i, {
+            error: "Invalid CUID format."
+        }),
+    frequency: z.enum(Frequency).optional(),
     startDate: z.coerce.date(),
     endDate: z.coerce.date().optional(),
-    incomeType: z.nativeEnum(IncomeType),
+    incomeType: z.enum(IncomeType),
 });
 
 // Error interface for the income form
@@ -200,10 +240,14 @@ export interface LoginFormErrors {
 
 // Schema for the login form
 export const SignInSchema = z.object({
-    email: string({ required_error: "Email is required" })
+    email: string({
+        error: (issue) => issue.input === undefined ? "Email is required" : undefined
+    })
         .min(1, "Email is required")
         .email("Invalid email"),
-    password: string({ required_error: "Password is required" })
+    password: string({
+        error: (issue) => issue.input === undefined ? "Password is required" : undefined
+    })
         .min(1, "Password is required")
         .min(8, "Password must be more than 8 characters")
         .max(32, "Password must be less than 32 characters"),
@@ -221,11 +265,17 @@ export interface SignupFormErrors {
 
 // Schema for the login form
 export const SignupSchema = z.object({
-    name: string({ required_error: "Name is required" }).min(1, "Name is required"),
-    email: string({ required_error: "Email is required" })
+    name: string({
+        error: (issue) => issue.input === undefined ? "Name is required" : undefined
+    }).min(1, "Name is required"),
+    email: string({
+        error: (issue) => issue.input === undefined ? "Email is required" : undefined
+    })
         .min(1, "Email is required")
         .email("Invalid email"),
-    password: string({ required_error: "Password is required" })
+    password: string({
+        error: (issue) => issue.input === undefined ? "Password is required" : undefined
+    })
         .min(1, "Password is required")
         .min(8, "Password must be more than 8 characters")
         .max(32, "Password must be less than 32 characters"),
@@ -248,7 +298,7 @@ export const YearMonthSchema = z.object({
 
 // schema for yearMonth
 export const InputYearMonthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, {
-    message: "Please enter a valid yearMonth in the format YYYY-MM.",
+    error: "Please enter a valid yearMonth in the format YYYY-MM."
 });
 
 // schema for provider login
