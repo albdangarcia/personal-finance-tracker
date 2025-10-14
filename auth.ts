@@ -92,24 +92,31 @@ export const authConfig = {
             }
             return session;
         },
-        // Note: This needs more work possible solutions if the user is signing in with
-        //       a provider and email already exists.
-        // 1. Automatically link the accounts
-        // 2. Throw an error and let the user know that the email already exists
-        // 3. Only allow the admin to log in with credentials and the rest with providers
-        // async signIn({ user, account }) {
-        //     // if the user is signing in with a provider, check if the email already exists
-        //     if (account && user.email) {
-        //         if (account.provider !== "credentials") {
-        //             // Check if a user with this email already exists
-        //             const existingUser = await getUser(user.email);
-        //             if (existingUser) {
-        //                 throw new Error("Email already exists.");
-        //             }
-        //         }
-        //     }
-        //     return true; // Allow sign-in
-        // },
+        // Handles cases where a user tries to sign in with an OAuth provider
+        // using an email that already exists in the system.
+        async signIn({ user, account }) {
+            // Allow sign in for the credentials (email/password) provider
+            if (account?.provider === "credentials") {
+                return true;
+            }
+
+            // For OAuth providers (Google, GitHub, etc.)
+            if (user.email) {
+                // Check if a user with this email already exists
+                const existingUser = await getUser(user.email);
+
+                // If a user with this email exists, prevent linking a new OAuth account
+                // to avoid potential account takeovers.
+                if (existingUser) {
+                    // throw a specific error. The `pages.error` config
+                    // will catch this and redirect the user appropriately.
+                    throw new Error("EmailExists");
+                }
+            }
+
+            // Allow sign-in for new users
+            return true;
+        },
     },
     session: {
         strategy: "jwt",
@@ -117,6 +124,7 @@ export const authConfig = {
     providers: providers,
     pages: {
         signIn: "/login",
+        error: "/login"
     },
 } satisfies NextAuthConfig;
 

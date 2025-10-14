@@ -53,8 +53,6 @@ const authenticateLogin = async (
             switch (error.type) {
                 case "CredentialsSignin":
                     return { message: "Invalid credentials" };
-                case "CredentialsSignin":
-                    throw error;
                 default:
                     return { message: "Something went wrong" };
             }
