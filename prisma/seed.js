@@ -713,18 +713,6 @@ async function seedBudgets() {
 }
 
 async function main() {
-    // Clear existing data
-    console.log("Deleting existing data ...");
-    await prisma.budget.deleteMany();
-    await prisma.debtPayment.deleteMany();
-    await prisma.debt.deleteMany();
-    await prisma.contribution.deleteMany();
-    await prisma.savingsGoal.deleteMany();
-    await prisma.expense.deleteMany();
-    await prisma.income.deleteMany();
-    await prisma.user.deleteMany();
-    await prisma.category.deleteMany();
-
     // Seed data
     console.log("Start seeding ...");
     await seedCategories();
