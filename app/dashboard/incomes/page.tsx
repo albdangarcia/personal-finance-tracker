@@ -30,7 +30,7 @@ interface Props {
 
 const Page = async ({ searchParams }: Props) => {
     // Get the query from the URL
-    const { query = "", page = "" } = await searchParams;
+    const { query = "" } = await searchParams;
 
     const { regularIncomes, irregularIncomes } = await fetchFilteredIncomes(
         query

@@ -9,10 +9,10 @@ import {
     SavingsGoal,
 } from "@prisma/client";
 
-export interface CategoryInfo extends Pick<Category, "id" | "name"> {}
+export type CategoryInfo = Pick<Category, "id" | "name">;
 
 // budgets
-interface BudgetInfo extends Pick<Budget, "id" | "amount" | "yearMonth"> {}
+type BudgetInfo = Pick<Budget, "id" | "amount" | "yearMonth">;
 
 export interface BudgetById extends BudgetInfo {
     category: CategoryInfo;
@@ -36,10 +36,9 @@ export interface ExpenseById
 }
 
 // savings goals and contributions
-interface ContributionInfo
-    extends Pick<Contribution, "id" | "amount" | "date"> {}
+type ContributionInfo = Pick<Contribution, "id" | "amount" | "date">;
 
-interface SavingsGoalInfo extends Pick<SavingsGoal, "id" | "name" | "amount"> {}
+type SavingsGoalInfo = Pick<SavingsGoal, "id" | "name" | "amount">;
 
 export interface ContributionById extends ContributionInfo {
     savingsGoal: Pick<SavingsGoalInfo, "id" | "name">;
@@ -64,9 +63,9 @@ export interface CategoriesWithGoals extends CategoryInfo {
 }
 
 // debts
-interface DebtInfo extends Pick<Debt, "id" | "name" | "amount" | "interest"> {}
+type DebtInfo = Pick<Debt, "id" | "name" | "amount" | "interest">;
 
-interface PaymentInfo extends Pick<DebtPayment, "id" | "amount" | "date"> {}
+type PaymentInfo = Pick<DebtPayment, "id" | "amount" | "date">;
 
 export interface DebtById extends DebtInfo, Pick<Debt, "categoryId"> {}
 

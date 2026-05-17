@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "prisma generate && prisma migrate deploy && next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint",
     "db": "npx prisma migrate reset",
     "test": "jest"
   },
@@ -29,6 +29,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.5",
     "@playwright/test": "^1.50.1",
     "@tailwindcss/postcss": "^4.1.14",
     "@testing-library/dom": "^10.4.0",
@@ -48,6 +49,6 @@
     "typescript": "^5.9.3"
   },
   "prisma": {
-    "seed": "node ./prisma/seed.js"
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seed.ts"
   }
 }

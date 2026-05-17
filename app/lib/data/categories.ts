@@ -1,7 +1,6 @@
 import { unstable_noStore as noStore } from "next/cache";
 import prisma from "@/app/lib/prisma";
 import { CategoryInfo } from "../interfaces";
-import { getAuthenticatedUserId } from "../utils/authUtils";
 
 /**
  * Fetches all categories from the database. The categories are shared across all users.

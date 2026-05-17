@@ -68,7 +68,7 @@ const fetchFilteredIncomes = async (query: string): Promise<GroupIncomes> => {
 
         // Return the incomes
         return { regularIncomes, irregularIncomes };
-    } catch (error) {
+    } catch {
         throw new Error("Failed to fetch incomes.");
     }
 };
@@ -116,7 +116,7 @@ const fetchIncomeById = async (id: string): Promise<IncomeById | null> => {
         });
 
         return income;
-    } catch (error) {
+    } catch {
         throw new Error("Failed to fetch income by id.");
     }
 };

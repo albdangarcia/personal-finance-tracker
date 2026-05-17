@@ -15,7 +15,7 @@ interface Props {
 }
 
 const TopNavBar = ({ userName, userImage }: Props) => {
-    let [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     return (
         <div className="py-4 bg-white gap-x-6 items-center flex z-40 top-0 sticky px-3 sm:pl-6 shadow-xs lg:hidden">
             {/* stack button */}

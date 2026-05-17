@@ -1,9 +1,10 @@
-const bcrypt = require("bcrypt");
-const { PrismaClient } = require("@prisma/client");
+import bcrypt from "bcrypt";
+import { PrismaClient } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
 // Function to calculate a date string based on the current date and a given month offset
-const calculateDate = (num) => {
+const calculateDate = (num: number) => {
     const now = new Date(); // Get the current date
     let year = now.getFullYear(); // Extract the current year
     let month = now.getMonth(); // Extract the current month (0-11)

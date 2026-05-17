@@ -11,7 +11,6 @@ import {
 import { useState } from "react";
 import DialogComponent from "../delete-dialog";
 import { GoalWithContributions } from "@/app/lib/interfaces";
-import { format } from "path";
 import { formatDate } from "@/app/lib/utils/general";
 
 interface Props {
