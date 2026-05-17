@@ -8,7 +8,9 @@ Note: Database functionality and support have been removed from next-auth in thi
 import NextAuth from "next-auth";
 import { authProviderConfigList } from "./auth.config";
 
-export const { auth: middleware } = NextAuth(authProviderConfigList)
+const { auth: proxy } = NextAuth(authProviderConfigList);
+
+export default proxy;
 
 // Filter Middleware to avoid API routes and static assets
 export const config = {
