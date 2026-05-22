@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "prisma generate && prisma migrate deploy && next build",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db": "npx prisma migrate reset",
+    "db": "npx prisma generate && npx prisma db push && npx prisma db seed",
     "test": "jest"
   },
   "dependencies": {
