@@ -1,31 +1,8 @@
 import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
+import { calculateDate } from "@/lib/utils";
 
 const prisma = new PrismaClient();
-
-// Function to calculate a date string based on the current date and a given month offset
-const calculateDate = (num: number) => {
-  const now = new Date(); // Get the current date
-  let year = now.getFullYear(); // Extract the current year
-  let month = now.getMonth(); // Extract the current month (0-11)
-
-  month += num; // Add the month offset to the current month
-
-  // Adjust the year and month if the month is less than 0
-  while (month < 0) {
-    month += 12;
-    year--;
-  }
-
-  // Adjust the year and month if the month is greater than 11
-  while (month > 11) {
-    month -= 12;
-    year++;
-  }
-
-  // Return the calculated date string in the format "YYYY-MM"
-  return `${year}-${String(month + 1).padStart(2, "0")}`;
-};
 
 const userId = {
   id: "clziqqbgy000108l7dmts0vng",
@@ -728,11 +705,23 @@ export async function main() {
   console.log("Seeding finished.");
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+const isExplicitSeedRun =
+  process.argv.includes("seed") ||
+  process.env.PRISMA_SEEDING === "true" ||
+  (typeof require !== "undefined" && require.main === module);
+
+if (isExplicitSeedRun) {
+  main()
+    .then(async () => {
+      await prisma.$disconnect();
+    })
+    .catch(async (e) => {
+      console.error(e);
+      await prisma.$disconnect();
+      process.exit(1);
+    });
+} else {
+  console.log(
+    "ℹ️ Seed script evaluated during build phase. Database seeding skipped.",
+  );
+}
