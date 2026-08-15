@@ -1,4 +1,5 @@
 "use server";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import prisma from "@/app/lib/prisma";
@@ -8,7 +9,7 @@ import {
     IncomeFormErrors,
     IncomeFormSchema,
 } from "../zod-schemas";
-import { IncomeType } from "@/prisma/generated/client";
+import { IncomeType } from "@/prisma/generated/enums";
 import { getAuthenticatedUserId } from "../utils/authUtils";
 
 const createIncome = async (
@@ -115,7 +116,8 @@ const deleteIncome = async (id: string) => {
 
     try {
         // Check if the income exists and belongs to the authenticated user
-        const income = await prisma.income.findUnique({
+        // Note: findFirst is used here because (id, userId) is not a compound unique key
+        const income = await prisma.income.findFirst({
             where: {
                 id: incomeId,
                 userId: userId,
@@ -139,7 +141,7 @@ const deleteIncome = async (id: string) => {
         });
 
         // Revalidate the cache
-        revalidatePath("/dashboard/debts");
+        revalidatePath("/dashboard/incomes");
     } catch (error) {
         console.error("Failed to delete Income:", error);
         return {
@@ -215,7 +217,7 @@ const updateIncome = async (
         }
 
         // Check if the income exists and belongs to the authenticated user
-        const income = await prisma.income.findUnique({
+        const income = await prisma.income.findFirst({
             where: {
                 id: id,
                 userId: userId,

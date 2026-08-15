@@ -1,18 +1,18 @@
-import {
-    Budget,
-    Category,
-    Contribution,
-    Debt,
-    DebtPayment,
-    Expense,
-    Income,
-    SavingsGoal,
-} from "@/prisma/generated/client";
+import type {
+  BudgetModel,
+  CategoryModel,
+  ContributionModel,
+  DebtModel,
+  DebtPaymentModel,
+  ExpenseModel,
+  IncomeModel,
+  SavingsGoalModel,
+} from "@/prisma/generated/models";
 
-export type CategoryInfo = Pick<Category, "id" | "name">;
+export type CategoryInfo = Pick<CategoryModel, "id" | "name">;
 
 // budgets
-type BudgetInfo = Pick<Budget, "id" | "amount" | "yearMonth">;
+type BudgetInfo = Pick<BudgetModel, "id" | "amount" | "yearMonth">;
 
 export interface BudgetById extends BudgetInfo {
     category: CategoryInfo;
@@ -31,14 +31,14 @@ export interface MonthlyObject {
 
 // expenses
 export interface ExpenseById
-    extends Pick<Expense, "id" | "name" | "amount" | "date"> {
+    extends Pick<ExpenseModel, "id" | "name" | "amount" | "date"> {
     category: CategoryInfo;
 }
 
 // savings goals and contributions
-type ContributionInfo = Pick<Contribution, "id" | "amount" | "date">;
+type ContributionInfo = Pick<ContributionModel, "id" | "amount" | "date">;
 
-type SavingsGoalInfo = Pick<SavingsGoal, "id" | "name" | "amount">;
+type SavingsGoalInfo = Pick<SavingsGoalModel, "id" | "name" | "amount">;
 
 export interface ContributionById extends ContributionInfo {
     savingsGoal: Pick<SavingsGoalInfo, "id" | "name">;
@@ -46,7 +46,7 @@ export interface ContributionById extends ContributionInfo {
 
 export interface SavingsGoalById
     extends SavingsGoalInfo,
-        Pick<SavingsGoal, "categoryId"> {}
+        Pick<SavingsGoalModel, "categoryId"> {}
 
 export interface GoalWithContributions extends SavingsGoalInfo {
     category: {
@@ -63,11 +63,11 @@ export interface CategoriesWithGoals extends CategoryInfo {
 }
 
 // debts
-type DebtInfo = Pick<Debt, "id" | "name" | "amount" | "interest">;
+type DebtInfo = Pick<DebtModel, "id" | "name" | "amount" | "interest">;
 
-type PaymentInfo = Pick<DebtPayment, "id" | "amount" | "date">;
+type PaymentInfo = Pick<DebtPaymentModel, "id" | "amount" | "date">;
 
-export interface DebtById extends DebtInfo, Pick<Debt, "categoryId"> {}
+export interface DebtById extends DebtInfo, Pick<DebtModel, "categoryId"> {}
 
 export interface PaymentById extends PaymentInfo {
     debt: Pick<DebtInfo, "id" | "name">;
@@ -82,12 +82,12 @@ export interface CategoriesWithDebts extends CategoryInfo {
 
 export interface DebtWithPayments extends DebtInfo {
     payments: PaymentInfo[];
-    category: Pick<Category, "name">;
+    category: Pick<CategoryModel, "name">;
 }
 
 // incomes
 export interface IncomeById
-    extends Omit<Income, "createdAt" | "updatedAt" | "userId" | "categoryId"> {
+    extends Omit<IncomeModel, "createdAt" | "updatedAt" | "userId" | "categoryId"> {
     category: CategoryInfo;
 }
 

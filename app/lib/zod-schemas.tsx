@@ -1,5 +1,5 @@
 import { string, z } from "zod";
-import { Frequency, IncomeType } from "@/prisma/generated/client";
+import { Frequency, IncomeType } from "@/prisma/generated/enums";
 
 // Schema for budget form
 export const BudgetFormSchema = z.object({

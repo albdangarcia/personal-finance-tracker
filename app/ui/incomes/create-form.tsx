@@ -1,9 +1,10 @@
 "use client";
+
 import { CategoryInfo } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 import { IncomeFormErrors } from "@/app/lib/zod-schemas";
 import { createIncome } from "@/app/lib/actions/income";
-import { Frequency, IncomeType } from "@/prisma/generated/client";
+import { Frequency, IncomeType } from "@/prisma/generated/enums";
 import { capitalizeFirstLetter } from "@/app/lib/utils/general";
 import { useState, useActionState } from "react";
 import getCurrentDate from "@/app/lib/utils/getCurrentDate";
@@ -23,7 +24,7 @@ const CreateIncomeForm = ({ categories }: { categories: CategoryInfo[] }) => {
     // Handle the income type selection
     const handleIncomeType = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setIsRegularIncome(e.target.value === IncomeType.REGULAR);
-    }
+    };
 
     return (
         <div>
@@ -75,7 +76,7 @@ const CreateIncomeForm = ({ categories }: { categories: CategoryInfo[] }) => {
                         id="frequency"
                         autoComplete="off"
                         aria-describedby="frequency-error"
-                        disabled={isRegularIncome ? false : true}
+                        disabled={!isRegularIncome}
                         className="disabled:opacity-50 disabled:bg-gray-100"
                     >
                         {Object.values(Frequency).map((frequency) => (
@@ -87,7 +88,7 @@ const CreateIncomeForm = ({ categories }: { categories: CategoryInfo[] }) => {
                             </option>
                         ))}
                     </select>
-                    {/* Income type errors */}
+                    {/* Frequency errors */}
                     <div
                         id="frequency-error"
                         aria-live="polite"
@@ -216,7 +217,7 @@ const CreateIncomeForm = ({ categories }: { categories: CategoryInfo[] }) => {
                         id="endDate"
                         autoComplete="off"
                         aria-describedby="endDate-error"
-                        disabled={isRegularIncome ? false : true}
+                        disabled={!isRegularIncome}
                         className="disabled:opacity-50 disabled:bg-gray-100"
                     />
                     {/* endDate errors */}

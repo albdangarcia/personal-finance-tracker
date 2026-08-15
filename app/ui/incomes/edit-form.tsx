@@ -1,12 +1,12 @@
 "use client";
+
 import { CategoryInfo, IncomeById } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 import { IncomeFormErrors } from "@/app/lib/zod-schemas";
-import { Frequency, IncomeType } from "@/prisma/generated/client";
+import { Frequency, IncomeType } from "@/prisma/generated/enums";
 import { capitalizeFirstLetter } from "@/app/lib/utils/general";
 import { useState, useActionState } from "react";
 import { updateIncome } from "@/app/lib/actions/income";
-
 
 interface Props {
     categories: CategoryInfo[];
@@ -15,10 +15,7 @@ interface Props {
 
 const EditIncomeForm = ({ categories, income }: Props) => {
     // Bind the updateIncome function with the income id
-    const updateIncomeWithId = updateIncome.bind(
-        null,
-        income.id
-    );
+    const updateIncomeWithId = updateIncome.bind(null, income.id);
 
     // Error state for the form
     const initialState = { message: null, errors: {} };
@@ -29,12 +26,20 @@ const EditIncomeForm = ({ categories, income }: Props) => {
     );
     
     // State to determine if the income is regular
-    const [isRegularIncome, setIsRegularIncome] = useState<boolean>(income.incomeType === IncomeType.REGULAR);
+    const [isRegularIncome, setIsRegularIncome] = useState<boolean>(
+        income.incomeType === IncomeType.REGULAR
+    );
     
     // Handle the income type selection
     const handleSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setIsRegularIncome(e.target.value === IncomeType.REGULAR);
-    }
+    };
+
+    // Helper for formatting date to YYYY-MM-DD
+    const formatDate = (date: Date | string | null | undefined) => {
+        if (!date) return "";
+        return new Date(date).toISOString().split("T")[0];
+    };
 
     return (
         <div>
@@ -87,7 +92,8 @@ const EditIncomeForm = ({ categories, income }: Props) => {
                         id="frequency"
                         autoComplete="off"
                         aria-describedby="frequency-error"
-                        disabled={isRegularIncome ? false : true}
+                        disabled={!isRegularIncome}
+                        defaultValue={income.frequency ?? ""}
                         className="disabled:opacity-50 disabled:bg-gray-100"
                     >
                         {Object.values(Frequency).map((frequency) => (
@@ -99,7 +105,7 @@ const EditIncomeForm = ({ categories, income }: Props) => {
                             </option>
                         ))}
                     </select>
-                    {/* Income type errors */}
+                    {/* Frequency errors */}
                     <div
                         id="frequency-error"
                         aria-live="polite"
@@ -205,7 +211,7 @@ const EditIncomeForm = ({ categories, income }: Props) => {
                         autoComplete="off"
                         required
                         aria-describedby="startDate-error"
-                        defaultValue={income.startDate.toISOString().split('T')[0]}
+                        defaultValue={formatDate(income.startDate)}
                     />
                     {/* startDate errors */}
                     <div id="startDate-error" aria-live="polite" aria-atomic="true">
@@ -230,9 +236,9 @@ const EditIncomeForm = ({ categories, income }: Props) => {
                         id="endDate"
                         autoComplete="off"
                         aria-describedby="endDate-error"
-                        disabled={isRegularIncome ? false : true}
+                        disabled={!isRegularIncome}
                         className="disabled:opacity-50 disabled:bg-gray-100"
-                        defaultValue={isRegularIncome ? (income.endDate ? income.startDate.toISOString().split('T')[0] : "") : ""}
+                        defaultValue={isRegularIncome ? formatDate(income.endDate) : ""}
                     />
                     {/* endDate errors */}
                     <div id="endDate-error" aria-live="polite" aria-atomic="true">
