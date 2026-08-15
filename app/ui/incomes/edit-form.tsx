@@ -2,7 +2,7 @@
 import { CategoryInfo, IncomeById } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 import { IncomeFormErrors } from "@/app/lib/zod-schemas";
-import { Frequency, IncomeType } from "@prisma/client";
+import { Frequency, IncomeType } from "@/prisma/generated/client";
 import { capitalizeFirstLetter } from "@/app/lib/utils/general";
 import { useState, useActionState } from "react";
 import { updateIncome } from "@/app/lib/actions/income";

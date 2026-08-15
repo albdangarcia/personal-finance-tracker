@@ -7,7 +7,7 @@ import {
     Expense,
     Income,
     SavingsGoal,
-} from "@prisma/client";
+} from "@/prisma/generated/client";
 
 export type CategoryInfo = Pick<Category, "id" | "name">;
 

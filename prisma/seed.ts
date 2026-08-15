@@ -1,8 +1,14 @@
+import "dotenv/config";
 import bcrypt from "bcrypt";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "./generated/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import pg from "pg";
 import { calculateDate } from "@/lib/utils";
 
-const prisma = new PrismaClient();
+const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+const pool = new pg.Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 const userId = {
   id: "clziqqbgy000108l7dmts0vng",
@@ -276,118 +282,34 @@ async function seedCategories() {
   try {
     await prisma.category.createMany({
       data: [
-        {
-          id: "clzn1qih0000008l62z1r5cus",
-          name: "Restaurant",
-        },
-        {
-          id: "clzn1sjfo000108l6hk8t48z4",
-          name: "Groceries",
-        },
-        {
-          id: "clzn1t6g6000208l68sy4a87y",
-          name: "Shopping",
-        },
-        {
-          id: "clzn1uya9000308l63mz9cnqd",
-          name: "Entertainment",
-        },
-        {
-          id: "clzn1v4hf000508l673fm0oku",
-          name: "Transportation",
-        },
-        {
-          id: "clzn1v9qs000608l6b6h23jt8",
-          name: "Health & Fitness",
-        },
-        {
-          id: "clzn1ve6r000708l69p99czkv",
-          name: "Utilities",
-        },
-        {
-          id: "clzn1vjnb000808l6d351ajrw",
-          name: "Travel",
-        },
-        {
-          id: "clzn1vqi8000908l64ure8t1k",
-          name: "Education",
-        },
-        {
-          id: "clzn1vv97000a08l6863rh49m",
-          name: "Insurance",
-        },
-        {
-          id: "clzn1wtpi000b08l69dclc6oq",
-          name: "Phone",
-        },
-        {
-          id: "clzn1wzml000c08l6ewdth0zk",
-          name: "Internet",
-        },
-        {
-          id: "clzn1ykfe000d08l66g2sh8iw",
-          name: "Pets",
-        },
-        {
-          id: "clzn1yobw000e08l694zh9tg3",
-          name: "Gifts",
-        },
-        {
-          id: "clzn1yspd000f08l67wjh5d0m",
-          name: "Kids",
-        },
-        {
-          id: "clzn1yym2000g08l61zfidl1g",
-          name: "Investments",
-        },
-        {
-          id: "clzn1z2bu000h08l69nb4dvva",
-          name: "Charity",
-        },
-        {
-          id: "clzn1z6qa000i08l6fklc577c",
-          name: "Savings",
-        },
-        {
-          id: "clzn1zbe1000j08l6gjabe0v6",
-          name: "Miscellaneous",
-        },
-        {
-          id: "clzn1zess000k08l6hx0zggcb",
-          name: "Clothing",
-        },
-        {
-          id: "clzn20svi000m08l6246xbqo7",
-          name: "Rent",
-        },
-        {
-          id: "clzn212yc000n08l64ahjevl2",
-          name: "Mortgage",
-        },
-        {
-          id: "clzn217qn000o08l6fg2i2fyq",
-          name: "Home Services",
-        },
-        {
-          id: "clzn21b66000p08l6g6rn5zip",
-          name: "Auto & Transport",
-        },
-        {
-          id: "clzn21eq3000q08l6f974e4q9",
-          name: "Gas & Fuel",
-        },
-        {
-          id: "cm0bu5boh000008lb2ol28llt",
-          name: "Credit Card",
-        },
-        {
-          id: "cm0ede91d000108ky0khb8k9k",
-          name: "Job",
-        },
-        {
-          id: "cm0edf2o2000008jz6nsj6nwe",
-          name: "Freelance",
-        },
+        { id: "clzn1qih0000008l62z1r5cus", name: "Restaurant" },
+        { id: "clzn1sjfo000108l6hk8t48z4", name: "Groceries" },
+        { id: "clzn1t6g6000208l68sy4a87y", name: "Shopping" },
+        { id: "clzn1uya9000308l63mz9cnqd", name: "Entertainment" },
+        { id: "clzn1v4hf000508l673fm0oku", name: "Transportation" },
+        { id: "clzn1v9qs000608l6b6h23jt8", name: "Health & Fitness" },
+        { id: "clzn1ve6r000708l69p99czkv", name: "Utilities" },
+        { id: "clzn1vjnb000808l6d351ajrw", name: "Travel" },
+        { id: "clzn1vqi8000908l64ure8t1k", name: "Education" },
+        { id: "clzn1vv97000a08l6863rh49m", name: "Insurance" },
+        { id: "clzn1wtpi000b08l69dclc6oq", name: "Phone" },
+        { id: "clzn1wzml000c08l6ewdth0zk", name: "Internet" },
+        { id: "clzn1ykfe000d08l66g2sh8iw", name: "Pets" },
+        { id: "clzn1yobw000e08l694zh9tg3", name: "Gifts" },
+        { id: "clzn1yspd000f08l67wjh5d0m", name: "Kids" },
+        { id: "clzn1yym2000g08l61zfidl1g", name: "Investments" },
+        { id: "clzn1z2bu000h08l69nb4dvva", name: "Charity" },
+        { id: "clzn1z6qa000i08l6fklc577c", name: "Savings" },
+        { id: "clzn1zbe1000j08l6gjabe0v6", name: "Miscellaneous" },
+        { id: "clzn1zess000k08l6hx0zggcb", name: "Clothing" },
+        { id: "clzn20svi000m08l6246xbqo7", name: "Rent" },
+        { id: "clzn212yc000n08l64ahjevl2", name: "Mortgage" },
+        { id: "clzn217qn000o08l6fg2i2fyq", name: "Home Services" },
+        { id: "clzn21b66000p08l6g6rn5zip", name: "Auto & Transport" },
+        { id: "clzn21eq3000q08l6f974e4q9", name: "Gas & Fuel" },
+        { id: "cm0bu5boh000008lb2ol28llt", name: "Credit Card" },
+        { id: "cm0ede91d000108ky0khb8k9k", name: "Job" },
+        { id: "cm0edf2o2000008jz6nsj6nwe", name: "Freelance" },
       ],
     });
   } catch (error) {
@@ -438,6 +360,7 @@ async function seedSavingContributions() {
     throw error;
   }
 }
+
 async function seedSavingsGoals() {
   console.log("Seeding savings goals...");
   try {
@@ -690,9 +613,32 @@ async function seedBudgets() {
   }
 }
 
+async function clearDatabase() {
+  console.log("Clearing existing financial data...");
+  try {
+    // Delete models with foreign key dependencies first
+    await prisma.debtPayment.deleteMany({});
+    await prisma.contribution.deleteMany({});
+    await prisma.income.deleteMany({});
+    await prisma.expense.deleteMany({});
+    await prisma.budget.deleteMany({});
+
+    // Delete parent models
+    await prisma.debt.deleteMany({});
+    await prisma.savingsGoal.deleteMany({});
+    await prisma.category.deleteMany({});
+    await prisma.user.deleteMany({});
+
+    console.log("Database cleared.");
+  } catch (error) {
+    console.error("Error clearing database:", error);
+    throw error;
+  }
+}
+
 export async function main() {
-  // Seed data
   console.log("Start seeding ...");
+  await clearDatabase();
   await seedCategories();
   await seedUsers();
   await Incomes();
@@ -713,15 +659,16 @@ const isExplicitSeedRun =
 if (isExplicitSeedRun) {
   main()
     .then(async () => {
+      console.log("Disconnecting Prisma Client...");
       await prisma.$disconnect();
     })
     .catch(async (e) => {
-      console.error(e);
+      console.error("An error occurred during the seeding process:", e);
       await prisma.$disconnect();
       process.exit(1);
     });
 } else {
   console.log(
-    "ℹ️ Seed script evaluated during build phase. Database seeding skipped.",
+    "ℹ️ Seed script evaluated during build phase. Database seeding skipped."
   );
 }

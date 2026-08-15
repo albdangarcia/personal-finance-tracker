@@ -8,7 +8,7 @@ import {
     IncomeFormErrors,
     IncomeFormSchema,
 } from "../zod-schemas";
-import { IncomeType } from "@prisma/client";
+import { IncomeType } from "@/prisma/generated/client";
 import { getAuthenticatedUserId } from "../utils/authUtils";
 
 const createIncome = async (

@@ -3,7 +3,7 @@ import { CategoryInfo } from "@/app/lib/interfaces";
 import FormButtons from "../form-buttons";
 import { IncomeFormErrors } from "@/app/lib/zod-schemas";
 import { createIncome } from "@/app/lib/actions/income";
-import { Frequency, IncomeType } from "@prisma/client";
+import { Frequency, IncomeType } from "@/prisma/generated/client";
 import { capitalizeFirstLetter } from "@/app/lib/utils/general";
 import { useState, useActionState } from "react";
 import getCurrentDate from "@/app/lib/utils/getCurrentDate";
