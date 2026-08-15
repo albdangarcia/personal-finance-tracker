@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "db": "npx prisma generate && npx prisma db push && npx prisma db seed",
-    "test": "jest"
+    "test": "jest",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.5.0",
@@ -20,7 +21,7 @@
     "bcrypt": "^6.0.0",
     "chart.js": "^4.5.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.545.0",
+    "lucide-react": "^1.31.0",
     "next": "^16.3.1",
     "next-auth": "^5.0.0-beta.29",
     "react": "^19.2.8",
