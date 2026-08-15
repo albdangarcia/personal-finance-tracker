@@ -8,11 +8,11 @@ export default defineConfig({
     seed: "tsx prisma/seed.ts",
   },
   datasource: {
-    // 1. Direct for migrations (Neon/Vercel) -> 2. Direct for local -> 3. Fallbacks
+    // Use process.env for optional vars, env() only for the final required one
     url:
-      env("DATABASE_URL_UNPOOLED") ??
-      env("POSTGRES_URL_NON_POOLING") ??
-      env("POSTGRES_URL") ??
+      process.env.DATABASE_URL_UNPOOLED ??
+      process.env.POSTGRES_URL_NON_POOLING ??
+      process.env.POSTGRES_URL ??
       env("DATABASE_URL"),
   },
 });
