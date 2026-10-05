@@ -8,11 +8,9 @@ export default defineConfig({
     seed: "tsx prisma/seed.ts",
   },
   datasource: {
-    // Use process.env for optional vars, env() only for the final required one
+    // Use process.env for the optional direct URL, env() for the required runtime URL
     url:
       process.env.DATABASE_URL_UNPOOLED ??
-      process.env.POSTGRES_URL_NON_POOLING ??
-      process.env.POSTGRES_URL ??
       env("DATABASE_URL"),
   },
 });
