@@ -1,16 +1,13 @@
-FROM node:20-alpine AS base
+FROM node:24-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy prisma directory and generate prisma client
-COPY prisma ./prisma/
-RUN npx prisma generate
-
-# Copy package.json and package-lock.json
+# Copy manifests and the schema before installing so Prisma's postinstall can generate the client
 COPY package.json package-lock.json* ./
+COPY prisma ./prisma/
 
 # Install dependencies
 RUN npm ci
@@ -27,6 +24,7 @@ RUN adduser --system --uid 1001 nextjs
 
 # Copy node_modules from deps stage
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/prisma/generated ./prisma/generated
 
 # Copy the rest of the application
 COPY . .
@@ -49,6 +47,6 @@ EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-# Command to wait for the PostgreSQL database to be ready, then run Prisma migrations and seed the database, and finally start the application in development mode
+# Wait for PostgreSQL, apply pending migrations, then start the application in development mode
 CMD wait-for-it postgres:5432 --timeout=30 --strict -- \
-    sh -c "npx prisma db push && npx prisma db seed && npm run dev"
+    sh -c "npx prisma migrate deploy && npm run dev"

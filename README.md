@@ -43,12 +43,7 @@ To run this project, you will need to add the following environment variables to
 |---------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | `AUTH_SECRET`             | A secret key for authentication. You can generate a secret key by running the command `openssl rand -base64 32` in your terminal. Ensure OpenSSL is installed: <br> - **macOS/Linux**: OpenSSL is usually pre-installed. Verify by running `openssl version`. <br> - **Windows**: Install OpenSSL from the [OpenSSL website](https://www.openssl.org/) or using [Chocolatey](https://chocolatey.org/) with the command `choco install openssl`. |
 | `AUTH_TRUST_HOST`         | Set to `true` or `false` to indicate whether to trust the host for authentication.                                     |
-| `POSTGRES_USER`           | The PostgreSQL database username.                                                                                      |
-| `POSTGRES_PASSWORD`       | The PostgreSQL database password.                                                                                      |
-| `POSTGRES_HOST`           | The PostgreSQL database host. Use `localhost` for local development or the Docker Compose service name `postgres`.     |
-| `POSTGRES_DB`             | The PostgreSQL database name.                                                                                          |
-| `POSTGRES_PORT`           | The PostgreSQL database port.                                                                                          |
-| `POSTGRES_URL`            | The PostgreSQL connection URL, which is constructed using the above variables.                                         |
+| `DATABASE_URL`            | The PostgreSQL connection URL for this project's `personal_finance_dev` database.                                      |
 
 ## Dashboard Access
 
@@ -106,29 +101,17 @@ To run the app locally, follow these steps:
     ```sh
     cp .env.example .env
     ```
-1. Download the official PostgreSQL image from Docker Hub:
-    ```sh
-    docker pull postgres
-    ```
-1. Start the PostgreSQL container (This step starts a new PostgreSQL container with the specified password and user):
-    ```sh
-    docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres
-    ```
 1. Install the dependencies:
     ```sh
     npm install
     ```
-1. Push the Prisma schema to the database:
+1. Start this project's isolated PostgreSQL database. It uses host port `5434` and a persistent Docker volume:
     ```sh
-    npx prisma db push
+    docker compose up -d postgres
     ```
-1. Push the Prisma schema to the database:
+1. Apply database migrations:
     ```sh
-    npx prisma generate
-    ```
-1. Seed the database:
-    ```sh
-    npx prisma db seed
+    npx prisma migrate deploy
     ```
 1. Run the app:
     ```sh

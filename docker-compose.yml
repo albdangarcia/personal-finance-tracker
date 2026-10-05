@@ -1,15 +1,24 @@
 services:
   postgres:
-    image: postgres
-    env_file:
-      - .env
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: personal_finance
+      POSTGRES_PASSWORD: personal_finance_local_dev
+      POSTGRES_DB: personal_finance_dev
     ports:
-      - "5432:5432"
+      - "5434:5432"
+    volumes:
+      - personal_finance_data:/var/lib/postgresql
   nextjs:
     build: .
     ports:
       - "3000:3000"
     env_file:
       - .env
+    environment:
+      DATABASE_URL: postgresql://personal_finance:personal_finance_local_dev@postgres:5432/personal_finance_dev
     depends_on:
       - postgres
+
+volumes:
+  personal_finance_data:
