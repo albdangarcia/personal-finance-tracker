@@ -9,6 +9,7 @@ import {
 import getCurrentYearMonth from "../utils/currentYearMonth";
 import { IdSchema, QuerySchema, YearMonthSchema } from "../zod-schemas";
 import { getAuthenticatedUserId } from "../utils/authUtils";
+import { sumAmountsForMonth } from "../utils/financialCalculations";
 
 /**
  * Fetches filtered budgets based on the provided query, year, and month.
@@ -94,14 +95,9 @@ const fetchFilteredBudgets = async (
         // Map over each budget in the budgets array
         const results = budgets.map((budget) => {
             // Calculate the total expenses for the current budget's category
-            const totalExpenses = budget.category.expenses.reduce(
-                (sum, expense) => {
-                    // If the expense's yearMonth matches the yearMonth, add its amount to the sum
-                    return expense.yearMonth === yearMonth
-                        ? sum + expense.amount
-                        : sum; // Otherwise, keep the sum unchanged
-                },
-                0 // Initialize the sum to 0
+            const totalExpenses = sumAmountsForMonth(
+                budget.category.expenses,
+                yearMonth
             );
 
             // Return a new object with the budget details and the calculated total expenses

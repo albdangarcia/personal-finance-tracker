@@ -16,6 +16,12 @@ const config = {
   coverageDirectory: "coverage",
   coverageProvider: 'v8',
   testEnvironment: 'jsdom',
+  moduleNameMapper: {
+    '^next/cache$': '<rootDir>/jest-mocks/next-cache.js',
+    '^next/navigation$': '<rootDir>/jest-mocks/next-navigation.js',
+    '^.*utils/authUtils$': '<rootDir>/jest-mocks/auth-utils.js',
+    '^@/(.*)$': '<rootDir>/$1',
+  },
   testMatch: [
     "<rootDir>/__tests__/**/*.[jt]s?(x)"
   ],
