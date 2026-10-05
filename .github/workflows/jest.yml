@@ -1,9 +1,19 @@
 name: React Tests with Jest and RTL
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
-    # Provide dummy database URLs so `prisma generate` doesn't crash during `npm install`
+    timeout-minutes: 10
+    # Prisma client generation reads DATABASE_URL during npm ci; tests mock Prisma and never connect.
     env:
       DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
     steps:
@@ -12,9 +22,9 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22' # Upgraded to 22 to fix the EBADENGINE warnings
+          node-version: '24'
           cache: 'npm'
       - name: Install dependencies
-        run: npm ci # npm ci is cleaner and faster for CI environments
+        run: npm ci
       - name: Run tests
         run: npm test -- --watchAll=false

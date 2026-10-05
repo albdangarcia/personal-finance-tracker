@@ -13,6 +13,7 @@ import {
     YearMonthSchema,
 } from "../zod-schemas";
 import { getAuthenticatedUserId } from "../utils/authUtils";
+import { groupAmountsByCategory } from "../utils/financialCalculations";
 
 // Limit the number of expenses per page
 const EXPENSES_PER_PAGE = 10;
@@ -123,37 +124,7 @@ const fetchExpensesByCategory = async (
             },
         });
 
-        // Group by category and calculate the total amount for each category
-        const groupByCategory = expenses.reduce<DataByCategories[]>(
-            (accumulator, expense) => {
-                // Extract categoryId and categoryName
-                const categoryId = expense.categoryId;
-                const categoryName = expense.category.name;
-
-                // Find if the category already exists in the accumulator
-                const existingCategory = accumulator.find(
-                    (item) => item.categoryId === categoryId
-                );
-
-                if (existingCategory) {
-                    // If the category exists, add the amount to the total
-                    existingCategory.totalAmount += expense.amount;
-                } else {
-                    // If the category does not exist, create a new category entry
-                    accumulator.push({
-                        categoryId: categoryId,
-                        categoryName: categoryName,
-                        totalAmount: expense.amount,
-                    });
-                }
-
-                // Return the updated accumulator for the next iteration
-                return accumulator;
-            },
-            [] // Initial value of the accumulator is an empty array
-        );
-
-        return groupByCategory;
+        return groupAmountsByCategory(expenses);
     } catch (error) {
         console.error("Failed to fetch expenses by category:", error);
         throw new Error("Failed to fetch expenses by category.");
